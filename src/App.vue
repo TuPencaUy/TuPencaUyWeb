@@ -1,9 +1,20 @@
-<script setup></script>
+<script setup>
+import NavBar from './components/NavBar.vue'
+import { useUserStore } from './store/user'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+if (!useUserStore().isAuthenticated) {
+  router.push('/login')
+}
+</script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-  </header>
-
-  <main></main>
+  <nav>
+    <NavBar />
+  </nav>
+  <main>
+    <RouterView />
+  </main>
 </template>
