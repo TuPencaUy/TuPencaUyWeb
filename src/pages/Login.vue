@@ -4,18 +4,17 @@ import { useRouter } from 'vue-router'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { useUserStore } from '@/store/user'
 
-const auth0 = useAuth0()
-const email = ref('')
-const password = ref('')
-const router = useRouter()
+const auth0 = useAuth0();
+const email = ref('');
+const password = ref('');
+const router = useRouter();
 
 if (useUserStore().isAuthenticated) {
-  router.push('/')
+  router.push('/');
 }
 
 async function handleLogin(event) {
-  debugger
-  const id = event.target.dataset.id
+  const id = event.target.dataset.id;
 
   let userData = {
     email: email.value,
@@ -28,14 +27,14 @@ async function handleLogin(event) {
       authorizationParams: {
         connection: 'google-oauth2'
       }
-    })
+    });
 
-    userData.token = auth0.idTokenClaims?._rawValue?.__raw
+    userData.token = auth0.idTokenClaims?._rawValue?.__raw;
   }
 
-  const loggedIn = await useUserStore().login(userData)
+  const loggedIn = await useUserStore().login(userData);
   if (loggedIn) {
-    router.push('/')
+    router.push('/');
   }
 }
 </script>

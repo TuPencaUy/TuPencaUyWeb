@@ -3,32 +3,41 @@ import userLogic from '@/logic/userLogic'
 
 export const useUserStore = defineStore({
   id: 'user',
-  state: () => {
+  state: () =>
+  {
     return {
       _isAuthenticated: false,
       _user: null,
-      _token: null
+      _token: { token: "", expiration: "" }
     }
   },
   actions: {
-    async login(userData) {
+    async login(userData)
+    {
+
       const user = userData?.token
         ? await userLogic().authLogin(userData.token)
-        : await userLogic().basicLogin(userData)
-      this._isAuthenticated = true
-      this._user = user
-      this._token = user?.token ?? null
+        : await userLogic().basicLogin(userData);
 
-      return this._isAuthenticated
+      if (user?.error || !user?.data) return false;
+
+      this._isAuthenticated = true;
+      this._user = user?.data?.user;
+      this._token.token = user?.data?.token;
+      this._token.expiration = user?.data?.expiration;
+
+      return this._isAuthenticated;
     },
-    logOut() {
+    logOut()
+    {
       this._isAuthenticated = false
       this._user = null
       this._token = null
     }
   },
   getters: {
-    isAuthenticated() {
+    isAuthenticated()
+    {
       return this._isAuthenticated
     }
   },
