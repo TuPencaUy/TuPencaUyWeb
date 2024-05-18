@@ -9,11 +9,12 @@ export default function userLogic()
     } catch (error) { }
   }
 
-  async function authLogin(token)
+  async function authLogin(token, currentTenant = {})
   {
     try
     {
-      return await api().execute('/identity/oauthlogin', 'POST', token);
+      const response = await api().execute('/identity/oauthlogin', 'POST', token, currentTenant);
+      return await response.json();
     } catch (error)
     {
       return error;

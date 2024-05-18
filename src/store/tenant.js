@@ -2,23 +2,28 @@ import { defineStore } from 'pinia'
 
 export const useTenantStore = defineStore({
   id: 'tenant',
-  state: () => {
+  state: () =>
+  {
     return {
       _currentTenant: null
     }
   },
   actions: {
-    setTenant(tenant) {
-      this._tenant = tenant
-    },
-    clearTenant() {
-      this._tenant = null
+    setCurrentTenant()
+    {
+      const url = window.location.hostname;
+
+      this._currentTenant = (url.split('.')?.length > 1)
+        ? url.split('.')[0]
+        : null;
     }
   },
   getters: {
-    tenant() {
-      return this._tenant
-    }
+    getCurrentTenant()
+    {
+      return this._currentTenant;
+    },
+
   },
   persist: true
 })
