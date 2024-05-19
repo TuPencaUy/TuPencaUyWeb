@@ -4,11 +4,12 @@ import { useUserStore } from './store/user'
 import { useTenantStore } from './store/tenant';
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue';
+import siteLogic from './logic/siteLogic';
 
 const router = useRouter()
 
 onMounted(() => {
-  useTenantStore().setCurrentTenant();
+  siteLogic().init();
 
   if (!useUserStore().isAuthenticated) {
     router.push('/login')

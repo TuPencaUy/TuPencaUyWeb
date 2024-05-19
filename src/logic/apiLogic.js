@@ -4,14 +4,20 @@ export default function api()
 
   async function execute(url, method, body = {}, headers = {})
   {
-    const response = await fetch(`${BASE_URL}${url}`, {
+    const requestObject = {
       method,
       headers: {
         'Content-Type': 'application/json',
         ...headers
-      },
-      body: JSON.stringify(body)
-    });
+      }
+    }
+
+    if (body && Object.keys(body).length > 0)
+    {
+      requestObject.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(`${BASE_URL}${url}`, requestObject);
     return response;
   }
 
