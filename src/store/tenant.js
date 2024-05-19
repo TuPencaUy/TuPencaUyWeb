@@ -11,10 +11,14 @@ export const useTenantStore = defineStore({
   actions: {
     setCurrentTenant()
     {
-      const url = window.location.hostname;
+      let url = window.location.hostname;
+      url = url.replace('www.', '');
+      url = url.replace('.com', '');
 
-      this._currentTenant = (url.split('.')?.length > 1)
-        ? url.split('.')[0]
+      const splittedUrl = url.split('.');
+
+      this._currentTenant = (splittedUrl?.length > 1)
+        ? splittedUrl[0]
         : null;
     }
   },

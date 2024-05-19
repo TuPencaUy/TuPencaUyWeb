@@ -15,7 +15,6 @@ export const useUserStore = defineStore({
   actions: {
     async login(userData)
     {
-
       const tenant = useTenantStore().getCurrentTenant;
 
       const user = userData?.token
