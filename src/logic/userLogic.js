@@ -13,7 +13,7 @@ export default function userLogic()
   {
     try
     {
-      const response = await api().execute('/identity/oauthlogin', 'POST', token, {currentTenant});
+      const response = await api().execute('/identity/oauthlogin', 'POST', token, { currentTenant });
       return await response.json();
     } catch (error)
     {
