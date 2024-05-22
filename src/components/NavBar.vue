@@ -38,6 +38,13 @@ const handleLogout = () => {
           >Login</router-link
         >
 
+        <router-link
+          v-if="!useUserStore()?.isAuthenticated"
+          class="nav-link link-body-emphasis"
+          to="/signin"
+          >Sign In</router-link
+        >
+
         <div v-if="useUserStore()?.isAuthenticated" class="dropdown text-end">
           <a
             href="#"
