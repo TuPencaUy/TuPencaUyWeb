@@ -1,77 +1,93 @@
 <script setup>
-import { ref } from 'vue';
-import formValidator from '@/utils/formValidator';
-import userLogic from '@/logic/userLogic';
-import { useTenantStore } from '@/store/tenant';
+import userLogic from '@/logic/userLogic'
+import { useTenantStore } from '@/store/tenant'
 import { useUserStore } from '@/store/user'
 
-const formData = ref({
-    name: '',
-    email: '',
-    password: '',
-    password2: '',
-});
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+
+import { Button } from '@/components/ui/button'
+import {
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
+const formSchema = toTypedSchema(z.object({
+    name: z.string().min(2).max(50),
+    email: z.string().email(),
+    password: z.string()
+}))
+
+const form = useForm({
+    validationSchema: formSchema,
+})
+
 
 async function handleSignUp(e) {
-    e.preventDefault();
-    const data = formData.value;
 
-    if (!formValidator().arePasswordEqual(data.password, data.password2)) {
-        alert('Passwords are not the same');
-        return;
-    }
+}
 
-    const dataBody = {
-        name: data.name,
-        email: data.email,
-        password: data.password
-    };
-
-    const siteName = '';
-
+const onSubmit = form.handleSubmit(async (values) => {
     let tenant = useTenantStore().getCurrentTenant ?? {};
 
-    const userData = await userLogic().basicSignUp(dataBody, tenant);
+    const userData = await userLogic().basicSignUp(values, tenant);
+
+    console.log(userData);
 
     if (loggedIn) {
         router.push('/');
     }
-}
-
+})
 </script>
 
 <template>
-    <main class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3 mt-5">
-                <div class="card">
-                    <div class="card-body">
-                        <form @submit="handleSignUp">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" v-model="formData.name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" v-model="formData.email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" v-model="formData.password" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password2" class="form-label">Repeat Password</label>
-                                <input type="password" class="form-control" id="password2" v-model="formData.password2" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="site" class="form-label">What is the name of your site?</label>
-                                <input type="site" class="form-control" id="site" v-model="siteName" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Sign Up</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <main class="container flex justify-center align-items-center ">
+        <Card class="w-full p-10 border-none">
+            <CardHeader class="flex-row justify-center">
+                <img src="../../public/logo.png" class="max-w-[24%] m-auto" alt="">
+            </CardHeader>
+            <form @submit="onSubmit" class="flex flex-col gap-5">
+
+                <FormField v-slot="{ componentField }" name="name">
+                    <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                            <Input type="text" placeholder="Name" v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                </FormField>
+
+                <FormField v-slot="{ componentField }" name="email">
+                    <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                            <Input type="email" placeholder="Email" v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                </FormField>
+
+                <FormField v-slot="{ componentField }" name="password">
+                    <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                            <Input type="password" placeholder="Password" v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                </FormField>
+
+                <Button type="submit" class="w-[100px] m-auto">
+                    Submit
+                </Button>
+            </form>
+        </Card>
     </main>
 </template>

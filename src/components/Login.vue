@@ -9,8 +9,7 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { useUserStore } from '@/store/user'
 
 import { Button } from '@/components/ui/button'
-import
-{
+import {
     FormControl,
     FormDescription,
     FormField,
@@ -18,8 +17,7 @@ import
     FormLabel,
     FormMessage,
 } from '@/components/ui/form'
-import
-{
+import {
     Card,
     CardContent,
     CardDescription,
@@ -45,16 +43,14 @@ const { handleSubmit } = useForm({
     validationSchema: formSchema,
 })
 
-const onSubmit = handleSubmit((values) =>
-{
+const onSubmit = handleSubmit((values) => {
     toast({
         title: 'You have successfully logged in!',
         description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))),
     });
 });
 
-async function handleLogin(event)
-{
+async function handleLogin(event) {
     debugger;
     const id = event.target.dataset.id;
 
@@ -65,8 +61,7 @@ async function handleLogin(event)
         picture: null
     }
 
-    if (id === 'google')
-    {
+    if (id === 'google') {
         await auth0.loginWithPopup({
             authorizationParams: {
                 connection: 'google-oauth2'
@@ -78,8 +73,7 @@ async function handleLogin(event)
     }
 
     const loggedIn = await useUserStore().login(userData);
-    if (loggedIn)
-    {
+    if (loggedIn) {
         router.push('/');
     }
 }
@@ -114,16 +108,19 @@ async function handleLogin(event)
                     Login
                 </Button>
                 <Separator />
-                <CardFooter class="flex justify-center">
+                <CardFooter class="flex justify-center gap-5">
                     <CardDescription>
                         <button class="login-with-google-btn" data-id="google" @click="handleLogin">
                             Login with Google
                         </button>
                     </CardDescription>
+                    <CardDescription>
+                        <router-link v-if="!useUserStore()?.isAuthenticated" class="nav-link link-body-emphasis"
+                            to="/signup">Do not have an account?</router-link>
+                    </CardDescription>
                 </CardFooter>
             </form>
         </Card>
-
     </main>
 </template>
 
