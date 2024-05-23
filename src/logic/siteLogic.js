@@ -23,7 +23,6 @@ export default function siteLogic()
         "Color": "",
       }
 
-      // Validate data
       for (let key in dataToSend)
       {
         if (!data.hasOwnProperty(key))
