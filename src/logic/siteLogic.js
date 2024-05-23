@@ -1,5 +1,6 @@
 import api from './apiLogic'
 import { useTenantStore } from '@/store/tenant'
+import { useUserStore } from '@/store/user';
 
 export default function siteLogic()
 {
@@ -9,6 +10,36 @@ export default function siteLogic()
     useTenantStore().setCurrentTenant();
 
     validateSite();
+  }
+
+  async function createSite(data)
+  {
+    try
+    {
+      const dataToSend = {
+        "name": "",
+        "Domain": "",
+        "AccessType": "",
+        "Color": "",
+      }
+
+      for (let key in dataToSend)
+      {
+        if (!data.hasOwnProperty(key))
+        {
+          return api().response(null, `Missing ${key}`, true);
+        }
+      }
+
+      const token = useUserStore().getToken;
+      if (!token) return null;
+
+      const response = await api().execute('/site/createsite', 'POST', data, { 'Authorization': `Bearer ${token}` });
+      return response.json();
+    } catch (e)
+    {
+      return null;
+    }
   }
 
   async function getSite(tenant)
@@ -38,6 +69,7 @@ export default function siteLogic()
 
   return {
     init,
+    createSite,
     getSite,
   }
 }

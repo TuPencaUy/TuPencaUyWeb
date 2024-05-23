@@ -43,6 +43,10 @@ export const useUserStore = defineStore({
     isAuthenticated()
     {
       return this._isAuthenticated;
+    },
+    getToken()
+    {
+      return this._token?.token;
     }
   },
   persist: true
