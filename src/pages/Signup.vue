@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import formValidator from '@/utils/formValidator';
 import userLogic from '@/logic/userLogic';
 import { useTenantStore } from '@/store/tenant';
+import { useUserStore } from '@/store/user'
 
 const formData = ref({
     name: '',
@@ -26,11 +27,10 @@ async function handleSignUp(e) {
         password: data.password
     };
 
-    const tenant = useTenantStore().getCurrentTenant;
+    let tenant = useTenantStore().getCurrentTenant ?? {};
 
     const userData = await userLogic().basicSignUp(dataBody, tenant);
 
-    const loggedIn = await useUserStore().login(userData);
     if (loggedIn) {
         router.push('/');
     }
