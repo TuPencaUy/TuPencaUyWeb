@@ -11,7 +11,7 @@ const formData = ref({
     password2: '',
 });
 
-async function handleSignIn(e) {
+async function handleSignUp(e) {
     e.preventDefault();
     const data = formData.value;
 
@@ -28,9 +28,12 @@ async function handleSignIn(e) {
 
     const tenant = useTenantStore().getCurrentTenant;
 
-    const result = await userLogic().basicSignUp(dataBody, tenant);
+    const userData = await userLogic().basicSignUp(dataBody, tenant);
 
-    console.log(result);
+    const loggedIn = await useUserStore().login(userData);
+    if (loggedIn) {
+        router.push('/');
+    }
 }
 
 </script>
@@ -41,7 +44,7 @@ async function handleSignIn(e) {
             <div class="col-md-6 offset-md-3 mt-5">
                 <div class="card">
                     <div class="card-body">
-                        <form @submit="handleSignIn">
+                        <form @submit="handleSignUp">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="name" v-model="formData.name" required>
@@ -58,7 +61,7 @@ async function handleSignIn(e) {
                                 <label for="password2" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password2" v-model="formData.password2" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Sign In</button>
+                            <button type="submit" class="btn btn-primary">Sign Up</button>
                         </form>
                     </div>
                 </div>
