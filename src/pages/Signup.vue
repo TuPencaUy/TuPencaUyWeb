@@ -27,6 +27,8 @@ async function handleSignUp(e) {
         password: data.password
     };
 
+    const siteName = '';
+
     let tenant = useTenantStore().getCurrentTenant ?? {};
 
     const userData = await userLogic().basicSignUp(dataBody, tenant);
@@ -58,8 +60,12 @@ async function handleSignUp(e) {
                                 <input type="password" class="form-control" id="password" v-model="formData.password" required>
                             </div>
                             <div class="mb-3">
-                                <label for="password2" class="form-label">Password</label>
+                                <label for="password2" class="form-label">Repeat Password</label>
                                 <input type="password" class="form-control" id="password2" v-model="formData.password2" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="site" class="form-label">What is the name of your site?</label>
+                                <input type="site" class="form-control" id="site" v-model="siteName" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Sign Up</button>
                         </form>
