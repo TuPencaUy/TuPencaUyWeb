@@ -21,7 +21,17 @@ export default function api()
     return response;
   }
 
+  function response(data = null, message = "", error = false)
+  {
+    return {
+      error: error,
+      message: message,
+      data: data
+    }
+  }
+
   return {
     execute,
+    response
   }
 }
