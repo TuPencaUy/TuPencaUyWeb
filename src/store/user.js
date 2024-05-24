@@ -9,7 +9,8 @@ export const useUserStore = defineStore({
     return {
       _isAuthenticated: false,
       _user: null,
-      _token: null
+      _token: null,
+      _picture: null
     }
   },
   actions: {
@@ -29,6 +30,7 @@ export const useUserStore = defineStore({
         token: user?.data?.token,
         expiration: user?.data?.expiration
       }
+      this._picture = userData?.picture;
 
       return this._isAuthenticated;
     },

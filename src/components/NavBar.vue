@@ -9,7 +9,7 @@ const router = useRouter()
 
 const handleLogout = () => {
   useUserStore().logOut()
-  router.push('/')
+  router.push('/login')
 }
 </script>
 
@@ -48,7 +48,7 @@ const handleLogout = () => {
             aria-expanded="false"
           >
             <img
-              :src="auth0?.user?._value?.picture ?? ''"
+              :src="useUserStore()?._picture"
               alt="mdo"
               width="32"
               height="32"
