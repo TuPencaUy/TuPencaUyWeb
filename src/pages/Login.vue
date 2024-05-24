@@ -19,7 +19,8 @@ async function handleLogin(event) {
   let userData = {
     email: email.value,
     password: password.value,
-    token: null
+    token: null,
+    picture: null
   }
 
   if (id === 'google') {
@@ -29,6 +30,7 @@ async function handleLogin(event) {
       }
     });
 
+    userData.picture = auth0.user?._value?.picture;
     userData.token = auth0.idTokenClaims?._rawValue?.__raw;
   }
 
