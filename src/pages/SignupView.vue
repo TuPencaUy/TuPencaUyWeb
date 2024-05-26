@@ -4,6 +4,7 @@ import { useTenantStore } from '@/store/tenant'
 import { useUserStore } from '@/store/user'
 
 import { useForm } from 'vee-validate'
+import { useToast } from '@/components/ui/toast/use-toast'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 
@@ -17,6 +18,8 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import Toaster from '@/components/ui/toast/Toaster.vue'
+import router from '@/router'
 
 const formSchema = toTypedSchema(z.object({
     name: z.string().min(2).max(50),
@@ -28,25 +31,28 @@ const form = useForm({
     validationSchema: formSchema,
 })
 
-
-async function handleSignUp(e) {
-
-}
+const { toast } = useToast();
 
 const onSubmit = form.handleSubmit(async (values) => {
     let tenant = useTenantStore().getCurrentTenant ?? {};
 
     const userData = await userLogic().basicSignUp(values, tenant);
 
-    console.log(userData);
-
-    if (loggedIn) {
-        router.push('/');
+    if (userData && !userData.error) {
+        toast({
+            title: 'Success',
+            description: userData.message,
+        });
     }
+
+    setTimeout(() => {
+        router.push('/');
+    }, 2000);
 })
 </script>
 
 <template>
+    <Toaster/>
     <main class="container flex justify-center align-items-center ">
         <Card class="w-full p-10 border-none">
             <CardHeader class="flex-row justify-center">
