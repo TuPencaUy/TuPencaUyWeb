@@ -21,6 +21,8 @@ import
 import {Input} from '@/components/ui/input';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import router from '@/router';
+import {Separator} from "@/components/ui/separator/index.js";
+import {Card, CardFooter, CardHeader} from "@/components/ui/card/index.js";
 
 const formSchema = toTypedSchema(z.object({
   name: z.string().min(2).max(50),
@@ -101,11 +103,16 @@ const onSubmit = form.handleSubmit(async (values) => {
             <FormMessage/>
           </FormItem>
         </FormField>
-
         <Button type="submit" class="w-[120px] m-auto">
           Register
         </Button>
       </form>
+      <Separator class="m-5"/>
+      <CardFooter class="flex justify-center">
+        <p class="text-sm">Already have an account?
+          <router-link to="/login" class="font-semibold">Login</router-link>
+        </p>
+      </CardFooter>
     </Card>
   </main>
 </template>
