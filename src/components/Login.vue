@@ -7,6 +7,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { useUserStore } from '@/store/user'
+import utils from '@/logic/utils'
+
 
 import { Button } from '@/components/ui/button'
 import
@@ -29,16 +31,19 @@ import
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
-import { toast } from '@/components/ui/toast'
+import { useToast } from '@/components/ui/toast/use-toast'
+import { Toaster } from '@/components/ui/toast'
 
-const email = ref('');
-const password = ref('');
+const { toast } = useToast()
+
 const router = useRouter();
 const auth0 = useAuth0();
+const email = ref('');
+const password = ref('');
 
 const formSchema = toTypedSchema(z.object({
     email: z.string().email(),
-    password: z.string().min(4).max(50),
+    password: z.string().min(4).max(30),
 }))
 
 const { handleSubmit } = useForm({
@@ -47,16 +52,12 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit((values) =>
 {
-    toast({
-        title: 'You have successfully logged in!',
-        description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))),
-    });
+    handleLogin();
 });
 
 async function handleLogin(event)
 {
-    debugger;
-    const id = event.target.dataset.id;
+    const id = event ? event.target.dataset.id : "";
 
     let userData = {
         email: email.value,
@@ -77,21 +78,40 @@ async function handleLogin(event)
         userData.token = auth0.idTokenClaims?._rawValue?.__raw;
     }
 
+    utils().showLoader();
     const loggedIn = await useUserStore().login(userData);
+    utils().hideLoader();
     if (loggedIn)
     {
-        router.push('/');
+        toast({
+            title: 'You have successfully logged in!',
+            description: 'Redirecting to the home page...',
+        });
+
+        setTimeout(() =>
+        {
+            router.push('/');
+        }, 2000);
+    }
+    else
+    {
+        toast({
+            title: 'Login failed!',
+            description: 'Please check your credentials and try again.',
+            variant: 'destructive'
+        });
     }
 }
 </script>
 
 <template>
+    <Toaster />
     <main class="container flex justify-center align-items-center ">
         <Card class="w-full p-10 border-none">
             <CardHeader class="flex-row justify-center">
-                <img src="../../public/logo.png" class="max-w-[24%]" alt="">
+                <img src="../../public/logo.png" class="max-w-[24%] min-w-[200px]" alt="">
             </CardHeader>
-            <form class="space-y-6" @submit="onSubmit">
+            <form class="space-y-6 my-6" @submit="onSubmit">
                 <FormField v-slot="{ componentField }" name="email">
                     <FormItem>
                         <FormLabel>Email</FormLabel>
@@ -113,23 +133,23 @@ async function handleLogin(event)
                 <Button type="submit">
                     Login
                 </Button>
-                <Separator />
-                <CardFooter class="flex justify-center">
-                    <CardDescription>
-                        <button class="login-with-google-btn" data-id="google" @click="handleLogin">
-                            Login with Google
-                        </button>
-                    </CardDescription>
-                </CardFooter>
             </form>
+            <Separator />
+            <CardFooter class="flex justify-center">
+                <CardDescription>
+                    <button class="login-with-google-btn" data-id="google" @click="handleLogin">
+                        Login with Google
+                    </button>
+                </CardDescription>
+            </CardFooter>
         </Card>
-
     </main>
 </template>
 
 <style scoped>
 .login-with-google-btn {
     transition: background-color .3s, box-shadow .3s;
+    margin-top: 1.5rem;
     padding: 12px 16px 12px 42px;
     border: none;
     border-radius: 3px;

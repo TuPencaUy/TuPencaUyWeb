@@ -5,6 +5,7 @@ import { useTenantStore } from './store/tenant';
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue';
 import siteLogic from './logic/siteLogic';
+import Loader from './components/utils/Loader.vue';
 
 const router = useRouter()
 
@@ -23,6 +24,7 @@ onMounted(() =>
 
 <template>
   <main>
+    <Loader />
     <RouterView />
   </main>
 </template>
