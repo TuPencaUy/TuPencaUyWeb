@@ -49,8 +49,8 @@ main-loader {
 
 .main-fader {
     width: 100%;
-    height: 100vh;
-    position: absolute;
+    height: 100%;
+    position: fixed;
     background-color: rgba(0, 0, 0, 0.8);
 
     .loader {
