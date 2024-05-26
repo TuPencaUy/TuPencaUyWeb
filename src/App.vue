@@ -8,10 +8,12 @@ import siteLogic from './logic/siteLogic';
 
 const router = useRouter()
 
-onMounted(() => {
+onMounted(() =>
+{
   siteLogic().init();
 
-  if (!useUserStore().isAuthenticated) {
+  if (!useUserStore().isAuthenticated)
+  {
     router.push('/login')
   }
 });
@@ -20,9 +22,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <nav>
-    <NavBar />
-  </nav>
   <main>
     <RouterView />
   </main>
