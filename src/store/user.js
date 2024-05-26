@@ -22,7 +22,7 @@ export const useUserStore = defineStore({
         ? await userLogic().authLogin(userData.token, tenant)
         : await userLogic().basicLogin(userData);
 
-      if (user?.error || !user?.data) return false;
+      if (!user || !user?.data || user?.error) return user;
 
       this._isAuthenticated = true;
       this._user = user?.data?.user;

@@ -2,12 +2,15 @@ import api from './apiLogic'
 
 export default function userLogic()
 {
-  async function basicSignUp(userData, currentTenant) {
-    try {
-      const response = await api().execute('/identity/basicsignup', 'POST', userData, {currentTenant});
+  async function basicSignUp(userData, currentTenant)
+  {
+    try
+    {
+      const response = await api().execute('/identity/basicsignup', 'POST', userData, { currentTenant });
       return await response.json();
-      
-    } catch (error) {
+
+    } catch (error)
+    {
       return error;
     }
   }
@@ -16,7 +19,12 @@ export default function userLogic()
   {
     try
     {
-    } catch (error) { }
+      const response = await api().execute('/identity/basiclogin', 'POST', userData);
+      return await response.json();
+    } catch (error)
+    {
+      return error;
+    }
   }
 
   async function authLogin(token, currentTenant = {})

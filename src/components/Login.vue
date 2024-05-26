@@ -79,9 +79,9 @@ async function handleLogin(event)
     }
 
     utils().showLoader();
-    const loggedIn = await useUserStore().login(userData);
+    const loginData = await useUserStore().login(userData);
     utils().hideLoader();
-    if (loggedIn)
+    if (loginData === true)
     {
         toast({
             title: 'You have successfully logged in!',
@@ -97,7 +97,7 @@ async function handleLogin(event)
     {
         toast({
             title: 'Login failed!',
-            description: 'Please check your credentials and try again.',
+            description: loginData?.message ?? 'Please try again.',
             variant: 'destructive'
         });
     }
@@ -116,7 +116,7 @@ async function handleLogin(event)
                     <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                            <Input type="text" placeholder="user@domain.com" v-bind="componentField" />
+                            <Input type="text" placeholder="user@domain.com" v-bind="componentField" v-model="email" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -125,7 +125,7 @@ async function handleLogin(event)
                     <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                            <Input type="password" v-bind="componentField" />
+                            <Input type="password" v-bind="componentField" v-model="password" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -133,26 +133,20 @@ async function handleLogin(event)
                 <Button type="submit">
                     Login
                 </Button>
-                <<<<<<< HEAD=======<Separator />
-                <CardFooter class="flex justify-center gap-5">
-                    <CardDescription>
-                        <button class="login-with-google-btn" data-id="google" @click="handleLogin">
-                            Login with Google
-                        </button>
-                    </CardDescription>
-                    <CardDescription>
-                        <router-link v-if="!useUserStore()?.isAuthenticated" class="nav-link link-body-emphasis"
-                            to="/signup">Do not have an account?</router-link>
-                    </CardDescription>
-                </CardFooter>
-                >>>>>>> b0dd4f4a2f01a07dd29bed6da6c8b5c5ce7f3f2b
             </form>
             <Separator />
             <CardFooter class="flex justify-center">
-                <CardDescription>
+                <CardDescription class="gap-5 flex flex-col">
                     <button class="login-with-google-btn" data-id="google" @click="handleLogin">
                         Login with Google
                     </button>
+                    <div>
+                        Do not have an account?
+                        <router-link v-if="!useUserStore()?.isAuthenticated"
+                            class="nav-link link-body-emphasis font-semibold text-black"
+                            to="/signup">Register</router-link>
+                    </div>
+
                 </CardDescription>
             </CardFooter>
         </Card>
