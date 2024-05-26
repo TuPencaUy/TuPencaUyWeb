@@ -1,55 +1,43 @@
-import { defineStore } from 'pinia'
-import userLogic from '@/logic/userLogic'
-import { useTenantStore } from './tenant'
+import {defineStore} from 'pinia';
+import userLogic from '@/logic/userLogic';
+import {useTenantStore} from './tenant';
+import { useAuth0 } from "@auth0/auth0-vue";
 
 export const useUserStore = defineStore({
-  id: 'user',
-  state: () =>
-  {
-    return {
-      _isAuthenticated: false,
-      _user: null,
-      _token: null,
-      _picture: null
-    }
-  },
-  actions: {
-    async login(userData)
-    {
-      const tenant = useTenantStore().getCurrentTenant;
+    id: 'user', state: () => {
+        return {
+            _isAuthenticated: false, _user: null, _token: null, _picture: null
+        };
+    }, actions: {
+        async login(userData) {
+            const tenant = useTenantStore().getCurrentTenant;
+            const user = userData?.token ? await userLogic().authLogin(userData.token, tenant) : await userLogic().basicLogin(userData);
 
-      const user = userData?.token
-        ? await userLogic().authLogin(userData.token, tenant)
-        : await userLogic().basicLogin(userData);
+            if (!user || !user?.data || user?.error) return user;
 
-      if (!user || !user?.data || user?.error) return user;
+            this.setLogIn(user);
 
-      this._isAuthenticated = true;
-      this._user = user?.data?.user;
-      this._token = {
-        token: user?.data?.token,
-        expiration: user?.data?.expiration
-      }
-      this._picture = userData?.picture;
+            return this._isAuthenticated;
+        }, logOut() {
+            this._isAuthenticated = false;
+            this._user = null;
+            this._token = null;
+        }, setLogIn(userData) {
+            const auth0 = useAuth0();
 
-      return this._isAuthenticated;
-    },
-    logOut()
-    {
-      this._isAuthenticated = false;
-      this._user = null;
-      this._token = null;
-    }
-  },
-  getters: {
-    isAuthenticated()
-    {
-      return this._isAuthenticated;
-    },
-    getToken()
-    {
-      return this._token?.token;
-    }
-  },
-  persist: true
-})
+            this._user = userData?.data?.user;
+            this._token = {
+                token: userData?.data?.token,
+                expiration: userData?.data?.expiration
+            };
+            this._picture = auth0?.user?.value?.picture;
+            this._isAuthenticated = userData?.data?.token ? true : false;
+        }
+    }, getters: {
+        isAuthenticated() {
+            return this._isAuthenticated;
+        }, getToken() {
+            return this._token?.token;
+        }
+    }, persist: true
+});
