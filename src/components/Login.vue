@@ -138,13 +138,13 @@ async function handleLogin(event)
             <CardFooter class="flex justify-center">
                 <CardDescription class="gap-5 flex flex-col">
                     <button class="login-with-google-btn" data-id="google" @click="handleLogin">
-                        Login with Google
+                        Log In with Google
                     </button>
                     <div>
                         Do not have an account?
                         <router-link v-if="!useUserStore()?.isAuthenticated"
                             class="nav-link link-body-emphasis font-semibold text-black"
-                            to="/signup">Register</router-link>
+                            to="/signup">Sign Up</router-link>
                     </div>
 
                 </CardDescription>
