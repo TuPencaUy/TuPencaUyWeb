@@ -133,6 +133,19 @@ async function handleLogin(event)
                 <Button type="submit">
                     Login
                 </Button>
+                <<<<<<< HEAD=======<Separator />
+                <CardFooter class="flex justify-center gap-5">
+                    <CardDescription>
+                        <button class="login-with-google-btn" data-id="google" @click="handleLogin">
+                            Login with Google
+                        </button>
+                    </CardDescription>
+                    <CardDescription>
+                        <router-link v-if="!useUserStore()?.isAuthenticated" class="nav-link link-body-emphasis"
+                            to="/signup">Do not have an account?</router-link>
+                    </CardDescription>
+                </CardFooter>
+                >>>>>>> b0dd4f4a2f01a07dd29bed6da6c8b5c5ce7f3f2b
             </form>
             <Separator />
             <CardFooter class="flex justify-center">
