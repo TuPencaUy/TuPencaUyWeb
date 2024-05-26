@@ -2,6 +2,16 @@ import api from './apiLogic'
 
 export default function userLogic()
 {
+  async function basicSignUp(userData, currentTenant) {
+    try {
+      const response = await api().execute('/identity/basicsignup', 'POST', userData, {currentTenant});
+      return await response.json();
+      
+    } catch (error) {
+      return error;
+    }
+  }
+
   async function basicLogin(userData)
   {
     try
@@ -22,6 +32,7 @@ export default function userLogic()
   }
 
   return {
+    basicSignUp,
     basicLogin,
     authLogin
   }

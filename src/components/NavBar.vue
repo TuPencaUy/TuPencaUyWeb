@@ -33,6 +33,13 @@ const handleLogout = () => {
           >Login</router-link
         >
 
+        <router-link
+          v-if="!useUserStore()?.isAuthenticated"
+          class="nav-link link-body-emphasis"
+          to="/signup"
+          >Sign up</router-link
+        >
+
         <div v-if="useUserStore()?.isAuthenticated" class="dropdown text-end">
           <a
             href="#"
