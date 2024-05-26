@@ -1,13 +1,10 @@
-import './assets/main.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap'
-
 import { createApp } from 'vue'
 import App from './App.vue'
 import { createAuth0 } from '@auth0/auth0-vue'
 import { createPinia } from 'pinia'
 import { createPersistedState } from 'pinia-plugin-persistedstate'
 import router from './router/index'
+import './assets/index.css'
 
 const pinia = createPinia()
 pinia.use(createPersistedState())

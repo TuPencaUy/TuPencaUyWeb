@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { useUserStore } from '@/store/user'
+import { Button } from '@/components/ui/button'
 
 const auth0 = useAuth0();
 const email = ref('');
@@ -42,15 +43,15 @@ async function handleLogin(event) {
 </script>
 
 <template>
-  <main class="container">
+  <main class="container w-full">
     <div class="row">
       <div class="col-md-6 offset-md-3 mt-5">
         <div class="card">
           <div class="card-body">
             <form @submit="handleLogin">
               <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" v-model="email" required />
+                <label class="text-lg text-red-600" for="email">Email</label>
+                <input type="email" class="form-control w-20" id="email" v-model="email" required />
               </div>
               <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
@@ -62,7 +63,7 @@ async function handleLogin(event) {
                   required
                 />
               </div>
-              <button type="submit" class="btn btn-primary w-[120px]">Login</button>
+              <Button>Login</Button>
               <div class="moreActions border-top py-3 mt-3 d-flex justify-content-center">
                 <button data-id="google" @click="handleLogin" type="button" class="login-with-google-btn" >Sign in with Google</button>
               </div>
