@@ -24,6 +24,19 @@ onMounted(async () => {
     router.push('/create-site');
     return;
   }
+  
+  
+  const site = await siteLogic().getSite();
+
+  
+  
+
+  if (!site.data) {
+    router.push('/create-site');
+    return;
+  }
+  
+
 });
 
 
