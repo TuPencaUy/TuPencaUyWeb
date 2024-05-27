@@ -59,7 +59,9 @@ const onSubmit = form.handleSubmit(async (values) => {
         description: 'Redirecting to your site...',
     });
 
-    
+    setTimeout(() => {
+        window.location.replace(`http://${values.domain}.${import.meta.env.VITE_BASE_DOMAIN}`);
+    }, 2000);
 });
 </script>
 
