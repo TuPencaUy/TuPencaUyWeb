@@ -48,6 +48,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       description: userData?.message ?? 'Something went wrong',
       variant: 'destructive'
     });
+    utils().hideLoader();
     return;
   }
 
