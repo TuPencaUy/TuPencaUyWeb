@@ -16,11 +16,12 @@ export default function siteLogic()
   {
     try
     {
+      
       const dataToSend = {
         "name": "",
-        "Domain": "",
-        "AccessType": "",
-        "Color": "",
+        "domain": "",
+        "accesstype": "",
+        "color": ""
       }
 
       for (let key in dataToSend)
@@ -33,8 +34,10 @@ export default function siteLogic()
 
       const token = useUserStore().getToken;
       if (!token) return null;
-
+      
       const response = await api().execute('/site/createsite', 'POST', data, { 'Authorization': `Bearer ${token}` });
+
+      
       return response.json();
     } catch (e)
     {

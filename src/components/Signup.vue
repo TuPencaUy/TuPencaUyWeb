@@ -1,6 +1,7 @@
 <script setup>
 import userLogic from '@/logic/userLogic';
 import { useTenantStore } from '@/store/tenant';
+import { useUserStore } from '@/store/user'
 import utils from '@/logic/utils.js';
 
 import { useForm } from 'vee-validate';
@@ -23,7 +24,7 @@ import { Separator } from "@/components/ui/separator/index.js";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card/index.js";
 
 const formSchema = toTypedSchema(z.object({
-  name: z.string().min(2).max(50),
+  name: z.string().min(4).max(50),
   email: z.string().email(),
   password: z.string()
 }));
@@ -41,9 +42,7 @@ const onSubmit = form.handleSubmit(async (values) => {
 
   const userData = await userLogic().basicSignUp(values, tenant);
 
-  utils().hideLoader();
-
-  if (!userData.ok || userData.error) {
+  if (!userData || userData.error) {
     toast({
       title: 'Register Failed',
       description: userData?.message ?? 'Something went wrong',
@@ -52,10 +51,22 @@ const onSubmit = form.handleSubmit(async (values) => {
     return;
   }
 
-  toast({
-    title: 'Success',
-    description: userData.message
-  });
+  const loginData = await useUserStore().login(userData);
+
+  utils().hideLoader();
+
+  if (!loginData) {
+    toast({
+      title: 'Login failed!',
+      description: 'Redirecting to the home page...',
+      variant: 'destructive'
+    });
+  } else {
+    toast({
+      title: 'Thank you for sign up!',
+      description: 'Redirecting to the home page...',
+    });
+  }
 
   setTimeout(() => {
     router.push('/');

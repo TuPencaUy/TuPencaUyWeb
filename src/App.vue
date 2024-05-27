@@ -9,14 +9,27 @@ import Loader from './components/utils/Loader.vue';
 
 const router = useRouter()
 
-onMounted(() =>
-{
+onMounted(async () => {
   siteLogic().init();
 
-  if (!useUserStore().isAuthenticated)
-  {
-    router.push('/login')
+  
+  if (!useUserStore().isAuthenticated) {
+    router.push('/login');
+    return;
   }
+  
+  
+  const site = await siteLogic().getSite();
+
+  
+  
+
+  if (!site.data) {
+    router.push('/create-site');
+    return;
+  }
+  
+
 });
 
 

@@ -9,15 +9,18 @@ export default function api() {
       }
     }
 
+    
     if (body && Object.keys(body).length > 0) {
       requestObject.body = JSON.stringify(body);
     }
 
-    if (Object.keys(headers).length === 0) {
+    if (Object.keys(headers).length > 0) {
       Object.assign(requestObject.headers, headers);
     }
 
-    const response = await fetch(`${BASE_URL}${url}`, requestObject);
+    const finalUrl = `${BASE_URL}${url}`;
+
+    const response = await fetch(finalUrl, requestObject);
     return response;
   }
 
