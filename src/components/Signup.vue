@@ -36,7 +36,7 @@ const form = useForm({
 const { toast } = useToast();
 
 const onSubmit = form.handleSubmit(async (values) => {
-  let tenant = useTenantStore().getCurrentTenant ?? {};
+  let tenant = useTenantStore().getCurrentTenant ?? null;
 
   utils().showLoader();
 
@@ -51,12 +51,12 @@ const onSubmit = form.handleSubmit(async (values) => {
     utils().hideLoader();
     return;
   }
+  const loginData = await useUserStore().login({email: values.email, password: values.password});
 
-  const loginData = await useUserStore().login(userData);
 
   utils().hideLoader();
 
-  if (!loginData) {
+  if (!loginData || loginData?.error) {
     toast({
       title: 'Login failed!',
       description: 'Redirecting to the home page...',
@@ -65,19 +65,19 @@ const onSubmit = form.handleSubmit(async (values) => {
   } else {
     toast({
       title: 'Thank you for sign up!',
-      description: 'Redirecting to the home page...',
+      description: 'Redirecting to create your site...',
     });
   }
 
   setTimeout(() => {
-    router.push('/');
+    router.push('/create-site');
   }, 2000);
 });
 </script>
 
 <template>
   <Toaster />
-  <main class="container flex justify-center align-items-center ">
+  <main class="container flex justify-center align-items-center">
     <Card class="w-full p-10 border-none">
       <CardHeader class="flex-row justify-center">
         <img src="../../public/logo.png" class="max-w-[24%] m-auto" alt="">

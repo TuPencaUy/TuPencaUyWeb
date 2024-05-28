@@ -18,18 +18,12 @@ onMounted(async () => {
     return;
   }
   
-  
   const site = await siteLogic().getSite();
 
-  
-  
-
-  if (!site.data) {
+  if (!site || !site?.data) {
     router.push('/create-site');
     return;
   }
-  
-
 });
 
 

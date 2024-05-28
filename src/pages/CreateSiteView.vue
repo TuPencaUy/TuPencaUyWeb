@@ -19,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import siteLogic from '@/logic/siteLogic';
+import { Card, CardContent, CardHeader } from "@/components/ui/card/index.js";
 
 // if (!useUserStore().isAuthenticated) {
 //   router.push('/login');
@@ -66,34 +67,39 @@ const onSubmit = form.handleSubmit(async (values) => {
 </script>
 
 <template>
-    <main class="container fixed w-full h-full flex flex-col justify-center">
-        <Toaster />
-        <div class="content m-auto">
-            <h1 class="text-4xl mb-5">Create your site</h1>
-            <form @submit="onSubmit" class="flex flex-col gap-5">
-                <FormField v-slot="{ componentField }" name="name">
-                    <FormItem>
-                        <FormLabel>Site name</FormLabel>
-                        <FormControl>
-                            <Input type="text" placeholder="Name" v-bind="componentField" />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                </FormField>
-                <FormField v-slot="{ componentField }" name="domain">
-                    <FormItem>
-                        <FormLabel>Site domain</FormLabel>
-                        <FormControl>
-                            <Input type="text" placeholder="Domain" v-bind="componentField" />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                </FormField>
-                <Button type="submit" class="w-[120px] m-auto">
-                    Create now!
-                </Button>
-            </form>
-        </div>
-    </main>
+    <Toaster />
+    <div class="container flex justify-center align-items-center h-screen">
+        <Card class="w-full p-10 border-none">
+            <CardHeader class="flex-row justify-center">
+                <img src="../../public/logo.png" class="max-w-[24%] m-auto" alt="">
+            </CardHeader>
+            <CardContent>
+                <h1 class="text-4xl mb-5">Create your site</h1>
+                <form @submit="onSubmit" class="flex flex-col gap-5">
+                    <FormField v-slot="{ componentField }" name="name">
+                        <FormItem>
+                            <FormLabel>Site name</FormLabel>
+                            <FormControl>
+                                <Input type="text" placeholder="Name" v-bind="componentField" />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    </FormField>
+                    <FormField v-slot="{ componentField }" name="domain">
+                        <FormItem>
+                            <FormLabel>Site domain</FormLabel>
+                            <FormControl>
+                                <Input type="text" placeholder="Domain" v-bind="componentField" />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    </FormField>
+                    <Button type="submit" class="w-[120px] m-auto">
+                        Create now!
+                    </Button>
+                </form>
+            </CardContent>
+        </Card>
+    </div>
 
 </template>
