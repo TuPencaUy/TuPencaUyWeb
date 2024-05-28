@@ -5,6 +5,7 @@ import HomeView from '../pages/Home.vue';
 import LoginView from '../pages/LoginView.vue';
 import SignUpView from '../pages/SignupView.vue';
 import DashboardView from "@/pages/Admin/Dashboards/DashboardView.vue";
+import EventsView from "@/pages/Admin/Events/EventsView.vue";
 
 const routes = [
     {path: '/', name: 'home', component: HomeView},
@@ -13,6 +14,7 @@ const routes = [
     {path: '/:catchAll(.*)', name: 'Not Found', component: LoginView},
     //Admin routes
     {path: '/admin', name: 'dashboard', component: DashboardView},
+    {path: '/admin/events', name: 'events', component: EventsView},
 ];
 
 const router = createRouter({
