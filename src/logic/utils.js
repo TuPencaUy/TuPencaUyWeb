@@ -17,10 +17,7 @@ export default function utils() {
     }
 
     function ensureIsLoggedIn() {
-        if (!useUserStore().isAuthenticated) {
-            router.push('/login');
-        }
-
+        return useUserStore().isAuthenticated;
     }
 
     return {
