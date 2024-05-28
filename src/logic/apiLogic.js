@@ -9,7 +9,7 @@ export default function api() {
       }
     }
 
-    
+
     if (body && Object.keys(body).length > 0) {
       requestObject.body = JSON.stringify(body);
     }
