@@ -1,6 +1,6 @@
 <template>
     <main class="loader-modal hidden">
-        <div class="main-fader" responsive-height-comments>
+        <div class="main-fader z-50" responsive-height-comments>
             <div class="loader">
                 <svg viewBox="0 0 866 866" xmlns="http://www.w3.org/2000/svg">
                     <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 164.83 151.5">
