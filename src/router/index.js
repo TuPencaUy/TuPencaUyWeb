@@ -18,7 +18,7 @@ const routes = [
     //Admin routes
     {path: '/admin', name: 'dashboard', component: DashboardView},
     {path: '/admin/events', name: 'events', component: EventsView},
-    {path: '/admin/events/add', name: 'addEvent', component: EventsAdd},
+    {path: '/admin/events/add', name: 'eventsAdd', component: EventsAdd},
 ];
 
 const router = createRouter({

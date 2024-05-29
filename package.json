@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@auth0/auth0-vue": "^2.3.3",
+    "@internationalized/date": "^3.5.4",
     "@popperjs/core": "^2.11.8",
     "@vee-validate/zod": "^4.12.8",
     "@vueuse/core": "^10.9.0",
