@@ -19,6 +19,7 @@ const routes = [
     {path: '/admin', name: 'dashboard', component: DashboardView},
     {path: '/admin/events', name: 'events', component: EventsView},
     {path: '/admin/events/add', name: 'eventsAdd', component: EventsAdd},
+    {path: '/admin/sports', name: 'sports', component: SportsView},
 ];
 
 const router = createRouter({
