@@ -9,20 +9,27 @@ export default function api() {
       }
     }
 
+    
     if (body && Object.keys(body).length > 0) {
       requestObject.body = JSON.stringify(body);
     }
 
-    if (Object.keys(headers).length === 0) {
-      Object.assign(requestObject.headers, headers);
+
+    const filteredHeaders = Object.fromEntries(
+      Object.entries(headers).filter(([key, value]) => value !== null)
+    );
+
+    if (Object.keys(filteredHeaders).length > 0) {
+      Object.assign(requestObject.headers, filteredHeaders);
     }
 
-    const response = await fetch(`${BASE_URL}${url}`, requestObject);
+    const finalUrl = `${BASE_URL}${url}`;
+
+    const response = await fetch(finalUrl, requestObject);
     return response;
   }
 
-  function response(data = null, message = "", error = false)
-  {
+  function response(data = null, message = "", error = false) {
     return {
       error: error,
       message: message,
