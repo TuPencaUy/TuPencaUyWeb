@@ -37,7 +37,7 @@ onMounted(async () => {
           You have no events
         </h3>
         <p class="text-sm text-muted-foreground">
-          You can start by adding a new event
+          You can start by adding a new one
         </p>
       </div>
     </div>
