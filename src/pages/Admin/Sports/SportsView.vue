@@ -23,10 +23,14 @@ if (!utils().ensureIsLoggedIn()) {
 const collection = ref([]);
 
 onMounted(async () => {
+    utils().showLoader();
     const response = await sportLogic().getSports();
     if (response && response?.data) {
         collection.value = response.data?.list;
     }
+    setTimeout(() => {
+        utils().hideLoader();
+    }, 1000);
 });
 
 function deleteItem() {
