@@ -6,6 +6,7 @@ import LoginView from '../pages/LoginView.vue';
 import SignUpView from '../pages/SignupView.vue';
 import DashboardView from "@/pages/Admin/Dashboards/DashboardView.vue";
 import EventsView from "@/pages/Admin/Events/EventsView.vue";
+import SportsView from "@/pages/Admin/Sports/SportsView.vue";
 
 const routes = [
     {path: '/', name: 'home', component: HomeView},
@@ -15,6 +16,7 @@ const routes = [
     //Admin routes
     {path: '/admin', name: 'dashboard', component: DashboardView},
     {path: '/admin/events', name: 'events', component: EventsView},
+    {path: '/admin/sports', name: 'sports', component: SportsView},
 ];
 
 const router = createRouter({
