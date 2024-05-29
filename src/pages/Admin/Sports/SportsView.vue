@@ -37,7 +37,10 @@ function deleteItem() {
 
 <template>
     <Admin title="Sports" name-btn-add="Add Sport" path-to-add="/admin/sports/add">
-        <Table>
+        <p class="text-lg text-muted-foreground m-auto" v-if="collection.length === 0">
+          No sports yet
+        </p>
+        <Table v-else>
             <TableHeader>
                 <TableRow>
                     <TableHead>ID</TableHead>
