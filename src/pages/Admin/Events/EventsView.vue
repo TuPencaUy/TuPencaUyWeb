@@ -22,7 +22,9 @@ onMounted(async () => {
   if (response && response?.data) {
     events.value = response.data.list;
   }
-  utils().hideLoader();
+  setTimeout(() => {
+    utils().hideLoader();
+  }, 1000);
 });
 
 </script>
