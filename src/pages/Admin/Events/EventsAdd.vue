@@ -9,6 +9,7 @@ import {Label} from '@/components/ui/label';
 import eventsLogic from '@/logic/eventsLogic';
 import { useToast } from '@/components/ui/toast/use-toast'
 import { Toaster } from '@/components/ui/toast'
+import router from '@/router'
 
 const { toast } = useToast()
 import {
@@ -61,6 +62,9 @@ const onSubmit = handleSubmit(async () => {
       title: 'Event created',
       description: 'Event has been created successfully',
     });
+    setTimeout(() => {
+      router.push('/admin/events');
+    }, 1000);
   } else {
     toast({
       title: 'Error',
