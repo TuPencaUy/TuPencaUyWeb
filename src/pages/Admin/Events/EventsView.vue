@@ -17,11 +17,14 @@ if (!utils().ensureIsLoggedIn()) {
 const events = ref([]);
 
 onMounted(async () => {
+  utils().showLoader();
   const response = await eventsLogic().getEvents();
   if (response && response?.data) {
-    events.value = response.data;
+    events.value = response.data.list;
   }
+  utils().hideLoader();
 });
+
 </script>
 
 <template>
@@ -37,11 +40,11 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="w-full gap-4 grid grid-template-columns=[repeat(200px, minmax(1fr))]">
+    <div v-if="events.length > 0" class="w-full gap-4 grid grid-template-columns=[repeat(200px, minmax(1fr))]">
         <Card v-for="event in events">
           <CardHeader>
             <Badge class="w-fit bg-gray-500">{{ Number(event.teamType) === 1 ? 'National' : 'Local' }}</Badge>
-            <CardTitle>{{ event.name }}</CardTitle>
+            <CardTitle>{{event.name}}</CardTitle>
           </CardHeader>
           <CardContent>
             <div class="flex gap-2">
