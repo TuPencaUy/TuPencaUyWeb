@@ -57,7 +57,7 @@ const onSubmit = handleSubmit(async () => {
   utils().showLoader();
   const response = await eventsLogic().createEvent(eventData?.value);
   utils().hideLoader();
-  if (response && response?.data) {
+  if (response && !response?.error) {
     toast({
       title: 'Event created',
       description: 'Event has been created successfully',
