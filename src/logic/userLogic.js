@@ -11,7 +11,7 @@ export default function userLogic()
 
     } catch (error)
     {
-      return error;
+      return null;
     }
   }
 

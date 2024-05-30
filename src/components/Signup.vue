@@ -1,6 +1,7 @@
 <script setup>
 import userLogic from '@/logic/userLogic';
 import { useTenantStore } from '@/store/tenant';
+import { useUserStore } from '@/store/user'
 import utils from '@/logic/utils.js';
 
 import { useForm } from 'vee-validate';
@@ -23,7 +24,7 @@ import { Separator } from "@/components/ui/separator/index.js";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card/index.js";
 
 const formSchema = toTypedSchema(z.object({
-  name: z.string().min(2).max(50),
+  name: z.string().min(4).max(50),
   email: z.string().email(),
   password: z.string()
 }));
@@ -35,37 +36,48 @@ const form = useForm({
 const { toast } = useToast();
 
 const onSubmit = form.handleSubmit(async (values) => {
-  let tenant = useTenantStore().getCurrentTenant ?? {};
+  let tenant = useTenantStore().getCurrentTenant ?? null;
 
   utils().showLoader();
 
   const userData = await userLogic().basicSignUp(values, tenant);
 
-  utils().hideLoader();
-
-  if (!userData.ok || userData.error) {
+  if (!userData || userData.error) {
     toast({
       title: 'Register Failed',
       description: userData?.message ?? 'Something went wrong',
       variant: 'destructive'
     });
+    utils().hideLoader();
     return;
   }
+  const loginData = await useUserStore().login({email: values.email, password: values.password});
 
-  toast({
-    title: 'Success',
-    description: userData.message
-  });
+
+  utils().hideLoader();
+
+  if (!loginData || loginData?.error) {
+    toast({
+      title: 'Login failed!',
+      description: 'Redirecting to the home page...',
+      variant: 'destructive'
+    });
+  } else {
+    toast({
+      title: 'Thank you for sign up!',
+      description: 'Redirecting to create your site...',
+    });
+  }
 
   setTimeout(() => {
-    router.push('/');
+    router.push('/create-site');
   }, 2000);
 });
 </script>
 
 <template>
   <Toaster />
-  <main class="container flex justify-center align-items-center ">
+  <main class="container flex justify-center align-items-center">
     <Card class="w-full p-10 border-none">
       <CardHeader class="flex-row justify-center">
         <img src="../../public/logo.png" class="max-w-[24%] m-auto" alt="">

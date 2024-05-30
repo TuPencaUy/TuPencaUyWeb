@@ -45,6 +45,7 @@ body {
 main-loader {
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.75);
+    z-index: 10000;
 }
 
 .main-fader {
