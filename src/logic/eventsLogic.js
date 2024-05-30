@@ -25,7 +25,7 @@ export default function eventsLogic() {
                 name: event.name,
                 startDate: event.startDate + 'T00:00:00.000Z',
                 endDate: event.endDate + 'T00:00:00.000Z',
-                commission: ALLOWED_COMMISSION_VALUES[event.commission],
+                comission: ALLOWED_COMMISSION_VALUES[event.commission],
                 teamType: ALLOWED_TEAM_TYPES[event.teamType],
             };
 

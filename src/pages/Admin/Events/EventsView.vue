@@ -20,6 +20,16 @@ if (!utils().ensureIsLoggedIn()) {
   router.push('/login');
 }
 
+const COMMISSION_VALUES = {
+  1: 'Yes',
+  0: 'No',
+};
+
+const TEAM_VALUES = {
+  1: 'National',
+  2: 'Local',
+};
+
 const collection = ref([]);
 
 onMounted(async () => {
@@ -69,8 +79,8 @@ function deleteItem() {
           <TableCell>{{ item.name }}</TableCell>
           <TableCell>{{ new Date(item.startDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ new Date(item.endDate).toLocaleDateString() }}</TableCell>
-          <TableCell>{{ item.comission }}</TableCell>
-          <TableCell>{{ item.teamType }}</TableCell>
+          <TableCell>{{ COMMISSION_VALUES[item.comission ?? 0] }}</TableCell>
+          <TableCell>{{ TEAM_VALUES[item.teamType ?? 0] }}</TableCell>
           <TableCell>
             <Button @click="deleteItem" variant="ghost">
               <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2" />
