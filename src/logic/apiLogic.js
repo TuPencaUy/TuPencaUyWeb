@@ -8,8 +8,7 @@ export default function api() {
         'Content-Type': 'application/json'
       }
     }
-
-
+    
     if (body && Object.keys(body).length > 0) {
       requestObject.body = JSON.stringify(body);
     }
