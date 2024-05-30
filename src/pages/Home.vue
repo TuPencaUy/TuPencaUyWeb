@@ -6,7 +6,7 @@ if (!useUserStore().isAuthenticated) {
   router.push('/login');
 }
 
-router.push('/admin/events/add');
+router.push('/admin');
 
 </script>
 
