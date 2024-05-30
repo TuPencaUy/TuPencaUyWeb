@@ -8,6 +8,7 @@ import DashboardView from "@/pages/Admin/Dashboards/DashboardView.vue";
 import EventsView from "@/pages/Admin/Events/EventsView.vue";
 import EventsAdd from "@/pages/Admin/Events/EventsAdd.vue";
 import SportsView from "@/pages/Admin/Sports/SportsView.vue";
+import TeamsView from "@/pages/Admin/Teams/TeamsView.vue";
 import CreateSiteView from '../pages/CreateSiteView.vue'
 
 const routes = [
@@ -21,6 +22,7 @@ const routes = [
   { path: '/admin/events', name: 'events', component: EventsView },
   { path: '/admin/events/add', name: 'addEvent', component: EventsAdd },
   { path: '/admin/sports', name: 'sports', component: SportsView },
+  { path: '/admin/teams', name: 'teams', component: TeamsView },
 ];
 
 const router = createRouter({
