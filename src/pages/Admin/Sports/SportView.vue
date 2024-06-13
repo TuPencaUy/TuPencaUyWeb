@@ -56,7 +56,7 @@ const {handleSubmit} = useForm({
 });
 
 onMounted(async () => {
-  objectId = String(route.params.id);
+  objectId = route.params.id ?? '';
   if(objectId) {
     utils().showLoader();
     const response = await sportLogic().getSports(objectId);
@@ -65,6 +65,7 @@ onMounted(async () => {
 
       console.log(objectData.value);
       objectData.value.tie = objectData.value.tie ? 'yes' : 'no';
+      //todo: no siempre se carga el valor y da error
     }
 
     setTimeout(() => {
@@ -80,8 +81,8 @@ const onSubmit = handleSubmit(async () => {
 
   if (response && !response?.error) {
     toast({
-      title: `Sport ${objectId !== null ? "updated" : "created"}`,
-      description: `Sport has been ${objectId !== null ? "updated" : "created"} successfully`,
+      title: `Sport ${objectId !== '' ? "updated" : "created"}`,
+      description: `Sport has been ${objectId !== '' ? "updated" : "created"} successfully`,
     });
     setTimeout(() => {
       router.push('/admin/sports');
@@ -112,9 +113,9 @@ const onSubmit = handleSubmit(async () => {
                 {{ objectData.name }}
               </h1>
               <div class="hidden items-center gap-2 md:ml-auto md:flex">
-                <Button variant="outline" size="sm">
-                  Discard
-                </Button>
+                <router-link variant="outline" class="inline-block" to="/admin/sports">
+                    Discard
+                </router-link>
                 <Button @click="onSubmit" size="sm">
                   Save
                 </Button>
@@ -179,9 +180,9 @@ const onSubmit = handleSubmit(async () => {
               </div>
             </div>
             <div class="flex items-center justify-center gap-2 md:hidden">
-              <Button variant="outline" size="sm">
-                Discard
-              </Button>
+              <router-link variant="outline" class="inline-block" to="/admin/sports">
+                  Discard
+              </router-link>
               <Button @click="onSubmit" size="sm">
                 Save
               </Button>

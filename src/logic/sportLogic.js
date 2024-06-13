@@ -5,7 +5,7 @@ export default function sportLogic() {
 
     async function getSports(id = '') {
         try {
-            const url = `/sport/${id}`;
+            const url = `/event/sport/${id}`;
             const currentTenant = useTenantStore().getCurrentTenant;
             const response = await api().execute(url, 'GET', null, {currentTenant});
             return response.json();
@@ -19,7 +19,7 @@ export default function sportLogic() {
             sport.tie = sport.tie === 'yes';
 
             const currentTenant = useTenantStore().getCurrentTenant;
-            const url = `/sport/${sportIdToUpdate}`;
+            const url = `/event/sport/${sportIdToUpdate}`;
             const httpRequest = sportIdToUpdate !== '' ? 'PATCH' : 'POST';
             const response = await api().execute(url, httpRequest, sport, {currentTenant});
             return response.json();
@@ -31,7 +31,7 @@ export default function sportLogic() {
     async function deleteSport(sportId) {
         try {
             const currentTenant = useTenantStore().getCurrentTenant;
-            const response = await api().execute(`/sport/${sportId}`, 'DELETE', null, {currentTenant});
+            const response = await api().execute(`/event/sport/${sportId}`, 'DELETE', null, {currentTenant});
             return response.json();
         } catch (error) {
             return error;

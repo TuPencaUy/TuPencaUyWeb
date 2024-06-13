@@ -25,8 +25,8 @@ const routes = [
   { path: '/admin/events/add', name: 'addEvent', component: EventView },
   { path: '/admin/events/:id', name: 'showEvent', component: EventView },
   { path: '/admin/sports', name: 'sports', component: SportsView },
-  { path: '/admin/sports/add', name: 'addEvent', component: SportView },
-  { path: '/admin/sports/:id', name: 'showEvent', component: SportView },
+  { path: '/admin/sports/add', name: 'addSport', component: SportView },
+  { path: '/admin/sports/:id', name: 'showSport', component: SportView },
   { path: '/admin/teams', name: 'teams', component: TeamsView },
 ];
 
