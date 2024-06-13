@@ -41,7 +41,7 @@ const route = useRoute();
 
 let eventId = '';
 
-const eventData = ref({
+const objectData = ref({
   name: 'eventName',
   startDate: '',
   endDate: '',
@@ -60,18 +60,18 @@ const {handleSubmit} = useForm({
 });
 
 onMounted(async () => {
-  eventId = String(route.params.id);
+  eventId = route.params.id ?? '';
   if(eventId) {
     utils().showLoader();
     const response = await eventsLogic().getEvents(eventId);
     if (response && response?.data) {
-      eventData.value = response.data;
+      objectData.value = response.data;
 
-      console.log(eventData.value);
-      eventData.value.comission = String(eventData.value.comission) === '0' ? 'no' : 'yes';
-      eventData.value.teamType = String(eventData.value.teamType) === '1' ? 'national' : 'local';
-      eventData.value.startDate = eventData.value.startDate.split('T')[0];
-      eventData.value.endDate = eventData.value.endDate.split('T')[0];
+      console.log(objectData.value);
+      objectData.value.comission = String(objectData.value.comission) === '0' ? 'no' : 'yes';
+      objectData.value.teamType = String(objectData.value.teamType) === '1' ? 'national' : 'local';
+      objectData.value.startDate = objectData.value.startDate.split('T')[0];
+      objectData.value.endDate = objectData.value.endDate.split('T')[0];
     }
 
     setTimeout(() => {
@@ -82,13 +82,13 @@ onMounted(async () => {
 
 const onSubmit = handleSubmit(async () => {
   utils().showLoader();
-  const response = await eventsLogic().createOrUpdateEvent(eventData?.value, eventId);
+  const response = await eventsLogic().createOrUpdateEvent(objectData?.value, eventId);
   utils().hideLoader();
 
   if (response && !response?.error) {
     toast({
-      title: `Event ${eventId !== null ? "updated" : "created"}`,
-      description: `Event has been ${eventId !== null ? "updated" : "created"} successfully`,
+      title: `Event ${eventId !== '' ? "updated" : "created"}`,
+      description: `Event has been ${eventId !== '' ? "updated" : "created"} successfully`,
     });
     setTimeout(() => {
       router.push('/admin/events');
@@ -117,9 +117,9 @@ const onSubmit = handleSubmit(async () => {
                 </Button>
               </router-link>
               <h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                {{ eventData.name }}
+                {{ objectData.name }}
               </h1>
-              <Badge variant="success">{{ eventData.teamType }}</Badge>
+              <Badge variant="success">{{ objectData.teamType }}</Badge>
               <div class="hidden items-center gap-2 md:ml-auto md:flex">
                 <Button variant="outline" size="sm">
                   Discard
@@ -141,7 +141,7 @@ const onSubmit = handleSubmit(async () => {
                         <FormItem>
                           <FormLabel>Name</FormLabel>
                           <FormControl>
-                            <Input type="text" v-bind="componentField" v-model="eventData.name"/>
+                            <Input type="text" v-bind="componentField" v-model="objectData.name"/>
                           </FormControl>
                           <FormMessage/>
                         </FormItem>
@@ -151,7 +151,7 @@ const onSubmit = handleSubmit(async () => {
                           <FormItem>
                             <FormLabel>Start Date</FormLabel>
                             <FormControl>
-                              <Input type="date" v-bind="componentField" v-model="eventData.startDate"/>
+                              <Input type="date" v-bind="componentField" v-model="objectData.startDate"/>
                             </FormControl>
                             <FormMessage/>
                           </FormItem>
@@ -160,7 +160,7 @@ const onSubmit = handleSubmit(async () => {
                           <FormItem>
                             <FormLabel>End Date</FormLabel>
                             <FormControl>
-                              <Input type="date" v-bind="componentField" v-model="eventData.endDate"/>
+                              <Input type="date" v-bind="componentField" v-model="objectData.endDate"/>
                             </FormControl>
                             <FormMessage/>
                           </FormItem>
@@ -180,7 +180,7 @@ const onSubmit = handleSubmit(async () => {
                     <div class="grid gap-6">
                       <div class="grid gap-3">
                         <Label for="status">Commission</Label>
-                        <Select v-model="eventData.comission">
+                        <Select v-model="objectData.comission">
                           <SelectTrigger id="status" aria-label="Select commission">
                             <SelectValue placeholder="Select commission"/>
                           </SelectTrigger>
@@ -200,7 +200,7 @@ const onSubmit = handleSubmit(async () => {
                     <div class="grid gap-6">
                       <div class="grid gap-3">
                         <Label for="status">Team Type</Label>
-                        <Select v-model="eventData.teamType">
+                        <Select v-model="objectData.teamType">
                           <SelectTrigger id="status" aria-label="Select team type">
                             <SelectValue placeholder="Select team type"/>
                           </SelectTrigger>
