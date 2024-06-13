@@ -76,7 +76,7 @@ onMounted(async () => {
 
 const onSubmit = handleSubmit(async () => {
   utils().showLoader();
-  const response = await sportLogic().createOrUpdateSport(objectData?.value, objectId);
+  const response = await sportLogic().createOrUpdateSport(objectData?._rawValue, objectId);
   utils().hideLoader();
 
   if (response && !response?.error) {
