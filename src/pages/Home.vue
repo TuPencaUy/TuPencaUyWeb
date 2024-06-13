@@ -6,9 +6,7 @@ if (!useUserStore().isAuthenticated) {
   router.push('/login');
 }
 
-//router.push('/chat');
-router.push('/admin');
-
+router.push('/chat');
 </script>
 
 <template>

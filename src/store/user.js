@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import userLogic from '@/logic/userLogic';
 import {useTenantStore} from './tenant';
-import { useAuth0 } from "@auth0/auth0-vue";
+import {useAuth0} from "@auth0/auth0-vue";
 import {useChatStore} from "@/store/chatStore.js";
 
 export const useUserStore = defineStore({
@@ -40,6 +40,9 @@ export const useUserStore = defineStore({
             return this._isAuthenticated;
         }, getToken() {
             return this._token?.token;
+        },
+        isAdmin() {
+            return this._user?.role?.id === 1;
         }
     }, persist: true
 });

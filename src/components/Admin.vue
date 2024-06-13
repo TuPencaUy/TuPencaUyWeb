@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {Input} from '@/components/ui/input';
 import {Sheet, SheetContent, SheetTrigger} from '@/components/ui/sheet';
 import router from '@/router';
 import {useTenantStore} from '@/store/tenant';
@@ -17,7 +16,12 @@ import utils from '@/logic/utils';
 import {Icon} from "@iconify/vue";
 import {useUserStore} from '@/store/user';
 
-utils().ensureIsLoggedIn();
+if (!utils().ensureIsLoggedIn()) {
+  router.push('/login');
+}
+if (!useUserStore().isAdmin) {
+  router.push('/');
+}
 
 const url = router.currentRoute.value.path;
 const splittedRouter = url.split('/');
@@ -168,7 +172,7 @@ const handleLogOut = () => {
             {{ props.title }}
           </h1>
           <router-link v-if="pathToAdd && nameBtnAdd" :to="pathToAdd">
-            <Button >
+            <Button>
               {{ nameBtnAdd }}
             </Button>
           </router-link>
