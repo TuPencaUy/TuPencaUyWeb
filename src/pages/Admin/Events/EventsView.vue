@@ -16,6 +16,22 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+import { useToast } from '@/components/ui/toast/use-toast'
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+
+const { toast } = useToast()
+
 if (!utils().ensureIsLoggedIn()) {
   router.push('/login');
 }
@@ -43,8 +59,26 @@ onMounted(async () => {
   }, 1000);
 });
 
-function deleteItem() {
-  console.log('delete item');
+async function deleteItem(id) {
+  utils().showLoader();
+  const response = await eventsLogic().deleteEvent(id);
+  utils().hideLoader();
+  if (response && !response?.error) {
+    toast({
+      title: 'Event deleted',
+      description: 'Event has been deleted successfully',
+    });
+    const response = await eventsLogic().getEvents();
+    if (response && response?.data) {
+      collection.value = response.data.list;
+    }
+  } else {
+    toast({
+      title: 'Error',
+      description: response?.message || 'An error occurred',
+      variant: 'destructive',
+    });
+  }
 }
 </script>
 
@@ -82,12 +116,28 @@ function deleteItem() {
           <TableCell>{{ COMMISSION_VALUES[item.comission ?? 0] }}</TableCell>
           <TableCell>{{ TEAM_VALUES[item.teamType ?? 0] }}</TableCell>
           <TableCell>
-            <Button @click="deleteItem" variant="ghost">
+            <router-link class="inline-block" :to="`/admin/events/${item.id}`">
               <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2" />
-            </Button>
-            <Button @click="deleteItem" variant="ghost">
-              <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2" />
-            </Button>
+            </router-link>
+            <AlertDialog>
+              <AlertDialogTrigger as-child>
+                <Button variant="ghost">
+                  <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure to delete it?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete the event.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction @click="deleteItem(item.id)">Continue</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </TableCell>
         </TableRow>
       </TableBody>

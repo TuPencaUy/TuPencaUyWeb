@@ -10,6 +10,7 @@ import eventsLogic from '@/logic/eventsLogic';
 import { useToast } from '@/components/ui/toast/use-toast'
 import { Toaster } from '@/components/ui/toast'
 import router from '@/router'
+import { useRoute } from 'vue-router'
 
 const { toast } = useToast()
 import {
@@ -28,18 +29,23 @@ import
   FormMessage,
 } from '@/components/ui/form'
 import Admin from "@/components/Admin.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {toTypedSchema} from "@vee-validate/zod";
 import * as z from "zod";
 import {useForm} from 'vee-validate'
 import {Badge} from "@/components/ui/badge";
 import utils from '@/logic/utils';
 
+
+const route = useRoute();
+
+let eventId = '';
+
 const eventData = ref({
   name: 'eventName',
   startDate: '',
   endDate: '',
-  commission: 'no',
+  comission: 'no',
   teamType: 'local',
 });
 
@@ -53,14 +59,36 @@ const {handleSubmit} = useForm({
   validationSchema: formSchema,
 });
 
+onMounted(async () => {
+  eventId = String(route.params.id);
+  if(eventId) {
+    utils().showLoader();
+    const response = await eventsLogic().getEvents(eventId);
+    if (response && response?.data) {
+      eventData.value = response.data;
+
+      console.log(eventData.value);
+      eventData.value.comission = String(eventData.value.comission) === '0' ? 'no' : 'yes';
+      eventData.value.teamType = String(eventData.value.teamType) === '1' ? 'national' : 'local';
+      eventData.value.startDate = eventData.value.startDate.split('T')[0];
+      eventData.value.endDate = eventData.value.endDate.split('T')[0];
+    }
+
+    setTimeout(() => {
+      utils().hideLoader();
+    }, 1000);
+  }
+});
+
 const onSubmit = handleSubmit(async () => {
   utils().showLoader();
-  const response = await eventsLogic().createEvent(eventData?.value);
+  const response = await eventsLogic().createOrUpdateEvent(eventData?.value, eventId);
   utils().hideLoader();
+
   if (response && !response?.error) {
     toast({
-      title: 'Event created',
-      description: 'Event has been created successfully',
+      title: `Event ${eventId !== null ? "updated" : "created"}`,
+      description: `Event has been ${eventId !== null ? "updated" : "created"} successfully`,
     });
     setTimeout(() => {
       router.push('/admin/events');
@@ -152,7 +180,7 @@ const onSubmit = handleSubmit(async () => {
                     <div class="grid gap-6">
                       <div class="grid gap-3">
                         <Label for="status">Commission</Label>
-                        <Select v-model="eventData.commission">
+                        <Select v-model="eventData.comission">
                           <SelectTrigger id="status" aria-label="Select commission">
                             <SelectValue placeholder="Select commission"/>
                           </SelectTrigger>
