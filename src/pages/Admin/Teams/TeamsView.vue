@@ -69,7 +69,7 @@ function deleteItem() {
                     <TableCell>{{ item.id }}</TableCell>
                     <TableCell>{{ item.name }}</TableCell>
                     <TableCell>{{ item.teamType }}</TableCell>
-                    <TableCell>{{ item.sport }}</TableCell>
+                    <TableCell>{{ item.sport.name }}</TableCell>
                     <TableCell>
                         <Button @click="deleteItem" variant="ghost">
                             <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2" />
