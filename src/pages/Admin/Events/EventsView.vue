@@ -116,9 +116,9 @@ async function deleteItem(id) {
           <TableCell>{{ COMMISSION_VALUES[item.comission ?? 0] }}</TableCell>
           <TableCell>{{ TEAM_VALUES[item.teamType ?? 0] }}</TableCell>
           <TableCell>
-            <Button @click="deleteItem(item.id)" variant="ghost">
+            <router-link class="inline-block" :to="`/admin/events/${item.id}`">
               <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2" />
-            </Button>
+            </router-link>
             <AlertDialog>
               <AlertDialogTrigger as-child>
                 <Button variant="ghost">

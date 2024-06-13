@@ -6,7 +6,7 @@ import LoginView from '../pages/LoginView.vue';
 import SignUpView from '../pages/SignupView.vue';
 import DashboardView from "@/pages/Admin/Dashboards/DashboardView.vue";
 import EventsView from "@/pages/Admin/Events/EventsView.vue";
-import EventsAdd from "@/pages/Admin/Events/EventsAdd.vue";
+import EventView from "@/pages/Admin/Events/EventView.vue";
 import SportsView from "@/pages/Admin/Sports/SportsView.vue";
 import TeamsView from "@/pages/Admin/Teams/TeamsView.vue";
 import CreateSiteView from '../pages/CreateSiteView.vue'
@@ -20,7 +20,8 @@ const routes = [
   //Admin routes
   { path: '/admin', name: 'dashboard', component: DashboardView },
   { path: '/admin/events', name: 'events', component: EventsView },
-  { path: '/admin/events/add', name: 'addEvent', component: EventsAdd },
+  { path: '/admin/events/add', name: 'addEvent', component: EventView },
+  { path: '/admin/events/:id', name: 'showEvent', component: EventView },
   { path: '/admin/sports', name: 'sports', component: SportsView },
   { path: '/admin/teams', name: 'teams', component: TeamsView },
 ];

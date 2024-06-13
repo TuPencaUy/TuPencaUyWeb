@@ -10,6 +10,7 @@ import eventsLogic from '@/logic/eventsLogic';
 import { useToast } from '@/components/ui/toast/use-toast'
 import { Toaster } from '@/components/ui/toast'
 import router from '@/router'
+import { useRoute } from 'vue-router'
 
 const { toast } = useToast()
 import {
@@ -28,12 +29,15 @@ import
   FormMessage,
 } from '@/components/ui/form'
 import Admin from "@/components/Admin.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {toTypedSchema} from "@vee-validate/zod";
 import * as z from "zod";
 import {useForm} from 'vee-validate'
 import {Badge} from "@/components/ui/badge";
 import utils from '@/logic/utils';
+
+
+const route = useRoute();
 
 const eventData = ref({
   name: 'eventName',
@@ -51,6 +55,22 @@ const formSchema = toTypedSchema(z.object({
 
 const {handleSubmit} = useForm({
   validationSchema: formSchema,
+});
+
+onMounted(async () => {
+  const eventId = route.params.id;
+  debugger
+  if(eventId) {
+    utils().showLoader();
+    const response = await eventsLogic().getEvents(eventId);
+    if (response && response?.data) {
+      eventData.value = response.data;
+    }
+
+    setTimeout(() => {
+      utils().hideLoader();
+    }, 1000);
+  }
 });
 
 const onSubmit = handleSubmit(async () => {

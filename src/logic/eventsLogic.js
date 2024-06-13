@@ -3,10 +3,11 @@ import {useTenantStore} from '@/store/tenant';
 
 export default function eventsLogic() {
 
-    async function getEvents() {
+    async function getEvents(id = '') {
         try {
+            const url = `/event/${id}`;
             const currentTenant = useTenantStore().getCurrentTenant;
-            const response = await api().execute('/event', 'GET', null, {currentTenant});
+            const response = await api().execute(url, 'GET', null, {currentTenant});
             return response.json();
         } catch (error) {
             return error;
