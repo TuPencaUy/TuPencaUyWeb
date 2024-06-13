@@ -12,18 +12,11 @@ const router = useRouter()
 onMounted(async () => {
   siteLogic().init();
 
-  
   if (!useUserStore().isAuthenticated) {
     router.push('/login');
     return;
   }
-  
-
-
-  
-
 });
-
 
 </script>
 
