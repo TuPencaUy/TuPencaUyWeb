@@ -60,7 +60,7 @@ const {handleSubmit} = useForm({
 });
 
 onMounted(async () => {
-  eventId = String(route.params.id);
+  eventId = route.params.id ?? '';
   if(eventId) {
     utils().showLoader();
     const response = await eventsLogic().getEvents(eventId);
@@ -87,8 +87,8 @@ const onSubmit = handleSubmit(async () => {
 
   if (response && !response?.error) {
     toast({
-      title: `Event ${eventId !== null ? "updated" : "created"}`,
-      description: `Event has been ${eventId !== null ? "updated" : "created"} successfully`,
+      title: `Event ${eventId !== '' ? "updated" : "created"}`,
+      description: `Event has been ${eventId !== '' ? "updated" : "created"} successfully`,
     });
     setTimeout(() => {
       router.push('/admin/events');
