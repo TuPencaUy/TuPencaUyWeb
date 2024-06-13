@@ -28,6 +28,7 @@ const handleSendMessage = async () => {
   utils().showLoader();
   await useChatStore().sendMessage(messageToSend);
   messageToSend = '';
+  document.querySelector("#input-send-message > input").value = "";
   utils().hideLoader();
 
   const objDiv = document.getElementById('messagesContainer');
@@ -88,7 +89,7 @@ const handleLogout = async () => {
         </div>
       </div>
 
-      <div v-if="currentChat?.id" class="w-full p-4">
+      <div id="input-send-message" v-if="currentChat?.id" class="w-full p-4">
         <Input placeholder="Type a message" @keyup.enter="handleSendMessage" v-model="messageToSend"/>
       </div>
     </div>
