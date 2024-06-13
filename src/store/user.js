@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import userLogic from '@/logic/userLogic';
 import {useTenantStore} from './tenant';
 import { useAuth0 } from "@auth0/auth0-vue";
+import {useChatStore} from "@/store/chatStore.js";
 
 export const useUserStore = defineStore({
     id: 'user', state: () => {
@@ -22,6 +23,7 @@ export const useUserStore = defineStore({
             this._isAuthenticated = false;
             this._user = null;
             this._token = null;
+            useChatStore().deleteChat();
         }, setLogIn(userData) {
             const auth0 = useAuth0();
 

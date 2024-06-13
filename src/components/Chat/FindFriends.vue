@@ -1,25 +1,38 @@
 <script setup>
-import {onMounted, ref} from 'vue';
-import firebaseLogic from "@/logic/Chat/firebaseLogic.js";
+import {onMounted, ref, toRefs} from 'vue';
 import utils from "@/logic/utils.js";
 import {getDocs} from 'firebase/firestore';
+import {useChatStore} from "@/store/chatStore.js";
+import {Icon} from "@iconify/vue";
 
 const usersToShow = ref([]);
 const users = ref([]);
 
 onMounted(async () => {
   utils().showLoader();
-  const usersCollection = firebaseLogic().getUsers();
-  const snapshot = await getDocs(usersCollection);
-  users.value = snapshot.docs.map(doc => doc.data());
+  users.value = await useChatStore().getUsers();
   usersToShow.value = users.value;
-
   utils().hideLoader();
 });
 
 const handleSearchFriends = async (values) => {
   const userToFind = values.target.value;
-  usersToShow.value = users.value?.filter(user => user.firstName.toLowerCase().includes(userToFind.toLowerCase()));
+  usersToShow.value = users.value?.filter(user => user?.name?.toLowerCase()?.includes(userToFind.toLowerCase()));
+};
+
+const createNewChat = async (receiver) => {
+  utils().showLoader();
+  const receiverRef = toRefs(receiver);
+  const receiverData = {
+    id: receiverRef.id.value,
+    name: receiverRef.name.value,
+    email: receiverRef.email.value,
+  };
+  await useChatStore().openChat(receiverData);
+  utils().hideLoader();
+
+  const objDiv = document.getElementById('messagesContainer');
+  objDiv.scrollTop = objDiv.scrollHeight;
 };
 </script>
 
@@ -32,12 +45,13 @@ const handleSearchFriends = async (values) => {
       <input type="text" placeholder="Search..." @input="handleSearchFriends"/>
     </div>
     <div class="find-friends__list">
-      <div v-for="user in usersToShow" :key="user" class="find-friends__item cursor-pointer hover:bg-gray-100">
+      <div id="containerChat" v-for="user in usersToShow" :key="user" @click="createNewChat(user)"
+           class="find-friends__item cursor-pointer hover:bg-gray-100">
         <div class="find-friends__item-avatar">
-          <img :src="user.picture || ''" alt="avatar"/>
+          <Icon icon="bxs:message" color="#757575" width="40" height="40"/>
         </div>
         <div class="find-friends__item-info">
-          <h4 class="text-lg font-semibold">{{ user.firstName }}</h4>
+          <h4 class="text-lg font-semibold">{{ user.name }}</h4>
           <p class="text-sm text-gray-500">Active 3m ago</p>
         </div>
       </div>
