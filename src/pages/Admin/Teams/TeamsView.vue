@@ -14,6 +14,19 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+
 import Button from "@/components/ui/button/Button.vue";
 
 if (!utils().ensureIsLoggedIn()) {
@@ -71,12 +84,28 @@ function deleteItem() {
                     <TableCell>{{ item.teamType }}</TableCell>
                     <TableCell>{{ item.sport.name }}</TableCell>
                     <TableCell>
-                        <Button @click="deleteItem" variant="ghost">
+                        <router-link class="inline-block" :to="`/admin/teams/${item.id}`">
                             <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2" />
-                        </Button>
-                        <Button @click="deleteItem" variant="ghost">
+                        </router-link>
+                        <AlertDialog>
+                        <AlertDialogTrigger as-child>
+                            <Button variant="ghost">
                             <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2" />
-                        </Button>
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure to delete it?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the sport.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction @click="deleteItem(item.id)">Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                        </AlertDialog>
                     </TableCell>
                 </TableRow>
             </TableBody>
