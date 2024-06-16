@@ -129,9 +129,9 @@ async function handleLogin(event) {
           </button>
           <div>
             Do not have an account?
-            <router-link v-if="!useUserStore()?.isAuthenticated"
-                         class="nav-link link-body-emphasis font-semibold text-black"
-                         to="/signup">Sign Up
+            <router-link
+                class="nav-link link-body-emphasis font-semibold text-black"
+                to="/signup">Sign Up
             </router-link>
           </div>
 

@@ -58,7 +58,7 @@ onMounted(async () => {
   objectId = route.params.id ?? '';
   if(objectId) {
     utils().showLoader();
-    const response = await sportLogic().getSports(objectId);
+    const response = await sportLogic().getSport(objectId);
     if (response && response?.data) {
       objectData.value = response.data;
 

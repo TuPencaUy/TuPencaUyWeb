@@ -3,7 +3,32 @@ import {useTenantStore} from '@/store/tenant';
 
 export default function sportLogic() {
 
-    async function getSports(id = '') {
+
+    async function getSports() {
+        try {
+            const sports = [];
+            let page = 1;
+            let hasMore = true;
+            do {
+                const url = `/event/sport?page=${page}`;
+                const currentTenant = useTenantStore().getCurrentTenant;
+                const response = await api().execute(url, 'GET', null, {currentTenant});
+                const data = await response.json();
+
+                if (data?.data?.list?.length > 0) {
+                    sports.push(...data.data.list);
+                    page++;
+                } else {
+                    hasMore = false;
+                    return sports;
+                }
+            } while (hasMore);
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async function getSport(id = '') {
         try {
             const url = `/event/sport/${id}`;
             const currentTenant = useTenantStore().getCurrentTenant;
@@ -40,6 +65,7 @@ export default function sportLogic() {
 
     return {
         getSports,
+        getSport,
         createOrUpdateSport,
         deleteSport
     };

@@ -73,8 +73,8 @@ onMounted(async () => {
   }
 
   //get sports
-  const sportsResponse = await sportLogic().getSports();
-  sports.value = sportsResponse.data.list.map(elem => {
+  const sportsCollection = await sportLogic().getSports();
+  sports.value = sportsCollection.map(elem => {
     return {id: String(elem.id), name: elem.name};
   });
 });
