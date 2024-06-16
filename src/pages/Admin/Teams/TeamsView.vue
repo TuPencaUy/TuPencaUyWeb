@@ -29,10 +29,6 @@ import {
 
 import Button from "@/components/ui/button/Button.vue";
 
-if (!utils().ensureIsLoggedIn()) {
-    router.push('/login');
-}
-
 const collection = ref([]);
 
 onMounted(async () => {

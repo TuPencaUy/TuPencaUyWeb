@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import {
   ChevronLeft,
 } from 'lucide-vue-next';
@@ -8,7 +8,6 @@ import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import eventsLogic from '@/logic/eventsLogic';
 import { useToast } from '@/components/ui/toast/use-toast'
-import { Toaster } from '@/components/ui/toast'
 import router from '@/router'
 import { useRoute } from 'vue-router'
 
@@ -67,7 +66,6 @@ onMounted(async () => {
     if (response && response?.data) {
       objectData.value = response.data;
 
-      console.log(objectData.value);
       objectData.value.comission = String(objectData.value.comission) === '0' ? 'no' : 'yes';
       objectData.value.teamType = String(objectData.value.teamType) === '1' ? 'national' : 'local';
       objectData.value.startDate = objectData.value.startDate.split('T')[0];
@@ -104,7 +102,6 @@ const onSubmit = handleSubmit(async () => {
 </script>
 
 <template>
-  <Toaster />
   <Admin>
     <div class="flex w-full flex-col bg-muted/40">
       <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">

@@ -28,7 +28,6 @@ import
 import {Separator} from '@/components/ui/separator';
 import {Input} from '@/components/ui/input';
 import {useToast} from '@/components/ui/toast/use-toast';
-import {Toaster} from '@/components/ui/toast';
 
 const {toast} = useToast();
 
@@ -94,7 +93,6 @@ async function handleLogin(event) {
 </script>
 
 <template>
-  <Toaster/>
   <main class="container flex justify-center align-items-center ">
     <Card class="w-full p-10 border-none">
       <CardHeader class="flex-row justify-center">
