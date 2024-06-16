@@ -1,15 +1,13 @@
 <script setup>
 import userLogic from '@/logic/userLogic';
-import { useTenantStore } from '@/store/tenant';
-import { useUserStore } from '@/store/user'
+import {useTenantStore} from '@/store/tenant';
+import {useUserStore} from '@/store/user';
 import utils from '@/logic/utils.js';
-
-import { useForm } from 'vee-validate';
-import { useToast } from '@/components/ui/toast/use-toast';
-import { toTypedSchema } from '@vee-validate/zod';
+import {useForm} from 'vee-validate';
+import {useToast} from '@/components/ui/toast/use-toast';
+import {toTypedSchema} from '@vee-validate/zod';
 import * as z from 'zod';
-
-import { Button } from '@/components/ui/button';
+import {Button} from '@/components/ui/button';
 import {
   FormControl,
   FormField,
@@ -17,11 +15,10 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import Toaster from '@/components/ui/toast/Toaster.vue';
+import {Input} from '@/components/ui/input';
 import router from '@/router';
-import { Separator } from "@/components/ui/separator/index.js";
-import { Card, CardFooter, CardHeader } from "@/components/ui/card/index.js";
+import {Separator} from "@/components/ui/separator/index.js";
+import {Card, CardFooter, CardHeader} from "@/components/ui/card/index.js";
 
 const formSchema = toTypedSchema(z.object({
   name: z.string().min(4).max(50),
@@ -33,7 +30,7 @@ const form = useForm({
   validationSchema: formSchema
 });
 
-const { toast } = useToast();
+const {toast} = useToast();
 
 const onSubmit = form.handleSubmit(async (values) => {
   let tenant = useTenantStore().getCurrentTenant ?? null;
@@ -65,12 +62,12 @@ const onSubmit = form.handleSubmit(async (values) => {
   } else {
     toast({
       title: 'Thank you for sign up!',
-      description: 'Redirecting to create your site...',
+      description: 'Redirecting...',
     });
   }
 
   setTimeout(() => {
-    router.push('/create-site');
+    useTenantStore().getCurrentTenant === null ? router.push('/create-site') : router.push('/');
   }, 2000);
 });
 </script>
@@ -87,9 +84,9 @@ const onSubmit = form.handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input type="text" placeholder="Name" v-bind="componentField" />
+              <Input type="text" placeholder="Name" v-bind="componentField"/>
             </FormControl>
-            <FormMessage />
+            <FormMessage/>
           </FormItem>
         </FormField>
 
@@ -97,9 +94,9 @@ const onSubmit = form.handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input type="email" placeholder="Email" v-bind="componentField" />
+              <Input type="email" placeholder="Email" v-bind="componentField"/>
             </FormControl>
-            <FormMessage />
+            <FormMessage/>
           </FormItem>
         </FormField>
 
@@ -107,16 +104,16 @@ const onSubmit = form.handleSubmit(async (values) => {
           <FormItem>
             <FormLabel>Password</FormLabel>
             <FormControl>
-              <Input type="password" placeholder="Password" v-bind="componentField" />
+              <Input type="password" placeholder="Password" v-bind="componentField"/>
             </FormControl>
-            <FormMessage />
+            <FormMessage/>
           </FormItem>
         </FormField>
         <Button type="submit" class="w-[120px] m-auto">
           Register
         </Button>
       </form>
-      <Separator class="m-5" />
+      <Separator class="m-5"/>
       <CardFooter class="flex justify-center">
         <p class="text-sm">Already have an account?
           <router-link to="/login" class="font-semibold">Log In</router-link>

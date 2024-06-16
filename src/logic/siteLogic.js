@@ -66,7 +66,7 @@ export default function siteLogic()
     const site = await getSite(tenant);
     if (!site || site?.error || !site?.data)
     {
-      window.location.href = import.meta.env.VITE_CENTRAL_DOMAIN;
+      window.location.href = import.meta.env.VITE_BASE_DOMAIN;
     }
   }
 
