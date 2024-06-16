@@ -14,10 +14,6 @@ import {Button} from "@/components/ui/button/index.js";
 import {CircleUser} from "lucide-vue-next";
 import router from "@/router/index.js";
 
-if (!useUserStore().isAuthenticated) {
-  router.push('/login');
-}
-
 const {currentChat} = storeToRefs(useChatStore());
 
 let messageToSend = '';

@@ -32,10 +32,6 @@ import {
 
 const { toast } = useToast()
 
-if (!utils().ensureIsLoggedIn()) {
-  router.push('/login');
-}
-
 const COMMISSION_VALUES = {
   1: 'Yes',
   0: 'No',

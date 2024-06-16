@@ -1,10 +1,5 @@
 <script setup>
-import {useUserStore} from '@/store/user.js';
 import router from '@/router';
-
-if (!useUserStore().isAuthenticated) {
-  router.push('/login');
-}
 
 router.push('/chat');
 </script>
