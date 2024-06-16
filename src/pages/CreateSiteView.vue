@@ -1,6 +1,4 @@
 <script setup>
-import { useUserStore } from '@/store/user.js';
-import router from '@/router';
 import utils from '@/logic/utils'
 
 import { useForm } from 'vee-validate';
@@ -17,13 +15,8 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import Toaster from '@/components/ui/toast/Toaster.vue';
 import siteLogic from '@/logic/siteLogic';
 import { Card, CardContent, CardHeader } from "@/components/ui/card/index.js";
-
-// if (!useUserStore().isAuthenticated) {
-//   router.push('/login');
-// }
 
 const formSchema = toTypedSchema(z.object({
     name: z.string(),
@@ -67,7 +60,6 @@ const onSubmit = form.handleSubmit(async (values) => {
 </script>
 
 <template>
-    <Toaster />
     <div class="container flex justify-center align-items-center h-screen">
         <Card class="w-full p-10 border-none">
             <CardHeader class="flex-row justify-center">

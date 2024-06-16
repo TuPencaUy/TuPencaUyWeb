@@ -76,7 +76,6 @@ const onSubmit = form.handleSubmit(async (values) => {
 </script>
 
 <template>
-  <Toaster />
   <main class="container flex justify-center align-items-center">
     <Card class="w-full p-10 border-none">
       <CardHeader class="flex-row justify-center">

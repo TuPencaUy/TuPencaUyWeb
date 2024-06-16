@@ -1,11 +1,10 @@
 <script setup>
-import NavBar from './components/NavBar.vue'
 import { useUserStore } from './store/user'
-import { useTenantStore } from './store/tenant';
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue';
 import siteLogic from './logic/siteLogic';
 import Loader from './components/utils/Loader.vue';
+import {Toaster} from "@/components/ui/toast/index.js";
 
 const router = useRouter()
 
@@ -21,6 +20,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Toaster/>
   <main>
     <Loader />
     <RouterView />

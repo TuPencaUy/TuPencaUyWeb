@@ -8,7 +8,6 @@ import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import sportLogic from '@/logic/sportLogic';
 import { useToast } from '@/components/ui/toast/use-toast'
-import { Toaster } from '@/components/ui/toast'
 import router from '@/router'
 import { useRoute } from 'vue-router'
 
@@ -98,7 +97,6 @@ const onSubmit = handleSubmit(async () => {
 </script>
 
 <template>
-  <Toaster />
   <Admin>
     <div class="flex w-full flex-col bg-muted/40">
       <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
