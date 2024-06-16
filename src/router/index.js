@@ -29,8 +29,8 @@ const routes = [
   { path: '/admin/sports/add', name: 'addSport', component: SportView },
   { path: '/admin/sports/:id', name: 'showSport', component: SportView },
   { path: '/admin/teams', name: 'teams', component: TeamsView },
-  { path: '/admin/teams/add', name: 'addSport', component: TeamView },
-  { path: '/admin/teams/:id', name: 'showSport', component: TeamView },
+  { path: '/admin/teams/add', name: 'addTeam', component: TeamView },
+  { path: '/admin/teams/:id', name: 'ShowTeam', component: TeamView },
 ];
 
 const router = createRouter({

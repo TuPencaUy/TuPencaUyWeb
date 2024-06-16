@@ -31,9 +31,9 @@ const collection = ref([]);
 
 onMounted(async () => {
   utils().showLoader();
-  const response = await sportLogic().getSports();
-  if (response && response?.data) {
-    collection.value = response.data?.list;
+  const sports = await sportLogic().getSports();
+  if (sports && sports.length > 0) {
+    collection.value = sports;
   }
   setTimeout(() => {
     utils().hideLoader();
