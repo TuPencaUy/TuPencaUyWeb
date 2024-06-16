@@ -2,8 +2,31 @@ import api from './apiLogic';
 import {useTenantStore} from '@/store/tenant';
 
 export default function eventsLogic() {
+    async function getEvents() {
+        try {
+            const events = [];
+            let page = 1;
+            let hasMore = true;
+            do {
+                const url = `/event?page=${page}`;
+                const currentTenant = useTenantStore().getCurrentTenant;
+                const response = await api().execute(url, 'GET', null, {currentTenant});
+                const data = await response.json();
 
-    async function getEvents(id = '') {
+                if (data?.data?.list?.length > 0) {
+                    events.push(...data.data.list);
+                    page++;
+                } else {
+                    hasMore = false;
+                    return events;
+                }
+            } while (hasMore);
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async function getEvent(id) {
         try {
             const url = `/event/${id}`;
             const currentTenant = useTenantStore().getCurrentTenant;
@@ -52,7 +75,8 @@ export default function eventsLogic() {
 
     return {
         getEvents,
+        getEvent,
         createOrUpdateEvent,
-        deleteEvent
+        deleteEvent,
     };
 }
