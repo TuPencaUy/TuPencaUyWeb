@@ -1,7 +1,7 @@
 <script setup>
 import router from '@/router';
 
-router.push('/chat');
+router.push('/');
 </script>
 
 <template>
