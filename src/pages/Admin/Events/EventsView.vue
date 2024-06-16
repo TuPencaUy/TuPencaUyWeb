@@ -1,11 +1,11 @@
 <script setup>
 import Admin from "@/components/Admin.vue";
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import utils from "@/logic/utils.js";
 import router from "@/router/index.js";
 import eventsLogic from "@/logic/eventsLogic.js";
-import { Button } from "@/components/ui/button/index.js";
-import { Icon } from "@iconify/vue";
+import {Button} from "@/components/ui/button/index.js";
+import {Icon} from "@iconify/vue";
 
 import {
   Table,
@@ -14,9 +14,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/components/ui/table';
 
-import { useToast } from '@/components/ui/toast/use-toast'
+import {useToast} from '@/components/ui/toast/use-toast';
 
 import {
   AlertDialog,
@@ -28,9 +28,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+} from '@/components/ui/alert-dialog';
 
-const { toast } = useToast()
+const {toast} = useToast();
 
 const COMMISSION_VALUES = {
   1: 'Yes',
@@ -46,9 +46,9 @@ const collection = ref([]);
 
 onMounted(async () => {
   utils().showLoader();
-  const response = await eventsLogic().getEvents();
-  if (response && response?.data) {
-    collection.value = response.data.list;
+  const events = await eventsLogic().getEvents();
+  if (events && events.length > 0) {
+    collection.value = events;
   }
   setTimeout(() => {
     utils().hideLoader();
@@ -113,12 +113,12 @@ async function deleteItem(id) {
           <TableCell>{{ TEAM_VALUES[item.teamType ?? 0] }}</TableCell>
           <TableCell>
             <router-link class="inline-block" :to="`/admin/events/${item.id}`">
-              <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2" />
+              <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2"/>
             </router-link>
             <AlertDialog>
               <AlertDialogTrigger as-child>
                 <Button variant="ghost">
-                  <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2" />
+                  <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2"/>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>

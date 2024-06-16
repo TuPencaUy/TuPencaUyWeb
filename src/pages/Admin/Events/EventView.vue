@@ -62,7 +62,7 @@ onMounted(async () => {
   eventId = route.params.id ?? '';
   if(eventId) {
     utils().showLoader();
-    const response = await eventsLogic().getEvents(eventId);
+    const response = await eventsLogic().getEvent(eventId);
     if (response && response?.data) {
       objectData.value = response.data;
 
