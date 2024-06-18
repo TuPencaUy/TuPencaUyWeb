@@ -1,33 +1,47 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia';
 
 export const useTenantStore = defineStore({
-  id: 'tenant',
-  state: () =>
-  {
-    return {
-      _currentTenant: null
-    }
-  },
-  actions: {
-    setCurrentTenant()
-    {
-      let url = window.location.hostname;
-      url = url.replace('www.', '');
-      url = url.replace('.com', '');
-
-      const splittedUrl = url.split('.');
-
-      this._currentTenant = (splittedUrl?.length > 1)
-        ? splittedUrl[0]
-        : null;
-    }
-  },
-  getters: {
-    getCurrentTenant()
-    {
-      return this._currentTenant;
+    id: 'tenant',
+    state: () => {
+        return {
+            _currentTenant: null,
+            _tenantAccess: null,
+            _tenantColor: null,
+            _isTenantValid: false,
+        };
     },
+    actions: {
+        setCurrentTenant() {
+            let url = window.location.hostname;
+            url = url.replace('www.', '');
+            url = url.replace('.com', '');
 
-  },
-  persist: true
-})
+            const splittedUrl = url.split('.');
+
+            this._currentTenant = (splittedUrl?.length > 1)
+                ? splittedUrl[0]
+                : null;
+        },
+        setTenantAccess(access) {
+            this._tenantAccess = access;
+        },
+        setTenantColor(color) {
+            this._tenantColor = color;
+        },
+        setIsTenantValid(isValid) {
+            this._isTenantValid = isValid;
+        },
+    },
+    getters: {
+        getCurrentTenant() {
+            return this._currentTenant;
+        },
+        getTenantAccess() {
+            return this._tenantAccess;
+        },
+        getTenantColor() {
+            return this._tenantColor;
+        },
+    },
+    persist: true
+});
