@@ -3,14 +3,15 @@ import {useTenantStore} from '@/store/tenant';
 import {useUserStore} from "@/store/user.js";
 
 export default function eventsLogic() {
-    async function getEvents() {
+    async function getEvents(instantiateEvents = false) {
         try {
             const events = [];
             let page = 1;
             let hasMore = true;
             do {
                 const url = `/event?page=${page}`;
-                const currentTenant = useTenantStore().getCurrentTenant;
+                let currentTenant = useTenantStore().getCurrentTenant;
+                if (instantiateEvents) currentTenant = null;
                 const response = await api().execute(url, 'GET', null, {currentTenant});
                 const data = await response.json();
 
@@ -19,6 +20,9 @@ export default function eventsLogic() {
                     page++;
                 } else {
                     hasMore = false;
+
+                    if (instantiateEvents) return events.filter(event => event.instantiable === true);
+
                     return events;
                 }
             } while (hasMore);
@@ -84,9 +88,21 @@ export default function eventsLogic() {
             const {data} = await response.json();
             if (!data) return [];
 
-            return data;
             return data.filter(user => user.id !== useUserStore()._user.id && user.role.id !== 1);
 
+        } catch (error) {
+            return error;
+        }
+    }
+
+    async function instantiateEvent(eventId) {
+        try {
+            const currentTenant = useTenantStore().getCurrentTenant;
+            const response = await api().execute(`/event/instantiateevent?eventId=${eventId}`, 'POST', null, {
+                currentTenant,
+                'Authorization': `Bearer ${useUserStore().getToken}`
+            });
+            return response.json();
         } catch (error) {
             return error;
         }
@@ -98,5 +114,6 @@ export default function eventsLogic() {
         getUsersFromEvent,
         createOrUpdateEvent,
         deleteEvent,
+        instantiateEvent,
     };
 }

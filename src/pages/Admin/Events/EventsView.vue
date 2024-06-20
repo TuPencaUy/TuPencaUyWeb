@@ -2,7 +2,6 @@
 import Admin from "@/components/Admin.vue";
 import {onMounted, ref} from "vue";
 import utils from "@/logic/utils.js";
-import router from "@/router/index.js";
 import eventsLogic from "@/logic/eventsLogic.js";
 import {Button} from "@/components/ui/button/index.js";
 import {Icon} from "@iconify/vue";
@@ -29,6 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {useTenantStore} from "@/store/tenant.js";
 
 const {toast} = useToast();
 
@@ -79,7 +79,7 @@ async function deleteItem(id) {
 </script>
 
 <template>
-  <Admin title="Events" name-btn-add="Add event" path-to-add="/admin/events/add">
+  <Admin title="Events" name-btn-add="Add event" :path-to-add="useTenantStore().isCentralSite ? '/admin/events/add' : '/admin/events/instantiate'">
     <div class="w-full m-auto" v-if="collection.length < 1">
       <div class="text-center">
         <h3 class="text-2xl font-bold tracking-tight">
@@ -93,7 +93,7 @@ async function deleteItem(id) {
     <Table v-else>
       <TableHeader>
         <TableRow>
-          <TableHead>ID</TableHead>
+          <TableHead v-if="useTenantStore().isCentralSite">ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Start Date</TableHead>
           <TableHead>End Date</TableHead>
@@ -105,13 +105,13 @@ async function deleteItem(id) {
       </TableHeader>
       <TableBody>
         <TableRow v-for="item in collection" :key="item.id">
-          <TableCell>{{ item.id }}</TableCell>
+          <TableCell v-if="useTenantStore().isCentralSite">{{ item.id }}</TableCell>
           <TableCell>{{ item.name }}</TableCell>
           <TableCell>{{ new Date(item.startDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ new Date(item.endDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ COMMISSION_VALUES[item.comission ?? 0] }}</TableCell>
           <TableCell>{{ TEAM_VALUES[item.teamType ?? 0] }}</TableCell>
-          <TableCell>
+          <TableCell v-if="useTenantStore().isCentralSite">
             <router-link class="inline-block" :to="`/admin/events/${item.id}`">
               <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2"/>
             </router-link>

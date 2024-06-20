@@ -12,6 +12,7 @@ import TeamsView from "@/pages/Admin/Teams/TeamsView.vue";
 import TeamView from "@/pages/Admin/Teams/TeamView.vue";
 import CreateSiteView from '../pages/CreateSiteView.vue';
 import ChatView from "@/pages/ChatView.vue";
+import EventInstantiate from "@/pages/Admin/Events/EventInstantiate.vue";
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -24,6 +25,7 @@ const routes = [
   { path: '/admin', name: 'dashboard', component: DashboardView },
   { path: '/admin/events', name: 'events', component: EventsView },
   { path: '/admin/events/add', name: 'addEvent', component: EventView },
+  { path: '/admin/events/instantiate', name: 'instantiateEvent', component: EventInstantiate },
   { path: '/admin/events/:id', name: 'showEvent', component: EventView },
   { path: '/admin/sports', name: 'sports', component: SportsView },
   { path: '/admin/sports/add', name: 'addSport', component: SportView },

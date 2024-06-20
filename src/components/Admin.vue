@@ -59,7 +59,7 @@ const handleLogOut = () => {
         <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <router-link to="/admin" class="flex items-center gap-2 text-lg font-semibold">
             <Package2 class="h-6 w-6"/>
-            <span class="truncate max-w-[160px]">TuPencaUY {{ currentTenant ? `(${currentTenant})` : '' }}</span>
+            <span class="truncate max-w-[160px]">{{ currentTenant ? `${currentTenant}` : 'TuPencaUY' }}</span>
           </router-link>
           <Button variant="outline" size="icon" class="ml-auto h-8 w-8">
             <Bell class="h-4 w-4"/>

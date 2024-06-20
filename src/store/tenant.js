@@ -42,6 +42,9 @@ export const useTenantStore = defineStore({
         getTenantColor() {
             return this._tenantColor;
         },
+        isCentralSite() {
+            return this._currentTenant === null;
+        }
     },
     persist: true
 });
