@@ -56,6 +56,7 @@ export default function eventsLogic() {
                 endDate: event.endDate + 'T00:00:00.000Z',
                 comission: ALLOWED_COMMISSION_VALUES[event.comission],
                 teamType: ALLOWED_TEAM_TYPES[event.teamType],
+                sport_id: event.sport_id
             };
 
             const currentTenant = useTenantStore().getCurrentTenant;
