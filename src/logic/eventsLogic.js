@@ -61,7 +61,11 @@ export default function eventsLogic() {
             const currentTenant = useTenantStore().getCurrentTenant;
             const url = `/event/${eventIdToUpdate}`;
             const httpRequest = eventIdToUpdate !== '' ? 'PATCH' : 'POST';
-            const response = await api().execute(url, httpRequest, dataToSend, {currentTenant});
+
+            const token = useUserStore().getToken;
+            if (!token) return null;
+
+            const response = await api().execute(url, httpRequest, dataToSend, {'Authorization': `Bearer ${token}`, currentTenant});
             return response.json();
         } catch (error) {
             return error;
@@ -71,7 +75,11 @@ export default function eventsLogic() {
     async function deleteEvent(eventId) {
         try {
             const currentTenant = useTenantStore().getCurrentTenant;
-            const response = await api().execute(`/event/${eventId}`, 'DELETE', null, {currentTenant});
+
+            const token = useUserStore().getToken;
+            if (!token) return null;
+
+            const response = await api().execute(`/event/${eventId}`, 'DELETE', null, {'Authorization': `Bearer ${token}`, currentTenant});
             return response.json();
         } catch (error) {
             return error;
