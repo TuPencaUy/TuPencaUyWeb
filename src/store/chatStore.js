@@ -15,6 +15,7 @@ import {
 } from 'firebase/firestore';
 import {uuid} from 'vue-uuid';
 import firebaseLogic from "@/logic/firebaseLogic.js";
+import {useTenantStore} from "@/store/tenant.js";
 
 export const useChatStore = defineStore({
     id: 'chat',
@@ -30,19 +31,6 @@ export const useChatStore = defineStore({
             this.currentUser = user;
         },
 
-        async getUsers() {
-            const users = collection(db, 'Users');
-            //Filter out the current user
-            const q = query(users, where('id', '!=', Number(useUserStore()._user?.id)));
-            const querySnapshot = await getDocs(q);
-            let results = [];
-            querySnapshot.forEach(doc => {
-                results.push(doc.data());
-            });
-
-            return results;
-        },
-
         async openChat(receiver) {
             if (!useUserStore()._user?.id || !receiver) return;
 
@@ -52,6 +40,8 @@ export const useChatStore = defineStore({
                 senderHasRead: false,
                 receiverHasRead: false,
                 messages: [],
+                site: useTenantStore().getCurrentTenant,
+                event: 1,
             };
 
             const chatExists = await firebaseLogic().checkIfChatExists(Number(data.sender), Number(data.receiver.id));

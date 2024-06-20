@@ -80,7 +80,7 @@ async function handleLogin(event) {
     });
 
     setTimeout(() => {
-      useUserStore().isAdmin ? router.push('/admin') : router.push('/chat');
+      useUserStore().isAdmin ? router.push('/admin') : router.push('/');
     }, 2000);
   } else {
     toast({

@@ -1,5 +1,6 @@
 import api from './apiLogic';
 import {useTenantStore} from '@/store/tenant';
+import {useUserStore} from "@/store/user.js";
 
 export default function eventsLogic() {
     async function getEvents() {
@@ -73,9 +74,28 @@ export default function eventsLogic() {
         }
     }
 
+    async function getUsersFromEvent(eventId) {
+        try {
+            const currentTenant = useTenantStore().getCurrentTenant;
+            const response = await api().execute(`/user?eventId=${eventId}`, 'GET', null, {
+                currentTenant,
+                'Authorization': `Bearer ${useUserStore().getToken}`
+            });
+            const {data} = await response.json();
+            if (!data) return [];
+
+            return data;
+            return data.filter(user => user.id !== useUserStore()._user.id && user.role.id !== 1);
+
+        } catch (error) {
+            return error;
+        }
+    }
+
     return {
         getEvents,
         getEvent,
+        getUsersFromEvent,
         createOrUpdateEvent,
         deleteEvent,
     };

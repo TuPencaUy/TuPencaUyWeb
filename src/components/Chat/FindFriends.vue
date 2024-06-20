@@ -1,16 +1,16 @@
 <script setup>
 import {onMounted, ref, toRefs} from 'vue';
 import utils from "@/logic/utils.js";
-import {getDocs} from 'firebase/firestore';
 import {useChatStore} from "@/store/chatStore.js";
 import {Icon} from "@iconify/vue";
+import eventsLogic from "@/logic/eventsLogic.js";
 
 const usersToShow = ref([]);
 const users = ref([]);
 
 onMounted(async () => {
   utils().showLoader();
-  users.value = await useChatStore().getUsers();
+  users.value = await eventsLogic().getUsersFromEvent(1);
   usersToShow.value = users.value;
   utils().hideLoader();
 });
@@ -50,9 +50,9 @@ const createNewChat = async (receiver) => {
         <div class="find-friends__item-avatar">
           <Icon icon="bxs:message" color="#757575" width="40" height="40"/>
         </div>
-        <div class="find-friends__item-info">
+        <div class="find-friends__item-info truncate max-w-[300px]">
           <h4 class="text-lg font-semibold">{{ user.name }}</h4>
-          <p class="text-sm text-gray-500">Active 3m ago</p>
+          <p class="text-sm text-gray-500">{{ user.email }}</p>
         </div>
       </div>
     </div>
