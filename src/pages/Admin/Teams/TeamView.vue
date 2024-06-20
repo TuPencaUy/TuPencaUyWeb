@@ -182,7 +182,7 @@ const onLogoChanged = (e) => {
                             <SelectValue placeholder="Select sport"/>
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem v-for="sport in sports" class="bg-white" :value="sport.id">
+                            <SelectItem v-for="sport in sports" class="bg-white" :key="sport.id" :value="sport.id">
                               {{ sport.name }}
                             </SelectItem>
                           </SelectContent>
@@ -192,7 +192,7 @@ const onLogoChanged = (e) => {
                             <SelectValue placeholder="Select sport"/>
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem v-for="sport in sports" class="bg-white" :value="sport.id">
+                            <SelectItem v-for="sport in sports" class="bg-white" :key="sport.id" :value="sport.id">
                               {{ sport.name }}
                             </SelectItem>
                           </SelectContent>

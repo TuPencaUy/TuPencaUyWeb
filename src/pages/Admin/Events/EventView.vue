@@ -7,6 +7,7 @@ import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import eventsLogic from '@/logic/eventsLogic';
+import sportLogic from "@/logic/sportLogic";
 import { useToast } from '@/components/ui/toast/use-toast'
 import router from '@/router'
 import { useRoute } from 'vue-router'
@@ -39,6 +40,7 @@ import utils from '@/logic/utils';
 const route = useRoute();
 
 let eventId = '';
+let sports = ref([]);
 
 const objectData = ref({
   name: 'eventName',
@@ -46,6 +48,7 @@ const objectData = ref({
   endDate: '',
   comission: 'no',
   teamType: 'local',
+  sport_id: ''
 });
 
 const formSchema = toTypedSchema(z.object({
@@ -76,6 +79,12 @@ onMounted(async () => {
       utils().hideLoader();
     }, 1000);
   }
+
+  //get sports
+  const sportsCollection = await sportLogic().getSports();
+  sports.value = sportsCollection.map(elem => {
+    return {id: String(elem.id), name: elem.name};
+  });
 });
 
 const onSubmit = handleSubmit(async () => {
@@ -164,6 +173,21 @@ const onSubmit = handleSubmit(async () => {
                         </FormField>
                       </div>
 
+                    </div>
+                    <div class="grid gap-6 mt-3">
+                      <div class="grid gap-3">
+                        <Label for="status">Sport</Label>
+                        <Select v-model="objectData.sport_id">
+                          <SelectTrigger id="status" aria-label="Sports">
+                            <SelectValue placeholder="Select sport"/>
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem v-for="sport in sports" class="bg-white" :key="sport.id" :value="sport.id">
+                              {{ sport.name }}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

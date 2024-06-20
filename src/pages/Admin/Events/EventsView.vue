@@ -96,6 +96,7 @@ async function deleteItem(id) {
         <TableRow>
           <TableHead v-if="useTenantStore().isCentralSite">ID</TableHead>
           <TableHead>Name</TableHead>
+          <TableHead>Sport</TableHead>
           <TableHead>Start Date</TableHead>
           <TableHead>End Date</TableHead>
           <TableHead>Comission</TableHead>
@@ -108,6 +109,7 @@ async function deleteItem(id) {
         <TableRow v-for="item in collection" :key="item.id">
           <TableCell v-if="useTenantStore().isCentralSite">{{ item.id }}</TableCell>
           <TableCell>{{ item.name }}</TableCell>
+          <TableCell>{{ item.sport.name }}</TableCell>
           <TableCell>{{ new Date(item.startDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ new Date(item.endDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ item.comission ?? 0 }}</TableCell>
