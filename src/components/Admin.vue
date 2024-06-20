@@ -80,13 +80,13 @@ const handleLogOut = () => {
               Events
             </router-link>
 
-            <router-link to="/admin/sports"
+            <router-link v-if="useTenantStore().isCentralSite" to="/admin/sports"
                          :class="`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${activeClass('sports')}  hover:text-foreground`">
               <Icon icon="fluent-mdl2:more-sports" class="h-5 w-5"/>
               Sports
             </router-link>
 
-            <router-link to="/admin/teams"
+            <router-link v-if="useTenantStore().isCentralSite" to="/admin/teams"
                          :class="`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${activeClass('teams')}  hover:text-foreground`">
               <Users class="h-5 w-5"/>
               Teams
