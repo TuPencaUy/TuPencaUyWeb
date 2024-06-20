@@ -28,7 +28,13 @@ const events = ref([]);
 const selectedEvent = ref(null);
 onMounted(async () => {
   utils().showLoader();
-  events.value = await eventsLogic().getEvents(true);
+  const allInstantiableEvents = await eventsLogic().getEvents(true);
+  const alreadyInstantiatedEvents = await eventsLogic().getEvents();
+
+  events.value = allInstantiableEvents.filter(event => {
+    return !alreadyInstantiatedEvents.find(e => e?.referenceEvent === event?.id);
+  });
+
   utils().hideLoader();
 });
 

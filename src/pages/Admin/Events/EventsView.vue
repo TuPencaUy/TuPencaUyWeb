@@ -79,7 +79,8 @@ async function deleteItem(id) {
 </script>
 
 <template>
-  <Admin title="Events" name-btn-add="Add event" :path-to-add="useTenantStore().isCentralSite ? '/admin/events/add' : '/admin/events/instantiate'">
+  <Admin title="Events" name-btn-add="Add event"
+         :path-to-add="useTenantStore().isCentralSite ? '/admin/events/add' : '/admin/events/instantiate'">
     <div class="w-full m-auto" v-if="collection.length < 1">
       <div class="text-center">
         <h3 class="text-2xl font-bold tracking-tight">
@@ -109,8 +110,8 @@ async function deleteItem(id) {
           <TableCell>{{ item.name }}</TableCell>
           <TableCell>{{ new Date(item.startDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ new Date(item.endDate).toLocaleDateString() }}</TableCell>
-          <TableCell>{{ COMMISSION_VALUES[item.comission ?? 0] }}</TableCell>
-          <TableCell>{{ TEAM_VALUES[item.teamType ?? 0] }}</TableCell>
+          <TableCell>{{ item.comission ?? 0 }}</TableCell>
+          <TableCell>{{ TEAM_VALUES[item.teamType ?? 1] }}</TableCell>
           <TableCell v-if="useTenantStore().isCentralSite">
             <router-link class="inline-block" :to="`/admin/events/${item.id}`">
               <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2"/>
