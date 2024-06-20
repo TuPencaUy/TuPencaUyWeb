@@ -13,6 +13,7 @@ import {Sheet, SheetContent, SheetTrigger} from '@/components/ui/sheet';
 import router from '@/router';
 import {useTenantStore} from '@/store/tenant';
 import utils from '@/logic/utils';
+import themes from '@/logic/themes';
 import {Icon} from "@iconify/vue";
 import {useUserStore} from '@/store/user';
 
@@ -27,6 +28,8 @@ const url = router.currentRoute.value.path;
 const splittedRouter = url.split('/');
 
 const currentTenant = useTenantStore().getCurrentTenant;
+
+themes().setTheme(useTenantStore().getTenantColor);
 
 const activeClass = (path) => {
   const routeActive = splittedRouter.find((route) => {
