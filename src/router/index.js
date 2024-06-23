@@ -16,6 +16,8 @@ import EventInstantiate from "@/pages/Admin/Events/EventInstantiate.vue";
 import SettingsView from "@/pages/Admin/Settings/SettingsView.vue";
 import SettingSecurity from "@/components/Settings/SettingSecurity.vue";
 import SettingCustom from "@/components/Settings/SettingCustom.vue";
+import SitesView from "@/pages/Admin/Sites/SitesView.vue";
+import SiteView from "@/pages/Admin/Sites/SiteView.vue";
 
 const routes = [
   { path: '/events', name: 'user events', component: Events },
@@ -36,6 +38,8 @@ const routes = [
   { path: '/admin/teams', name: 'teams', component: TeamsView },
   { path: '/admin/teams/add', name: 'addTeam', component: TeamView },
   { path: '/admin/teams/:id', name: 'ShowTeam', component: TeamView },
+  { path: '/admin/sites', name: 'sites', component: SitesView },
+  { path: '/admin/sites/add', name: 'addSite', component: SiteView },
   //Settings
   { path: '/admin/settings/general', name: 'settings', component: SettingsView },
   { path: '/admin/settings/security', name: 'settingSecurity', component: SettingSecurity },

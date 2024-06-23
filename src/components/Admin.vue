@@ -92,6 +92,12 @@ const handleLogOut = () => {
               Teams
             </router-link>
 
+            <router-link v-if="useTenantStore().isCentralSite" to="/admin/sites"
+                         :class="`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${activeClass('sites')}  hover:text-foreground`">
+              <Icon icon="fluent-mdl2:my-network" class="h-5 w-5"/>
+              Sites
+            </router-link>
+
             <router-link v-if="useTenantStore().getCurrentTenant" to="/admin/settings/general"
                          :class="`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${activeClass('settings')}  hover:text-foreground`">
               <Icon icon="bx:bx-cog" class="h-5 w-5"/>

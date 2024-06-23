@@ -13,28 +13,29 @@ export default function siteLogic() {
         await validateSite();
     }
 
+    async function getSites() {
+        try {
+            const response = await api().execute('/site', 'GET');
+            return response.json();
+        } catch (e) {
+            return null;
+        }
+    }
+
     async function createSite(data) {
         try {
 
             const dataToSend = {
-                "name": "",
-                "domain": "",
-                "accesstype": "",
-                "color": ""
+                "name": data?.name,
+                "domain": data?.domain,
+                "accessType": Number(data?.accesstype),
+                "color": Number(data?.color),
             };
-
-            for (let key in dataToSend) {
-                if (!data.hasOwnProperty(key)) {
-                    return api().response(null, `Missing ${key}`, true);
-                }
-            }
 
             const token = useUserStore().getToken;
             if (!token) return null;
 
-            const response = await api().execute('/site/createsite', 'POST', data, {'Authorization': `Bearer ${token}`});
-
-
+            const response = await api().execute('/site/createsite', 'POST', dataToSend, {'Authorization': `Bearer ${token}`});
             return response.json();
         } catch (e) {
             return null;
@@ -56,6 +57,21 @@ export default function siteLogic() {
             if (!token) return null;
 
             const response = await api().execute(`/site/${dataToSend.id}`, 'PUT', dataToSend, {'Authorization': `Bearer ${token}`});
+            return response.json();
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function deleteSite(siteId) {
+        try {
+            const token = useUserStore().getToken;
+            if (!token) return null;
+
+            const response = await api().execute(`/site/${siteId}`, 'DELETE', null, {
+                currentTenant: null,
+                'Authorization': `Bearer ${token}`
+            });
             return response.json();
         } catch (e) {
             return null;
@@ -90,9 +106,11 @@ export default function siteLogic() {
 
     return {
         init,
+        getSites,
         createSite,
         getSite,
         updateSite,
+        deleteSite,
         validateSite,
     };
 }
