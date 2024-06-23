@@ -23,6 +23,10 @@ router.beforeEach((to, from, next) => {
     next('/');
   }
 
+  if (!to.path.includes('/admin') && useUserStore().isAdmin) {
+    next('/admin');
+  }
+
   if (!useTenantStore().getCurrentTenant && !useUserStore().isAdmin && !useUserStore()._user?.site) {
     if (to.path === '/create-site') next();
     next('/create-site');

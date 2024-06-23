@@ -8,11 +8,11 @@ import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import eventsLogic from '@/logic/eventsLogic';
 import sportLogic from "@/logic/sportLogic";
-import { useToast } from '@/components/ui/toast/use-toast'
-import router from '@/router'
-import { useRoute } from 'vue-router'
+import {useToast} from '@/components/ui/toast/use-toast';
+import router from '@/router';
+import {useRoute} from 'vue-router';
 
-const { toast } = useToast()
+const {toast} = useToast();
 import {
   Select,
   SelectContent,
@@ -27,12 +27,12 @@ import
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/components/ui/form';
 import Admin from "@/components/Admin.vue";
 import {onMounted, ref} from "vue";
 import {toTypedSchema} from "@vee-validate/zod";
 import * as z from "zod";
-import {useForm} from 'vee-validate'
+import {useForm} from 'vee-validate';
 import {Badge} from "@/components/ui/badge";
 import utils from '@/logic/utils';
 
@@ -54,7 +54,7 @@ const objectData = ref({
 const formSchema = toTypedSchema(z.object({
   name: z.string().min(4).max(30),
   startDate: z.string(),
-  endDate: z.string()
+  endDate: z.string(),
 }));
 
 const {handleSubmit} = useForm({
@@ -63,7 +63,7 @@ const {handleSubmit} = useForm({
 
 onMounted(async () => {
   eventId = route.params.id ?? '';
-  if(eventId) {
+  if (eventId) {
     utils().showLoader();
     const response = await eventsLogic().getEvent(eventId);
     if (response && response?.data) {
@@ -88,6 +88,15 @@ onMounted(async () => {
 });
 
 const onSubmit = handleSubmit(async () => {
+  if (objectData?.value.startDate > objectData?.value.endDate) {
+    toast({
+      title: 'Error',
+      description: 'Please select a valid date range',
+      variant: 'destructive',
+    });
+    return;
+  }
+
   utils().showLoader();
   const response = await eventsLogic().createOrUpdateEvent(objectData?.value, eventId);
   utils().hideLoader();

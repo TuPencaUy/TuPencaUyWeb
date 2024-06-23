@@ -16,6 +16,7 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card/index.js";
+import router from "@/router";
 import {Button} from "@/components/ui/button/index.js";
 import {ChevronLeft} from "lucide-vue-next";
 import {useToast} from '@/components/ui/toast/use-toast';
@@ -41,7 +42,9 @@ onMounted(async () => {
 async function handleInstantiate() {
   if (!selectedEvent.value) return;
 
+  utils().showLoader();
   const response = await eventsLogic().instantiateEvent(selectedEvent.value);
+  utils().hideLoader();
   if (!response || response?.error) {
     toast({
       title: 'Error',
@@ -56,6 +59,10 @@ async function handleInstantiate() {
     title: 'Success',
     description: 'Event added successfully',
   });
+
+  setTimeout(() => {
+    router.push('/admin/events');
+  }, 1000);
 }
 </script>
 

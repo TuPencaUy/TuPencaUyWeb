@@ -20,8 +20,7 @@ import {Card, CardContent, CardHeader} from "@/components/ui/card/index.js";
 import {useUserStore} from "@/store/user.js";
 
 const formSchema = toTypedSchema(z.object({
-  name: z.string(),
-  domain: z.string()
+  domain: z.string(),
 }));
 
 const form = useForm({
@@ -30,11 +29,12 @@ const form = useForm({
 const {toast} = useToast();
 
 const onSubmit = form.handleSubmit(async (values) => {
-
-
   utils().showLoader();
 
   values.accesstype = values.color = 1;
+  const domain = values.domain.toLowerCase().trim().replaceAll(' ', '');
+  values.domain = domain;
+  values.name = domain;
 
   const siteData = await siteLogic().createSite(values);
 
@@ -70,15 +70,6 @@ const onSubmit = form.handleSubmit(async (values) => {
       <CardContent>
         <h1 class="text-4xl mb-5">Create your site</h1>
         <form @submit="onSubmit" class="flex flex-col gap-5">
-          <FormField v-slot="{ componentField }" name="name">
-            <FormItem>
-              <FormLabel>Site name</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="Name" v-bind="componentField"/>
-              </FormControl>
-              <FormMessage/>
-            </FormItem>
-          </FormField>
           <FormField v-slot="{ componentField }" name="domain">
             <FormItem>
               <FormLabel>Site domain</FormLabel>
