@@ -13,6 +13,9 @@ import TeamView from "@/pages/Admin/Teams/TeamView.vue";
 import CreateSiteView from '../pages/CreateSiteView.vue';
 import ChatView from "@/pages/ChatView.vue";
 import EventInstantiate from "@/pages/Admin/Events/EventInstantiate.vue";
+import SettingsView from "@/pages/Admin/Settings/SettingsView.vue";
+import SettingSecurity from "@/components/Settings/SettingSecurity.vue";
+import SettingCustom from "@/components/Settings/SettingCustom.vue";
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -33,6 +36,11 @@ const routes = [
   { path: '/admin/teams', name: 'teams', component: TeamsView },
   { path: '/admin/teams/add', name: 'addTeam', component: TeamView },
   { path: '/admin/teams/:id', name: 'ShowTeam', component: TeamView },
+  //Settings
+  { path: '/admin/settings/general', name: 'settings', component: SettingsView },
+  { path: '/admin/settings/security', name: 'settingSecurity', component: SettingSecurity },
+  { path: '/admin/settings/custom', name: 'settingCustom', component: SettingCustom },
+
 ];
 
 const router = createRouter({

@@ -1,11 +1,14 @@
 import api from './apiLogic';
 import {useTenantStore} from '@/store/tenant';
 import {useUserStore} from '@/store/user';
+import themes from "@/logic/themes.js";
 
 export default function siteLogic() {
 
     async function init() {
         await useTenantStore().setCurrentTenant();
+
+        await themes().setTheme(useTenantStore().getTenantColor);
 
         await validateSite();
     }

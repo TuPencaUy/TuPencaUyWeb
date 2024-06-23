@@ -13,7 +13,6 @@ import {Sheet, SheetContent, SheetTrigger} from '@/components/ui/sheet';
 import router from '@/router';
 import {useTenantStore} from '@/store/tenant';
 import utils from '@/logic/utils';
-import themes from '@/logic/themes';
 import {Icon} from "@iconify/vue";
 import {useUserStore} from '@/store/user';
 
@@ -28,8 +27,6 @@ const url = router.currentRoute.value.path;
 const splittedRouter = url.split('/');
 
 const currentTenant = useTenantStore().getCurrentTenant;
-
-themes().setTheme(useTenantStore().getTenantColor);
 
 const activeClass = (path) => {
   const routeActive = splittedRouter.find((route) => {
@@ -72,7 +69,7 @@ const handleLogOut = () => {
         <div class="flex-1">
           <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
             <router-link to="/admin"
-                         :class="`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${activeClass('admin')}  hover:text-foreground`">
+                         :class="`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${url === '/admin' ? 'bg-muted text-primary' : 'text-muted-foreground'}  hover:text-foreground`">
               <Home class="h-5 w-5"/>
               Dashboard
             </router-link>
@@ -95,7 +92,7 @@ const handleLogOut = () => {
               Teams
             </router-link>
 
-            <router-link to="/admin/settings"
+            <router-link v-if="useTenantStore().getCurrentTenant" to="/admin/settings/general"
                          :class="`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${activeClass('settings')}  hover:text-foreground`">
               <Icon icon="bx:bx-cog" class="h-5 w-5"/>
               Settings
