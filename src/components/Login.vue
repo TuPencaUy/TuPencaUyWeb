@@ -28,6 +28,8 @@ import
 import {Separator} from '@/components/ui/separator';
 import {Input} from '@/components/ui/input';
 import {useToast} from '@/components/ui/toast/use-toast';
+import {useTenantStore} from "@/store/tenant.js";
+import siteLogic from "@/logic/siteLogic.js";
 
 const {toast} = useToast();
 
@@ -80,7 +82,24 @@ async function handleLogin(event) {
     });
 
     setTimeout(() => {
-      useUserStore().isAdmin ? router.push('/admin') : router.push('/events');
+      if (useUserStore().isAdmin) router.push('/admin');
+
+      if (useTenantStore().isCentralSite) {
+        const userSite = useUserStore().getSite;
+        //Validate if the user has a tenant
+        if (userSite) {
+          useUserStore().logOut();
+          siteLogic().redirectUserToSite(userSite.domain);
+        } else {
+          router.push('/create-site');
+
+        }
+      } else {
+        router.push('/events');
+
+      }
+
+
     }, 2000);
   } else {
     toast({

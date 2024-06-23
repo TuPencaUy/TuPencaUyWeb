@@ -104,6 +104,10 @@ export default function siteLogic() {
         useTenantStore().setIsTenantValid(true);
     }
 
+    async function redirectUserToSite(tenant) {
+        window.location.href = `http://${tenant}.${import.meta.env.VITE_BASE_DOMAIN}`;
+    }
+
     return {
         init,
         getSites,
@@ -112,5 +116,6 @@ export default function siteLogic() {
         updateSite,
         deleteSite,
         validateSite,
+        redirectUserToSite,
     };
 }

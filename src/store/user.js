@@ -46,6 +46,9 @@ export const useUserStore = defineStore({
         },
         getEvents() {
             return this._user?.events;
+        },
+        getSite() {
+            return this._user?.site;
         }
     }, persist: true
 });
