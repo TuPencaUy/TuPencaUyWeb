@@ -4,6 +4,7 @@ export const useTenantStore = defineStore({
     id: 'tenant',
     state: () => {
         return {
+            _id: null,
             _currentTenant: null,
             _tenantAccess: null,
             _tenantColor: null,
@@ -31,6 +32,9 @@ export const useTenantStore = defineStore({
         setIsTenantValid(isValid) {
             this._isTenantValid = isValid;
         },
+        setTenantId(id) {
+            this._id = id;
+        }
     },
     getters: {
         getCurrentTenant() {
@@ -44,6 +48,9 @@ export const useTenantStore = defineStore({
         },
         isCentralSite() {
             return this._currentTenant === null;
+        },
+        getTenantId() {
+            return this._id;
         }
     },
     persist: true

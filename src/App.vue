@@ -20,7 +20,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (to.path.includes('/admin') && !useUserStore().isAdmin) {
-    next('/');
+    next('/events');
   }
 
   if (!to.path.includes('/admin') && useUserStore().isAdmin) {

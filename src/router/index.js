@@ -1,6 +1,6 @@
 import {createMemoryHistory, createRouter} from 'vue-router';
 
-import HomeView from '../pages/Home.vue';
+import Events from '../pages/Events.vue';
 import LoginView from '../pages/LoginView.vue';
 import SignUpView from '../pages/SignupView.vue';
 import DashboardView from "@/pages/Admin/Dashboards/DashboardView.vue";
@@ -18,7 +18,7 @@ import SettingSecurity from "@/components/Settings/SettingSecurity.vue";
 import SettingCustom from "@/components/Settings/SettingCustom.vue";
 
 const routes = [
-  { path: '/', name: 'home', component: HomeView },
+  { path: '/events', name: 'user events', component: Events },
   { path: '/signup', name: 'Signin', component: SignUpView },
   { path: '/login', name: 'login', component: LoginView },
   { path: '/create-site', name: 'create-site', component: CreateSiteView },

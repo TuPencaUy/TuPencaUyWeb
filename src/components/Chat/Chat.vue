@@ -5,7 +5,7 @@ import {useTenantStore} from "@/store/tenant.js";
 import router from "@/router/index.js";
 
 if(!useTenantStore().getCurrentTenant){
-  router.push('/');
+  router.push('/events');
 }
 </script>
 

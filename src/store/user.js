@@ -43,6 +43,9 @@ export const useUserStore = defineStore({
         },
         isAdmin() {
             return this._user?.role?.id === 1;
+        },
+        getEvents() {
+            return this._user?.events;
         }
     }, persist: true
 });

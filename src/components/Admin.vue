@@ -20,7 +20,7 @@ if (!utils().ensureIsLoggedIn()) {
   router.push('/login');
 }
 if (!useUserStore().isAdmin) {
-  router.push('/');
+  router.push('/events');
 }
 
 const url = router.currentRoute.value.path;

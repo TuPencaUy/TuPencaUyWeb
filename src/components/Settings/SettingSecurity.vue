@@ -12,6 +12,11 @@ import {
 } from "@/components/ui/select/index.js";
 import {Button} from '@/components/ui/button';
 import {onMounted, ref} from "vue";
+import siteLogic from "@/logic/siteLogic.js";
+import utils from "@/logic/utils.js";
+import {useToast} from "@/components/ui/toast/index.js";
+
+const {toast} = useToast();
 
 let currentPermission = ref('');
 
@@ -39,8 +44,24 @@ const SITE_PERMISSION_VALUES = [
 ];
 
 async function handlePermissionChange() {
-  //TODO: to be implemented
-};
+  debugger;
+  utils().showLoader();
+  const response = await siteLogic().updateSite(currentPermission?._rawValue);
+  utils().hideLoader();
+  if (!response || response?.error) {
+    toast({
+      title: 'Error',
+      description: 'Failed to update site permission',
+      variant: 'destructive'
+    });
+    return;
+  }
+
+  toast({
+    title: 'Success',
+    description: 'Site permission updated successfully',
+  });
+}
 
 </script>
 

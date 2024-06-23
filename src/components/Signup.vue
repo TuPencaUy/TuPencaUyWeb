@@ -67,7 +67,7 @@ const onSubmit = form.handleSubmit(async (values) => {
   }
 
   setTimeout(() => {
-    useTenantStore().getCurrentTenant === null ? router.push('/create-site') : router.push('/');
+    useTenantStore().getCurrentTenant === null ? router.push('/create-site') : router.push('/events');
   }, 2000);
 });
 </script>
