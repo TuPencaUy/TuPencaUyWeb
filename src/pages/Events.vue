@@ -1,6 +1,6 @@
 <script setup>
 import Header from "@/components/Header.vue";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card/index.js";
+import {Card, CardHeader, CardTitle} from "@/components/ui/card/index.js";
 import {onMounted, ref} from "vue";
 import eventsLogic from "@/logic/eventsLogic.js";
 import utils from "@/logic/utils.js";
@@ -15,15 +15,42 @@ import {
   CarouselPrevious
 } from "@/components/ui/carousel/index.js";
 import {Label} from "@/components/ui/label/index.js";
+import userLogic from "@/logic/userLogic.js";
+import {useToast} from "@/components/ui/toast/index.js";
 
-const events = ref([]);
-const userEvents = useUserStore().getEvents;
+const {toast} = useToast();
+
+let events = ref([]);
+let userEvents = useUserStore().getEvents;
 
 onMounted(async () => {
   utils().showLoader();
   events.value = await eventsLogic().getEvents();
+  events.value = events.value.filter(event => !userEvents.find(userEvent => userEvent.id === event.id));
   utils().hideLoader();
 });
+
+async function handleSubscribe(eventId) {
+  utils().showLoader();
+  const response = await userLogic().subscribeToEvent(eventId);
+  utils().hideLoader();
+  if (!response || response?.error) {
+    toast({
+      title: 'Error',
+      description: 'An error occurred while subscribing to the event',
+      variant: 'destructive'
+    });
+  }
+
+  toast({
+    title: 'Success',
+    description: 'You have successfully subscribed to the event',
+    variant: 'success'
+  });
+
+  userEvents.push(events.value.find(event => event.id === eventId));
+  events.value = events.value.filter(event => event.id !== eventId);
+}
 </script>
 
 <template>
@@ -48,9 +75,9 @@ onMounted(async () => {
                       class="relative w-full h-full text-center hover:cursor-pointer group">
                   <div
                       class="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <Button class="bg-red-400 hover:bg-red-600 text-white">
+                    <Button class="bg-green-400 hover:bg-green-600 text-white">
                       <Icon icon="iconoir:lock" class="w-5 h-5"/>
-                      Subscribe
+                      View event
                     </Button>
                   </div>
                   <CardHeader>
@@ -64,7 +91,7 @@ onMounted(async () => {
           </Carousel>
         </div>
       </div>
-      <div class="m-8">
+      <div v-if="events.length > 0" class="m-8">
         <Label class="mt-4 text-2xl">Available events</Label>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 
@@ -80,7 +107,7 @@ onMounted(async () => {
                       class="relative w-full h-full text-center hover:cursor-pointer group">
                   <div
                       class="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <Button class="bg-red-400 hover:bg-red-600 text-white">
+                    <Button class="bg-red-400 hover:bg-red-600 text-white" @click="handleSubscribe(event.id)">
                       <Icon icon="iconoir:lock" class="w-5 h-5"/>
                       Subscribe
                     </Button>
