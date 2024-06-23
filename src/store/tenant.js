@@ -1,4 +1,5 @@
 import {defineStore} from 'pinia';
+import siteLogic from "@/logic/siteLogic.js";
 
 export const useTenantStore = defineStore({
     id: 'tenant',
@@ -34,6 +35,11 @@ export const useTenantStore = defineStore({
         },
         setTenantId(id) {
             this._id = id;
+        },
+        async refreshTenantValues() {
+            this.setCurrentTenant();
+            this.setIsTenantValid(false);
+            await siteLogic().validateSite();
         }
     },
     getters: {

@@ -44,9 +44,17 @@ const SITE_PERMISSION_VALUES = [
 ];
 
 async function handlePermissionChange() {
-  debugger;
   utils().showLoader();
-  const response = await siteLogic().updateSite(currentPermission?._rawValue);
+
+  const siteData = {
+    "id": useTenantStore().getTenantId,
+    "name": useTenantStore().getCurrentTenant,
+    "domain": useTenantStore().getCurrentTenant,
+    "accesstype": currentPermission?._rawValue,
+    "color": useTenantStore().getTenantColor
+  };
+
+  const response = await siteLogic().updateSite(siteData);
   utils().hideLoader();
   if (!response || response?.error) {
     toast({
@@ -56,6 +64,8 @@ async function handlePermissionChange() {
     });
     return;
   }
+
+  await useTenantStore().refreshTenantValues();
 
   toast({
     title: 'Success',
@@ -94,7 +104,7 @@ async function handlePermissionChange() {
         </form>
       </CardContent>
       <CardFooter class="border-t px-6 py-4">
-        <Button @click="handlePermissionChange">Save</Button>
+        <Button @click="handlePermissionChange" :disabled="Number(useTenantStore().getTenantAccess) === Number(currentPermission)">Save</Button>
       </CardFooter>
     </Card>
   </Settings>

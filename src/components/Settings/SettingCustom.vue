@@ -14,7 +14,10 @@ import themes from "@/logic/themes.js";
 import {onMounted, ref} from "vue";
 import utils from "@/logic/utils.js";
 import {useTenantStore} from "@/store/tenant.js";
+import siteLogic from "@/logic/siteLogic.js";
+import {useToast} from "@/components/ui/toast/index.js";
 
+const {toast} = useToast();
 let selectedTheme = ref('');
 let availableThemes = ref([]);
 
@@ -26,11 +29,34 @@ onMounted(async () => {
 });
 
 async function handleThemeChange() {
-  //TODO: left to implement save to database
-  useTenantStore().setTenantColor(Number(selectedTheme.value));
+  const siteData = {
+    "id": useTenantStore().getTenantId,
+    "name": useTenantStore().getCurrentTenant,
+    "domain": useTenantStore().getCurrentTenant,
+    "accesstype": useTenantStore().getTenantAccess,
+    "color": selectedTheme?._rawValue,
+  };
 
+  utils().showLoader();
+  const response = await siteLogic().updateSite(siteData);
+  utils().hideLoader();
+  if (!response || response?.error) {
+    toast({
+      title: "Error",
+      description: "Failed to update site theme",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  toast({
+    title: "Success",
+    description: "Site theme updated successfully",
+  });
+
+  await useTenantStore().refreshTenantValues();
   await themes().setTheme(Number(selectedTheme.value));
-};
+}
 </script>
 
 <template>

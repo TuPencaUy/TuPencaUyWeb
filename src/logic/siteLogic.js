@@ -41,21 +41,21 @@ export default function siteLogic() {
         }
     }
 
-    async function updateSite(siteId) {
+    async function updateSite(siteData) {
         try {
 
             const dataToSend = {
-                "id": useTenantStore().getTenantId,
-                "name": useTenantStore().getCurrentTenant,
-                "domain": useTenantStore().getCurrentTenant,
-                "accesstype": useTenantStore().getTenantAccess,
-                "color": useTenantStore().getTenantColor
+                "id": siteData.id,
+                "Name": siteData.name,
+                "Domain": siteData.domain,
+                "AccessType": Number(siteData.accesstype),
+                "Color": Number(siteData.color)
             };
 
             const token = useUserStore().getToken;
             if (!token) return null;
 
-            const response = await api().execute(`/site/${siteId}`, 'PUT', dataToSend.id, {'Authorization': `Bearer ${token}`});
+            const response = await api().execute(`/site/${dataToSend.id}`, 'PUT', dataToSend, {'Authorization': `Bearer ${token}`});
             return response.json();
         } catch (e) {
             return null;
@@ -93,5 +93,6 @@ export default function siteLogic() {
         createSite,
         getSite,
         updateSite,
+        validateSite,
     };
 }
