@@ -18,6 +18,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
 import {useToast} from '@/components/ui/toast/use-toast';
 
 import {
@@ -35,7 +43,12 @@ import {useTenantStore} from "@/store/tenant.js";
 
 const objectData = ref({
   firstTeam: 0,
-  secondTeam: 0
+  secondTeam: 0,
+  firstTeamScore: 0,
+  secondTeamScore: 0,
+  date: '',
+  eventId: 0,
+  sport: 0
 });
 
 
@@ -50,7 +63,7 @@ onMounted(async () => {
   let eventId = route.params.event ?? '';
   const matches = await matchLogic().getMatches(eventId);
   event.value = await eventsLogic().getEvent(eventId);
-  if (matches && matches.length > 0) {
+  if (matches && matches.length > 0) {  
     collection.value = matches;
   }
 
@@ -59,6 +72,9 @@ onMounted(async () => {
   if (teamsDB && teamsDB.length > 0) {
     teams.value = teamsDB;
   }
+
+  objectData.value.eventId = eventId;
+  objectData.value.sport = event.value.data.sport.id;
 
   setTimeout(() => {
     utils().hideLoader();
@@ -86,6 +102,32 @@ async function deleteItem(id) {
     });
   }
 }
+
+const onSubmit = async (match = null) => {
+  let matchId = match?.id ?? '';
+  match = match ?? objectData?._rawValue;
+
+  debugger;
+
+  utils().showLoader();
+  const response = await matchLogic().createOrUpdateMatch(match, matchId);
+  utils().hideLoader();
+
+  if (response && !response?.error) {
+    toast({
+      title: `Match ${matchId !== '' ? "updated" : "created"}`,
+      description: `Match has been ${matchId !== '' ? "updated" : "created"} successfully`,
+    });
+    collection.value = await matchLogic().getMatches(event.value.data.id);
+    utils().hideLoader();
+  } else {
+    toast({
+      title: 'Error',
+      description: response?.message || 'An error occurred',
+      variant: 'destructive',
+    });
+  }
+};
 </script>
 
 <template>
@@ -119,12 +161,19 @@ async function deleteItem(id) {
           <TableCell v-if="useTenantStore().isCentralSite">{{ item.id }}</TableCell>
           <TableCell>{{ item.firstTeam.name }}</TableCell>
           <TableCell>{{ item.secondTeam.name }}</TableCell>
-          <TableCell>{{ item.firstTeamScore }}</TableCell>
-          <TableCell>{{ item.secondTeamScore }}</TableCell>
+          <TableCell>
+            <Input type="text" v-model="item.firstTeamScore"/>
+          </TableCell>
+          <TableCell>
+            <Input type="text" v-model="item.secondTeamScore"/>
+          </TableCell>
           <TableCell>{{ new Date(item.date).toLocaleDateString() }}</TableCell>
           <TableCell>
             <AlertDialog>
               <AlertDialogTrigger as-child>
+                <Button variant="ghost" @click="onSubmit(item)">
+                  <Icon icon="material-symbols:update" class="w-4 h-4 mr-2"/>
+                </Button>
                 <Button variant="ghost">
                   <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2"/>
                 </Button>
@@ -148,36 +197,46 @@ async function deleteItem(id) {
         <TableRow>
           <TableCell v-if="useTenantStore().isCentralSite"></TableCell>
           <TableCell>
-            <Select v-model="objectData.firstTeam">
-                <SelectTrigger id="status" aria-label="Sports">
-                <SelectValue placeholder="Select sport"/>
-                </SelectTrigger>
-                <SelectContent>
-                <SelectItem v-for="team in teams" class="bg-white" :key="team.id" :value="team.id">
-                    {{ team.name }}
-                </SelectItem>
-                </SelectContent>
-            </Select>
+            <div class="grid gap-6 mt-3">
+              <div class="grid gap-3">
+                <Select v-model="objectData.firstTeam">
+                  <SelectTrigger id="firstTeam" aria-label="First Team">
+                    <SelectValue placeholder="Select team"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem v-for="team in teams" class="bg-white" :key="team.id" :value="team.id">
+                      {{ team.name }}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </TableCell>
           <TableCell>
-            <Select v-model="objectData.secondTeam">
-                <SelectTrigger id="status" aria-label="Sports">
-                <SelectValue placeholder="Select sport"/>
-                </SelectTrigger>
-                <SelectContent>
-                <SelectItem v-for="team in teams" class="bg-white" :key="team.id" :value="team.id">
-                    {{ team.name }}
-                </SelectItem>
-                </SelectContent>
-            </Select>
+            <div class="grid gap-6 mt-3">
+              <div class="grid gap-3">
+                <Select v-model="objectData.secondTeam">
+                  <SelectTrigger id="secondTeam" aria-label="Second Team">
+                    <SelectValue placeholder="Select team"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem v-for="team in teams" class="bg-white" :key="team.id" :value="team.id">
+                      {{ team.name }}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </TableCell>
           <TableCell>0</TableCell>
           <TableCell>0</TableCell>
-          <TableCell>{{ new Date().toLocaleDateString() }}</TableCell>
           <TableCell>
-            <router-link class="inline-block" :to="`/admin/events/`">
-              <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2"/>
-            </router-link>
+            <Input type="date" v-bind="componentField" v-model="objectData.date"/>
+          </TableCell>
+          <TableCell>
+            <Button variant="ghost" @click="onSubmit">
+              <Icon icon="gala:add" class="w-4 h-4 mr-2"/>
+            </Button>
           </TableCell>
         </TableRow>
       </TableBody>

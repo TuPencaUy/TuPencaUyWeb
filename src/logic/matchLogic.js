@@ -1,5 +1,6 @@
 import api from './apiLogic';
 import {useTenantStore} from '@/store/tenant';
+import {useUserStore} from "@/store/user.js";
 
 export default function matchLogic() {
 
@@ -41,16 +42,17 @@ export default function matchLogic() {
     async function createOrUpdateMatch(match, matchIdToUpdate = '') {
         try {
             match.sport = Number(match.sport);
-            match.matchType = Number(match.matchType);
-
-            if (match.logo) {
-                match.logo = match.logo.split(',')[1];
-            }
+            match.eventId = Number(match.eventId);
+            match.date = new Date(match.date).toISOString();
 
             const currentTenant = useTenantStore().getCurrentTenant;
             const url = `/event/match/${matchIdToUpdate}`;
             const httpRequest = matchIdToUpdate !== '' ? 'PATCH' : 'POST';
-            const response = await api().execute(url, httpRequest, match, {currentTenant});
+
+            const token = useUserStore().getToken;
+            if (!token) return null;
+
+            const response = await api().execute(url, httpRequest, match, {'Authorization': `Bearer ${token}`, currentTenant});
             return response.json();
         } catch (error) {
             return error;
