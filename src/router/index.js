@@ -10,6 +10,7 @@ import SportsView from "@/pages/Admin/Sports/SportsView.vue";
 import SportView from "@/pages/Admin/Sports/SportView.vue";
 import TeamsView from "@/pages/Admin/Teams/TeamsView.vue";
 import TeamView from "@/pages/Admin/Teams/TeamView.vue";
+import MatchesView from "@/pages/Admin/Matches/MatchesView.vue";
 import CreateSiteView from '../pages/CreateSiteView.vue';
 import ChatView from "@/pages/ChatView.vue";
 import EventInstantiate from "@/pages/Admin/Events/EventInstantiate.vue";
@@ -38,6 +39,7 @@ const routes = [
   { path: '/admin/teams', name: 'teams', component: TeamsView },
   { path: '/admin/teams/add', name: 'addTeam', component: TeamView },
   { path: '/admin/teams/:id', name: 'ShowTeam', component: TeamView },
+  { path: '/admin/event/:event/matches', name: 'showMatches', component: MatchesView },
   { path: '/admin/sites', name: 'sites', component: SitesView },
   { path: '/admin/sites/add', name: 'addSite', component: SiteView },
   //Settings
