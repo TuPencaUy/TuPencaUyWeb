@@ -51,7 +51,6 @@ const objectData = ref({
   sport: 0
 });
 
-
 const {toast} = useToast();
 const route = useRoute();
 const collection = ref([]);
@@ -84,16 +83,12 @@ onMounted(async () => {
 async function deleteItem(id) {
   utils().showLoader();
   const response = await matchLogic().deleteMatch(id);
-  utils().hideLoader();
   if (response && !response?.error) {
     toast({
       title: 'match deleted',
       description: 'match has been deleted successfully',
     });
-    const response = await matchLogic().getMatches();
-    if (response && response?.data) {
-      collection.value = response.data.list;
-    }
+    collection.value = await matchLogic().getMatches(event.value.data.id);
   } else {
     toast({
       title: 'Error',
@@ -101,17 +96,23 @@ async function deleteItem(id) {
       variant: 'destructive',
     });
   }
+  utils().hideLoader();
 }
 
 const onSubmit = async (match = null) => {
   let matchId = match?.id ?? '';
-  match = match ?? objectData?._rawValue;
 
-  debugger;
+ if(matchId !== '') {
+  objectData.value.date = match.date;
+  objectData.value.firstTeam = match.firstTeam.id;
+  objectData.value.secondTeam = match.secondTeam.id;
+  objectData.value.firstTeamScore = Number(match.firstTeamScore);
+  objectData.value.secondTeamScore = Number(match.secondTeamScore);
+  objectData.value.sport = match.sport.id;
+ }
 
   utils().showLoader();
-  const response = await matchLogic().createOrUpdateMatch(match, matchId);
-  utils().hideLoader();
+  const response = await matchLogic().createOrUpdateMatch(objectData._rawValue, matchId);
 
   if (response && !response?.error) {
     toast({
@@ -119,7 +120,6 @@ const onSubmit = async (match = null) => {
       description: `Match has been ${matchId !== '' ? "updated" : "created"} successfully`,
     });
     collection.value = await matchLogic().getMatches(event.value.data.id);
-    utils().hideLoader();
   } else {
     toast({
       title: 'Error',
@@ -127,6 +127,7 @@ const onSubmit = async (match = null) => {
       variant: 'destructive',
     });
   }
+  utils().hideLoader();
 };
 </script>
 
@@ -162,18 +163,18 @@ const onSubmit = async (match = null) => {
           <TableCell>{{ item.firstTeam.name }}</TableCell>
           <TableCell>{{ item.secondTeam.name }}</TableCell>
           <TableCell>
-            <Input type="text" v-model="item.firstTeamScore"/>
+            <input type="text" v-model="item.firstTeamScore"/>
           </TableCell>
           <TableCell>
-            <Input type="text" v-model="item.secondTeamScore"/>
+            <input type="text" v-model="item.secondTeamScore"/>
           </TableCell>
           <TableCell>{{ new Date(item.date).toLocaleDateString() }}</TableCell>
           <TableCell>
+            <Button variant="ghost" @click="onSubmit(item)">
+              <Icon icon="material-symbols:update" class="w-4 h-4 mr-2"/>
+            </Button>
             <AlertDialog>
               <AlertDialogTrigger as-child>
-                <Button variant="ghost" @click="onSubmit(item)">
-                  <Icon icon="material-symbols:update" class="w-4 h-4 mr-2"/>
-                </Button>
                 <Button variant="ghost">
                   <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2"/>
                 </Button>
@@ -231,7 +232,7 @@ const onSubmit = async (match = null) => {
           <TableCell>0</TableCell>
           <TableCell>0</TableCell>
           <TableCell>
-            <Input type="date" v-bind="componentField" v-model="objectData.date"/>
+            <input type="date" v-model="objectData.date"/>
           </TableCell>
           <TableCell>
             <Button variant="ghost" @click="onSubmit">

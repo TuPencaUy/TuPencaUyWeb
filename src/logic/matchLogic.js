@@ -62,7 +62,9 @@ export default function matchLogic() {
     async function deleteMatch(matchId) {
         try {
             const currentTenant = useTenantStore().getCurrentTenant;
-            const response = await api().execute(`/event/match/${matchId}`, 'DELETE', null, {currentTenant});
+            const token = useUserStore().getToken;
+            if (!token) return null;
+            const response = await api().execute(`/event/match/${matchId}`, 'DELETE', null, {'Authorization': `Bearer ${token}`, currentTenant});
             return response.json();
         } catch (error) {
             return error;
