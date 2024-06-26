@@ -7,6 +7,7 @@ import eventsLogic from '@/logic/eventsLogic';
 import teamLogic from "@/logic/teamLogic";
 import {Button} from "@/components/ui/button/index.js";
 import {Icon} from "@iconify/vue";
+import {Input} from '@/components/ui/input';
 import { useRoute } from 'vue-router'
 
 import {
@@ -56,6 +57,8 @@ const route = useRoute();
 const collection = ref([]);
 let event = ref({});
 let teams = ref([]);
+let timeHour = ref(0);
+let timeMinutes = ref(0);
 
 onMounted(async () => {
   utils().showLoader();
@@ -112,7 +115,17 @@ const onSubmit = async (match = null) => {
  }
 
   utils().showLoader();
-  const response = await matchLogic().createOrUpdateMatch(objectData._rawValue, matchId);
+
+  const objectToSend = objectData._rawValue;
+  
+  if (matchId == '') {
+    const datetime = new Date(objectToSend.date);
+    datetime.setHours(timeHour.value);
+    datetime.setMinutes(timeMinutes.value);
+    objectToSend.date = datetime;
+  }
+
+  const response = await matchLogic().createOrUpdateMatch(objectToSend, matchId);
 
   if (response && !response?.error) {
     toast({
@@ -163,10 +176,10 @@ const onSubmit = async (match = null) => {
           <TableCell>{{ item.firstTeam.name }}</TableCell>
           <TableCell>{{ item.secondTeam.name }}</TableCell>
           <TableCell>
-            <input type="text" v-model="item.firstTeamScore"/>
+            <Input type="text" v-model="item.firstTeamScore"/>
           </TableCell>
           <TableCell>
-            <input type="text" v-model="item.secondTeamScore"/>
+            <Input type="text" v-model="item.secondTeamScore"/>
           </TableCell>
           <TableCell>{{ new Date(item.date).toLocaleDateString() }}</TableCell>
           <TableCell>
@@ -232,7 +245,16 @@ const onSubmit = async (match = null) => {
           <TableCell>0</TableCell>
           <TableCell>0</TableCell>
           <TableCell>
-            <input type="date" v-model="objectData.date"/>
+            <div class="flex w-fit gap-[10px]">
+              <Input type="date" class="w-[200px]" v-model="objectData.date"/>
+              <div class="flex gap-[5px]">
+                <Input type="text" class="w-[60px]" v-model="timeHour"/>
+                <div class="flex flex-col justify-center">
+                  <p>:</p>
+                </div>
+                <Input type="text" class="w-[60px]" v-model="timeMinutes"/>
+              </div>
+            </div>
           </TableCell>
           <TableCell>
             <Button variant="ghost" @click="onSubmit">

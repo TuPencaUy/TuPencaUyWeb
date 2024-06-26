@@ -4,15 +4,12 @@ import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import router from "@/router/index.js";
 
-import {useEventStore} from "@/store/event.js";
-
 import matchLogic from "@/logic/matchLogic.js";
 
 
 import Header from "@/components/Header.vue";
 import {Icon} from "@iconify/vue";
 import {Input} from "@/components/ui/input/index.js";
-import {Separator} from "@/components/ui/separator/index.js";
 import {Button} from "@/components/ui/button/index.js";
 
 const route = useRoute();
@@ -23,6 +20,15 @@ onMounted(async () => {
   if (!route.params.id) await router.push('/events');
   
   matches.value = await matchLogic().getMatches(parseInt(route.params.id));
+
+  matches.value = [...matches.value].map((elem) => {
+    const padNumber = (num) => num < 10 ? `0${num}` : num;
+
+    const date = new Date(elem.date);
+    elem.date = `${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${date.getFullYear()}`;
+    elem.startTime = `${padNumber(date.getHours())}:${padNumber(date.getMinutes())}`;
+    return elem;
+  });
 });
 </script>
 

@@ -43,7 +43,7 @@ export default function matchLogic() {
         try {
             match.sport = Number(match.sport);
             match.eventId = Number(match.eventId);
-            match.date = new Date(match.date).toISOString();
+            match.date = match.date.toISOString();
 
             const currentTenant = useTenantStore().getCurrentTenant;
             const url = `/event/match/${matchIdToUpdate}`;
