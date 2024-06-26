@@ -181,7 +181,6 @@ const onSubmit = handleSubmit(async () => {
                           </FormItem>
                         </FormField>
                       </div>
-
                     </div>
                     <div class="grid gap-6 mt-3">
                       <div class="grid gap-3">
@@ -200,6 +199,11 @@ const onSubmit = handleSubmit(async () => {
                     </div>
                   </CardContent>
                 </Card>
+                <router-link :to="`/admin/event/${objectData.id}/matches`">
+                  <Button variant="outline">
+                    Show Matches
+                  </Button>
+                </router-link>
               </div>
               <div class="grid auto-rows-max items-start gap-4 lg:gap-8">
                 <Card>
