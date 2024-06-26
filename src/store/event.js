@@ -16,6 +16,10 @@ export const useEventStore = defineStore({
             this._currentEvent = response?.data ?? null;
         }
     },
-    getters: {},
+    getters: {
+        getCurrentEvent() {
+            return this._currentEvent;
+        }
+    },
     persist: true
 });

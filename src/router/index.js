@@ -23,6 +23,7 @@ import SiteView from "@/pages/Admin/Sites/SiteView.vue";
 
 const routes = [
   { path: '/events', name: 'user events', component: Events },
+  { path: '/events/:id', name: 'user event', component: Event },
   { path: '/signup', name: 'Signin', component: SignUpView },
   { path: '/login', name: 'login', component: LoginView },
   { path: '/create-site', name: 'create-site', component: CreateSiteView },

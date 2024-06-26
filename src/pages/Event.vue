@@ -3,7 +3,12 @@
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import router from "@/router/index.js";
+
 import {useEventStore} from "@/store/event.js";
+
+import matchLogic from "@/logic/matchLogic.js";
+
+
 import Header from "@/components/Header.vue";
 import {Icon} from "@iconify/vue";
 import {Input} from "@/components/ui/input/index.js";
@@ -16,8 +21,10 @@ const matches = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
 onMounted(async () => {
   if (!route.params.id) await router.push('/events');
+  
+  matches.value = await matchLogic().getMatches(parseInt(route.params.id));
+  debugger;
 
-  await useEventStore().setCurrentEvent(route.params.id);
 });
 </script>
 
