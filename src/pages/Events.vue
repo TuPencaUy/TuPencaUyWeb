@@ -75,7 +75,7 @@ async function handleSubscribe(eventId) {
                       class="relative w-full h-full text-center hover:cursor-pointer group">
                   <div
                       class="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <router-link :to="`/events/${event.referenceEvent}`">
+                    <router-link :to="`/events/${event.id}`">
                       <Button class="bg-green-400 hover:bg-green-600 text-white">
                         View event
                       </Button>
