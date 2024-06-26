@@ -63,10 +63,23 @@ let timeMinutes = ref(0);
 onMounted(async () => {
   utils().showLoader();
   let eventId = route.params.event ?? '';
-  const matches = await matchLogic().getMatches(eventId);
+  let matches = await matchLogic().getMatches(eventId);
   event.value = await eventsLogic().getEvent(eventId);
+
   if (matches && matches.length > 0) {  
+    matches = [...matches].map((elem) => {
+      const padNumber = (num) => num < 10 ? `0${num}` : num;
+
+      const date = new Date(elem.date);
+      const dateFormatted = `${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${date.getFullYear()}`;
+      const time = `${padNumber(date.getHours())}:${padNumber(date.getMinutes())}`;
+      elem.date = `${dateFormatted} ${time}`;
+
+      return elem;
+    });
+
     collection.value = matches;
+
   }
 
   const teamsDB = await teamLogic().getTeams();
@@ -181,7 +194,7 @@ const onSubmit = async (match = null) => {
           <TableCell>
             <Input type="text" v-model="item.secondTeamScore"/>
           </TableCell>
-          <TableCell>{{ new Date(item.date).toLocaleDateString() }}</TableCell>
+          <TableCell>{{ item.date }}</TableCell>
           <TableCell>
             <Button variant="ghost" @click="onSubmit(item)">
               <Icon icon="material-symbols:update" class="w-4 h-4 mr-2"/>
