@@ -63,7 +63,7 @@ const {handleSubmit} = useForm({
 
 onMounted(async () => {
   eventId = route.params.id ?? '';
-  if (eventId) {
+  if (eventId !== '') {
     utils().showLoader();
     const response = await eventsLogic().getEvent(eventId);
     if (response && response?.data) {
@@ -192,6 +192,24 @@ const onSubmit = handleSubmit(async () => {
                           <SelectContent>
                             <SelectItem v-for="sport in sports" class="bg-white" :key="sport.id" :value="sport.id">
                               {{ sport.name }}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div v-if="eventId !== ''" class="grid gap-6 mt-3">
+                      <div class="grid gap-3">
+                        <Label for="status">Instantiable</Label>
+                        <Select v-model="objectData.instantiable">
+                          <SelectTrigger id="instantiable" aria-label="Instantiable">
+                            <SelectValue placeholder="Select"/>
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem class="bg-white" value="true">
+                              Yes
+                            </SelectItem>
+                            <SelectItem class="bg-white" value="false">
+                              No
                             </SelectItem>
                           </SelectContent>
                         </Select>

@@ -58,7 +58,7 @@ const createBet = async (matchId) => {
     matchId: parseInt(matchId),
     eventId: parseInt(route.params.id)
   };
-  debugger;
+  
   const response = await betLogic().createOrUpdateBet(objectData);
   utils().hideLoader();
 

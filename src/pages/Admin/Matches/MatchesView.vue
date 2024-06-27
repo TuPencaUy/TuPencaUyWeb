@@ -160,17 +160,7 @@ const onSubmit = async (match = null) => {
 <template>
   <Admin title="Matches" name-btn-add="Add match"
          :path-to-add="useTenantStore().isCentralSite ? '/admin/matches/add' : '/admin/matches/instantiate'">
-    <div class="w-full m-auto" v-if="collection.length < 1">
-      <div class="text-center">
-        <h3 class="text-2xl font-bold tracking-tight">
-          You have no matches
-        </h3>
-        <p class="text-sm text-muted-foreground">
-          You can start by adding a new one
-        </p>
-      </div>
-    </div>
-    <Table v-else>
+    <Table>
       <TableHeader>
         <TableRow>
           <TableHead v-if="useTenantStore().isCentralSite">ID</TableHead>
