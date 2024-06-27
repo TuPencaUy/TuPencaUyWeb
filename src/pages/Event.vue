@@ -5,16 +5,34 @@ import {onMounted, ref} from "vue";
 import router from "@/router/index.js";
 
 import matchLogic from "@/logic/matchLogic.js";
+import betLogic from "@/logic/betLogic.js";
+import utils from '@/logic/utils';
 
+import { useToast } from '@/components/ui/toast/use-toast'
+import { useUserStore } from "@/store/user.js"
 
 import Header from "@/components/Header.vue";
 import {Icon} from "@iconify/vue";
 import {Input} from "@/components/ui/input/index.js";
 import {Button} from "@/components/ui/button/index.js";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+
+const { toast } = useToast()
+
 const route = useRoute();
 
 const matches = ref([]);
+
+const firstTeamScore = ref(0);
+const secondTeamScore = ref(0);
 
 onMounted(async () => {
   if (!route.params.id) await router.push('/events');
@@ -30,6 +48,35 @@ onMounted(async () => {
     return elem;
   });
 });
+
+const createBet = async (matchId) => {
+  utils().showLoader();
+  const objectData = {
+    firstTeamScore: parseInt(firstTeamScore._rawValue),
+    secondTeamScore: parseInt(secondTeamScore._rawValue),
+    userEmail: useUserStore().getUserEmail,
+    matchId: parseInt(matchId),
+    eventId: parseInt(route.params.id)
+  };
+  debugger;
+  const response = await betLogic().createOrUpdateBet(objectData);
+  utils().hideLoader();
+
+  if (response && !response?.error) {
+    toast({
+      title: `You made a prediction`
+    });
+    setTimeout(() => {
+      router.push('/admin/events');
+    }, 1000);
+  } else {
+    toast({
+      title: 'Error',
+      description: response?.message || 'An error occurred',
+      variant: 'destructive',
+    });
+  }
+};
 </script>
 
 <template>
@@ -70,11 +117,38 @@ onMounted(async () => {
               </div>
             </div>
             <div class="flex gap-2 justify-center items-center">
-
-              <Button variant="outline" size="sm" class="">
-                <Icon icon="clarity:note-line" class="h-5 w-5"/>
-                Predict
-              </Button>
+              <Dialog>
+                <DialogTrigger as-child>
+                  <Button variant="outline" size="sm" class="">
+                    <Icon icon="clarity:note-line" class="h-5 w-5"/>
+                    Predict
+                  </Button>
+                </DialogTrigger>
+                <DialogContent class="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Predict the result</DialogTitle>
+                  </DialogHeader>
+                  <div class="grid gap-4 py-4">
+                    <div class="grid grid-cols-4 items-center gap-4">
+                      <Label for="name" class="text-right">
+                        {{match?.firstTeam?.name}}
+                      </Label>
+                      <Input v-model="firstTeamScore" class="col-span-3" />
+                    </div>
+                    <div class="grid grid-cols-4 items-center gap-4">
+                      <Label for="username" class="text-right">
+                        {{match?.secondTeam?.name}}
+                      </Label>
+                      <Input v-model="secondTeamScore" class="col-span-3" />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit" @click="createBet(match.id)">
+                      Predict now!
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>

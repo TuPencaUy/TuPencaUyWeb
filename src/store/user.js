@@ -49,6 +49,9 @@ export const useUserStore = defineStore({
         },
         getSite() {
             return this._user?.site;
+        },
+        getUserEmail() {
+            return this._user?.email;
         }
     }, persist: true
 });
