@@ -158,7 +158,7 @@ const onSubmit = async (match = null) => {
 </script>
 
 <template>
-  <Admin title="Matches" name-btn-add="Add match"
+  <Admin title="Matches"
          :path-to-add="useTenantStore().isCentralSite ? '/admin/matches/add' : '/admin/matches/instantiate'">
     <Table>
       <TableHeader>
