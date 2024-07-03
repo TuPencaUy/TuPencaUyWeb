@@ -30,21 +30,30 @@ const { toast } = useToast()
 const route = useRoute();
 
 const matches = ref([]);
+const bets = ref([]);
 
 const firstTeamScore = ref(0);
 const secondTeamScore = ref(0);
 
 onMounted(async () => {
   if (!route.params.id) await router.push('/events');
-  
   matches.value = await matchLogic().getMatches(parseInt(route.params.id));
-
+  bets.value = await betLogic().getBets('eventId=' + parseInt(route.params.id));
   matches.value = [...matches.value].map((elem) => {
     const padNumber = (num) => num < 10 ? `0${num}` : num;
 
     const date = new Date(elem.date);
     elem.date = `${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${date.getFullYear()}`;
     elem.startTime = `${padNumber(date.getHours())}:${padNumber(date.getMinutes())}`;
+    return elem;
+  });
+
+  matches.value = [...matches.value].map((elem) => {
+    const bet = bets.value.find((bet) => bet.match?.id === elem.id);
+    if (bet) {
+      elem.betFirstTeam = bet.scoreFirstTeam;
+      elem.betSecondTeam = bet.scoreSecondTeam;
+    }
     return elem;
   });
 });
@@ -58,7 +67,7 @@ const createBet = async (matchId) => {
     matchId: parseInt(matchId),
     eventId: parseInt(route.params.id)
   };
-  
+
   const response = await betLogic().createOrUpdateBet(objectData);
   utils().hideLoader();
 
@@ -104,11 +113,11 @@ const createBet = async (matchId) => {
               <div class="flex items-center">
                 <div class="flex items-center gap-4">
                   <p class="text-2xl text-uppercase font-semibold">{{ match?.firstTeam?.name ?? 'Team 1' }}</p>
-                  <p class="text-lg text-uppercase font-semibold">{{ match?.firstTeamScore ?? '0' }}</p>
+                  <p class="text-lg text-uppercase font-semibold">{{ match?.betFirstTeam ?? '0' }}</p>
                 </div>
                 <Icon icon="solar:cup-outline" class="h-8 w-8 px-2"/>
                 <div class="flex items-center gap-4">
-                  <p class="text-lg text-uppercase font-semibold">{{ match?.secondTeamScore ?? '0' }}</p>
+                  <p class="text-lg text-uppercase font-semibold">{{ match?.betSecondTeam ?? '0' }}</p>
                   <p class="text-2xl text-uppercase font-semibold">{{ match?.secondTeam?.name ?? 'Team 2' }}</p>
                 </div>
               </div>

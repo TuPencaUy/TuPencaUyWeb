@@ -17,6 +17,7 @@ import {
 import {Label} from "@/components/ui/label/index.js";
 import userLogic from "@/logic/userLogic.js";
 import {useToast} from "@/components/ui/toast/index.js";
+import {useEventStore} from "@/store/event.js";
 
 const {toast} = useToast();
 
@@ -76,7 +77,7 @@ async function handleSubscribe(eventId) {
                   <div
                       class="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                     <router-link :to="`/events/${event.id}`">
-                      <Button class="bg-green-400 hover:bg-green-600 text-white">
+                      <Button @click="useEventStore().setCurrentEvent(event.id)" class="bg-green-400 hover:bg-green-600 text-white">
                         View event
                       </Button>
                     </router-link>
