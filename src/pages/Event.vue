@@ -8,8 +8,8 @@ import matchLogic from "@/logic/matchLogic.js";
 import betLogic from "@/logic/betLogic.js";
 import utils from '@/logic/utils';
 
-import { useToast } from '@/components/ui/toast/use-toast'
-import { useUserStore } from "@/store/user.js"
+import {useToast} from '@/components/ui/toast/use-toast';
+import {useUserStore} from "@/store/user.js";
 
 import Header from "@/components/Header.vue";
 import {Icon} from "@iconify/vue";
@@ -23,9 +23,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
 
-const { toast } = useToast()
+const {toast} = useToast();
 
 const route = useRoute();
 
@@ -68,7 +68,8 @@ const createBet = async (matchId) => {
     eventId: parseInt(route.params.id)
   };
 
-  const response = await betLogic().createOrUpdateBet(objectData);
+  const isUpdating = bets.value.some((bet) => bet.match?.id === matchId);
+  const response = await betLogic().createOrUpdateBet(objectData, isUpdating);
   utils().hideLoader();
 
   if (response && !response?.error) {
@@ -76,7 +77,7 @@ const createBet = async (matchId) => {
       title: `You made a prediction`
     });
     setTimeout(() => {
-      router.push('/admin/events');
+      router.push(`/events/${route.params.id}`);
     }, 1000);
   } else {
     toast({
@@ -108,7 +109,8 @@ const createBet = async (matchId) => {
             </div>
             <div class="rounded-[50px] p-4 flex justify-evenly max-w-[800px] w-[800px] shadow">
               <div>
-                <img :src="match?.firstTeam?.logo ?? 'https://via.placeholder.com/150'" alt="team1 logo" class="w-10 h-10"/>
+                <img :src="match?.firstTeam?.logo ?? 'https://via.placeholder.com/150'" alt="team1 logo"
+                     class="w-10 h-10"/>
               </div>
               <div class="flex items-center">
                 <div class="flex items-center gap-4">
@@ -122,7 +124,8 @@ const createBet = async (matchId) => {
                 </div>
               </div>
               <div class="border rounded-lg flex justify-evenly">
-                <img :src="match?.secondTeam?.logo ?? 'https://via.placeholder.com/150'" alt="team2 logo" class="w-10 h-10"/>
+                <img :src="match?.secondTeam?.logo ?? 'https://via.placeholder.com/150'" alt="team2 logo"
+                     class="w-10 h-10"/>
               </div>
             </div>
             <div class="flex gap-2 justify-center items-center">
@@ -140,15 +143,15 @@ const createBet = async (matchId) => {
                   <div class="grid gap-4 py-4">
                     <div class="grid grid-cols-4 items-center gap-4">
                       <Label for="name" class="text-right">
-                        {{match?.firstTeam?.name}}
+                        {{ match?.firstTeam?.name }}
                       </Label>
-                      <Input v-model="firstTeamScore" class="col-span-3" />
+                      <Input v-model="firstTeamScore" class="col-span-3"/>
                     </div>
                     <div class="grid grid-cols-4 items-center gap-4">
                       <Label for="username" class="text-right">
-                        {{match?.secondTeam?.name}}
+                        {{ match?.secondTeam?.name }}
                       </Label>
-                      <Input v-model="secondTeamScore" class="col-span-3" />
+                      <Input v-model="secondTeamScore" class="col-span-3"/>
                     </div>
                   </div>
                   <DialogFooter>

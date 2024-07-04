@@ -23,16 +23,15 @@ export default function betLogic() {
         }
     }
 
-    async function createOrUpdateBet(bet, betIdToUpdate = '') {
+    async function createOrUpdateBet(bet, updating = false) {
         try {
             const currentTenant = useTenantStore().getCurrentTenant;
-            const url = `/bet/${betIdToUpdate}`;
-            const httpRequest = betIdToUpdate !== '' ? 'PATCH' : 'POST';
+            const httpRequest = updating ? 'PATCH' : 'POST';
 
             const token = useUserStore().getToken;
             if (!token) return null;
 
-            const response = await api().execute(url, httpRequest, bet, {
+            const response = await api().execute('/bet', httpRequest, bet, {
                 'Authorization': `Bearer ${token}`,
                 currentTenant
             });
