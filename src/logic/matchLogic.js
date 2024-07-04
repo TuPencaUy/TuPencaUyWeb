@@ -43,7 +43,7 @@ export default function matchLogic() {
         try {
             match.sport = Number(match.sport);
             match.eventId = Number(match.eventId);
-            match.date = match.date.toISOString();
+            match.date = toLocalISOString(match.date);
 
             const currentTenant = useTenantStore().getCurrentTenant;
             const url = `/event/match/${matchIdToUpdate}`;
@@ -52,23 +52,36 @@ export default function matchLogic() {
             const token = useUserStore().getToken;
             if (!token) return null;
 
-            const response = await api().execute(url, httpRequest, match, {'Authorization': `Bearer ${token}`, currentTenant});
+            const response = await api().execute(url, httpRequest, match, {
+                'Authorization': `Bearer ${token}`,
+                currentTenant
+            });
             return response.json();
         } catch (error) {
             return error;
         }
     }
 
+
     async function deleteMatch(matchId) {
         try {
             const currentTenant = useTenantStore().getCurrentTenant;
             const token = useUserStore().getToken;
             if (!token) return null;
-            const response = await api().execute(`/event/match/${matchId}`, 'DELETE', null, {'Authorization': `Bearer ${token}`, currentTenant});
+            const response = await api().execute(`/event/match/${matchId}`, 'DELETE', null, {
+                'Authorization': `Bearer ${token}`,
+                currentTenant
+            });
             return response.json();
         } catch (error) {
             return error;
         }
+    }
+
+    function toLocalISOString(date) {
+        const offset = date.getTimezoneOffset() * 60000;
+        const adjustedDate = new Date(date.getTime() - offset);
+        return adjustedDate.toISOString().slice(0, -1);
     }
 
     return {

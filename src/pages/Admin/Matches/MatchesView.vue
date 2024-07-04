@@ -130,9 +130,13 @@ const onSubmit = async (match = null) => {
   utils().showLoader();
 
   const objectToSend = objectData._rawValue;
-  
-  if (matchId == '') {
-    const datetime = new Date(objectToSend.date);
+
+  if (matchId === '') {
+    const splittedDate = objectToSend.date?.split('-');
+    const year = Number(splittedDate[0]);
+    const month = Number(splittedDate[1]) - 1;
+    const day = Number(splittedDate[2]);
+    const datetime = new Date(year, month, day);
     datetime.setHours(timeHour.value);
     datetime.setMinutes(timeMinutes.value);
     objectToSend.date = datetime;
