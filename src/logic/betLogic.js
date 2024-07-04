@@ -10,7 +10,7 @@ export default function betLogic() {
         try {
             const bets = [];
 
-            const url = `/bet?eventId=${useEventStore().getCurrentEvent?.id}`;
+            const url = `/bet?eventId=${useEventStore().getCurrentEvent?.id}&userEmail=${useUserStore().getUserEmail}`;
             const currentTenant = useTenantStore().getCurrentTenant;
             const response = await api().execute(url, 'GET', null, {currentTenant});
             const data = await response.json();

@@ -14,6 +14,11 @@ export const useEventStore = defineStore({
         async setCurrentEvent(eventId) {
             const response = await eventsLogic().getEvent(eventId);
             this._currentEvent = response?.data ?? null;
+        },
+        resetCurrentEvent() {
+            this._currentEvent = null;
+            this._bets = [];
+            this._matches = [];
         }
     },
     getters: {
