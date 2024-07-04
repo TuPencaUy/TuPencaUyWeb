@@ -8,7 +8,7 @@ import teamLogic from "@/logic/teamLogic";
 import {Button} from "@/components/ui/button/index.js";
 import {Icon} from "@iconify/vue";
 import {Input} from '@/components/ui/input';
-import { useRoute } from 'vue-router'
+import {useRoute} from 'vue-router';
 
 import {
   Table,
@@ -66,7 +66,7 @@ onMounted(async () => {
   let matches = await matchLogic().getMatches(eventId);
   event.value = await eventsLogic().getEvent(eventId);
 
-  if (matches && matches.length > 0) {  
+  if (matches && matches.length > 0) {
     matches = [...matches].map((elem) => {
       const padNumber = (num) => num < 10 ? `0${num}` : num;
 
@@ -118,20 +118,30 @@ async function deleteItem(id) {
 const onSubmit = async (match = null) => {
   let matchId = match?.id ?? '';
 
- if(matchId !== '') {
-  objectData.value.date = match.date;
-  objectData.value.firstTeam = match.firstTeam.id;
-  objectData.value.secondTeam = match.secondTeam.id;
-  objectData.value.firstTeamScore = Number(match.firstTeamScore);
-  objectData.value.secondTeamScore = Number(match.secondTeamScore);
-  objectData.value.sport = match.sport.id;
- }
+  if (matchId !== '') {
+    objectData.value.date = match.date;
+    objectData.value.firstTeam = match.firstTeam.id;
+    objectData.value.secondTeam = match.secondTeam.id;
+    objectData.value.firstTeamScore = Number(match.firstTeamScore);
+    objectData.value.secondTeamScore = Number(match.secondTeamScore);
+    objectData.value.sport = match.sport.id;
+  }
 
   utils().showLoader();
 
   const objectToSend = objectData._rawValue;
 
   if (matchId === '') {
+    if (!objectToSend.date || timeHour.value < 0 || timeHour.value > 23 || timeMinutes.value < 0 || timeMinutes.value > 59) {
+      toast({
+        title: 'Error',
+        description: 'Invalid time format',
+        variant: 'destructive',
+      });
+      utils().hideLoader();
+      return;
+    }
+
     const splittedDate = objectToSend.date?.split('-');
     const year = Number(splittedDate[0]);
     const month = Number(splittedDate[1]) - 1;
@@ -212,7 +222,7 @@ const onSubmit = async (match = null) => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </TableCell> 
+          </TableCell>
         </TableRow>
 
         <TableRow>
