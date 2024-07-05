@@ -99,7 +99,6 @@ async function handleLogin(event) {
         }
       } else {
         router.push('/events');
-
       }
 
 

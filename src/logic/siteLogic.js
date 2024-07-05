@@ -91,8 +91,6 @@ export default function siteLogic() {
         const tenant = useTenantStore().getCurrentTenant;
         if (!tenant) return;
 
-        if (useTenantStore()._isTenantValid) return;
-
         const site = await getSite(tenant);
         if (!site || site?.error || !site?.data) {
             window.location.href = import.meta.env.VITE_API_CENTRAL_URL;
@@ -101,7 +99,6 @@ export default function siteLogic() {
         useTenantStore().setTenantId(site.data?.id);
         useTenantStore().setTenantAccess(site.data?.accessType ?? 1);
         useTenantStore().setTenantColor(site.data?.color ?? 1);
-        useTenantStore().setIsTenantValid(true);
     }
 
     async function redirectUserToSite(tenant) {

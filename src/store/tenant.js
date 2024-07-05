@@ -9,7 +9,6 @@ export const useTenantStore = defineStore({
             _currentTenant: null,
             _tenantAccess: null,
             _tenantColor: null,
-            _isTenantValid: false,
         };
     },
     actions: {
@@ -30,15 +29,11 @@ export const useTenantStore = defineStore({
         setTenantColor(color) {
             this._tenantColor = color;
         },
-        setIsTenantValid(isValid) {
-            this._isTenantValid = isValid;
-        },
         setTenantId(id) {
             this._id = id;
         },
         async refreshTenantValues() {
             this.setCurrentTenant();
-            this.setIsTenantValid(false);
             await siteLogic().validateSite();
         }
     },
