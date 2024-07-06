@@ -31,7 +31,9 @@ onMounted(async () => {
 
   utils().showLoader();
   events.value = await eventsLogic().getEvents();
-  events.value = events.value.filter(event => !userEvents.find(userEvent => userEvent.id === event.id));
+  if (userEvents?.length > 0) {
+    events.value = events.value.filter(event => !userEvents.find(userEvent => userEvent.id === event.id));
+  }
   utils().hideLoader();
 });
 
@@ -65,7 +67,7 @@ async function handleSubscribe(eventId) {
       <div class="w-full h-40 flex flex-col justify-center align-items-center bg-white shadow border-primary">
         <h1 class="text-4xl font-bold text-center">Events</h1>
       </div>
-      <div v-if="userEvents.length > 0" class="m-8">
+      <div v-if="userEvents?.length > 0" class="m-8">
         <Label class="mt-4 text-2xl">Your events</Label>
         <div class="grid grid-cols-5 md:grid-cols-5 lg:grid-cols-5 gap-4 mt-4">
           <Carousel
@@ -75,7 +77,8 @@ async function handleSubscribe(eventId) {
     }"
           >
             <CarouselContent class="-ml-1">
-              <CarouselItem v-for="event in userEvents" :key="event" class="w-[400px] sm:basis-1/2 md:basis-1/4 lg:basis-1/5">
+              <CarouselItem v-for="event in userEvents" :key="event"
+                            class="w-[400px] sm:basis-1/2 md:basis-1/4 lg:basis-1/5">
                 <Card id="eventId"
                       class="relative w-full h-full text-center hover:cursor-pointer group">
                   <div
@@ -98,7 +101,7 @@ async function handleSubscribe(eventId) {
           </Carousel>
         </div>
       </div>
-      <div v-if="events.length > 0" class="m-8">
+      <div v-if="events?.length > 0" class="m-8">
         <Label class="mt-4 text-2xl">Available events</Label>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 

@@ -116,9 +116,11 @@ const createBet = async (matchId) => {
                 <div class="flex items-center gap-4">
                   <p class="text-2xl text-uppercase font-semibold">{{ match?.firstTeam?.name ?? 'Team 1' }}</p>
                   <p class="text-lg text-uppercase font-semibold">{{ match?.betFirstTeam ?? '0' }}</p>
+                  <p class="text-lg text-uppercase font-semibold">{{ match?.firstTeamScore ?? '0' }}</p>
                 </div>
                 <Icon icon="solar:cup-outline" class="h-8 w-8 px-2"/>
                 <div class="flex items-center gap-4">
+                  <p class="text-lg text-uppercase font-semibold">{{ match?.secondTeamScore ?? '0' }}</p>
                   <p class="text-lg text-uppercase font-semibold">{{ match?.betSecondTeam ?? '0' }}</p>
                   <p class="text-2xl text-uppercase font-semibold">{{ match?.secondTeam?.name ?? 'Team 2' }}</p>
                 </div>

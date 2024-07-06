@@ -4,23 +4,25 @@ import {useUserStore} from "@/store/user.js";
 
 export default function matchLogic() {
 
+    const URL = '/match';
+
     async function getMatches(eventId) {
         try {
-            const matchs = [];
+            const matches = [];
             let page = 1;
             let hasMore = true;
             do {
-                const url = `/event/match?page=${page}&eventId=${eventId}`;
+                const url = `${URL}?page=${page}&eventId=${eventId}`;
                 const currentTenant = useTenantStore().getCurrentTenant;
                 const response = await api().execute(url, 'GET', null, {currentTenant});
                 const data = await response.json();
 
                 if (data?.data?.list?.length > 0) {
-                    matchs.push(...data.data.list);
+                    matches.push(...data.data.list);
                     page++;
                 } else {
                     hasMore = false;
-                    return matchs;
+                    return matches;
                 }
             } while (hasMore);
         } catch (error) {
@@ -30,7 +32,7 @@ export default function matchLogic() {
 
     async function getMatch(id) {
         try {
-            const url = `/event/match/${id}`;
+            const url = `${URL}/${id}`;
             const currentTenant = useTenantStore().getCurrentTenant;
             const response = await api().execute(url, 'GET', null, {currentTenant});
             return response.json();
@@ -46,7 +48,7 @@ export default function matchLogic() {
             match.date = (matchIdToUpdate) ? toLocalISOString(new Date(match.date)) : toLocalISOString(match.date);
 
             const currentTenant = useTenantStore().getCurrentTenant;
-            const url = `/event/match/${matchIdToUpdate}`;
+            const url = `${URL}/${matchIdToUpdate}`;
             const httpRequest = matchIdToUpdate !== '' ? 'PATCH' : 'POST';
 
             const token = useUserStore().getToken;
@@ -68,7 +70,7 @@ export default function matchLogic() {
             const currentTenant = useTenantStore().getCurrentTenant;
             const token = useUserStore().getToken;
             if (!token) return null;
-            const response = await api().execute(`/event/match/${matchId}`, 'DELETE', null, {
+            const response = await api().execute(`${URL}/${matchId}`, 'DELETE', null, {
                 'Authorization': `Bearer ${token}`,
                 currentTenant
             });
