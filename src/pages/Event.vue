@@ -109,7 +109,9 @@ const createBet = async (matchId) => {
             </div>
             <div class="rounded-[50px] p-4 flex justify-evenly max-w-[800px] w-[800px] shadow">
               <div>
-                <img :src="match?.firstTeam?.logo ?? 'https://via.placeholder.com/150'" alt="team1 logo"
+                <img v-if="!match.firstTeam?.logo" src="https://via.placeholder.com/150" alt="team1 logo"
+                     class="w-10 h-10"/>
+                <img v-else :src="['data:image/png;base64',match.firstTeam.logo]" alt="team1 logo"
                      class="w-10 h-10"/>
               </div>
               <div class="flex items-center">
@@ -126,7 +128,9 @@ const createBet = async (matchId) => {
                 </div>
               </div>
               <div class="border rounded-lg flex justify-evenly">
-                <img :src="match?.secondTeam?.logo ?? 'https://via.placeholder.com/150'" alt="team2 logo"
+                <img v-if="!match.secondTeam?.logo" src="https://via.placeholder.com/150" alt="team2 logo"
+                     class="w-10 h-10"/>
+                <img v-else :src="['data:image/png;base64',match.secondTeam.logo]" alt="team2 logo"
                      class="w-10 h-10"/>
               </div>
             </div>
