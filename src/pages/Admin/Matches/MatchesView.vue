@@ -216,12 +216,12 @@ const onSubmit = async (match = null) => {
             </Select>
           </TableCell>
           <TableCell>
-            <Button variant="ghost" @click="onSubmit(item)">
+            <Button variant="ghost" @click="onSubmit(item)" :disabled="utils().hasDateExpired(item.date)">
               <Icon icon="material-symbols:update" class="w-4 h-4 mr-2"/>
             </Button>
             <AlertDialog>
               <AlertDialogTrigger as-child>
-                <Button variant="ghost">
+                <Button variant="ghost" :disabled="utils().hasDateExpired(item.date)">
                   <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2"/>
                 </Button>
               </AlertDialogTrigger>

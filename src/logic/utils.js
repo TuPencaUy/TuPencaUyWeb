@@ -1,4 +1,3 @@
-import router from "@/router/index.js";
 import {useUserStore} from "@/store/user.js";
 
 export default function utils() {
@@ -20,9 +19,18 @@ export default function utils() {
         return useUserStore().isAuthenticated;
     }
 
+    function hasDateExpired(limitDate) {
+        const dateToCompare = typeof limitDate === 'string' ? new Date(limitDate) : limitDate;
+
+        const result = Date.now() > dateToCompare;
+
+        return result;
+    }
+
     return {
         showLoader,
         hideLoader,
-        ensureIsLoggedIn
+        ensureIsLoggedIn,
+        hasDateExpired
     };
 }

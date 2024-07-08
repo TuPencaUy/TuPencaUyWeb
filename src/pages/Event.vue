@@ -47,6 +47,7 @@ const getMatches = async () => {
     const padNumber = (num) => num < 10 ? `0${num}` : num;
 
     const date = new Date(elem.date);
+    elem.fullDate = date;
     elem.date = `${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${date.getFullYear()}`;
     elem.startTime = `${padNumber(date.getHours())}:${padNumber(date.getMinutes())}`;
     return elem;
@@ -139,7 +140,7 @@ const createBet = async (matchId) => {
             <div class="flex gap-2 justify-center items-center">
               <Dialog>
                 <DialogTrigger as-child>
-                  <Button variant="outline" size="sm" class="">
+                  <Button variant="outline" size="sm" class="" :disabled="utils().hasDateExpired(match.fullDate)">
                     <Icon icon="clarity:note-line" class="h-5 w-5"/>
                     Predict
                   </Button>
