@@ -74,6 +74,7 @@ onMounted(async () => {
       objectData.value.startDate = objectData.value.startDate.split('T')[0];
       objectData.value.endDate = objectData.value.endDate.split('T')[0];
       objectData.value.comission = objectData.value.comission * 100;
+      objectData.value.instantiable = objectData.value.instantiable ? 'true' : 'false';
     }
 
     setTimeout(() => {
