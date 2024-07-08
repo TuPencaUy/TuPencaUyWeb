@@ -92,7 +92,7 @@ async function deleteItem(id) {
       <TableBody>
         <TableRow v-for="item in collection" :key="item.id">
           <TableCell>
-            <img v-if="item.logo" :src="['data:image/png;base64',item.logo]" alt="logo" class="w-40 h-40"/>
+            <img v-if="item.logo" :src="['data:image/png;base64',item.logo]" alt="logo" class="w-10 h-10"/>
           </TableCell>
           <TableCell>{{ item.id }}</TableCell>
           <TableCell>{{ item.name }}</TableCell>
