@@ -32,11 +32,6 @@ import {useTenantStore} from "@/store/tenant.js";
 
 const {toast} = useToast();
 
-const COMMISSION_VALUES = {
-  1: 'Yes',
-  0: 'No',
-};
-
 const TEAM_VALUES = {
   1: 'National',
   2: 'Local',
@@ -112,7 +107,7 @@ async function deleteItem(id) {
           <TableCell>{{ item.sport.name }}</TableCell>
           <TableCell>{{ new Date(item.startDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ new Date(item.endDate).toLocaleDateString() }}</TableCell>
-          <TableCell>{{ item.comission ?? 0 }}</TableCell>
+          <TableCell>{{ `${item.comission * 100 ?? 0}%` }}</TableCell>
           <TableCell>{{ TEAM_VALUES[item.teamType ?? 1] }}</TableCell>
           <TableCell v-if="useTenantStore().isCentralSite">
             <router-link class="inline-block" :to="`/admin/events/${item.id}`">

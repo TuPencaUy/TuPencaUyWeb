@@ -46,7 +46,7 @@ const objectData = ref({
   name: 'eventName',
   startDate: '',
   endDate: '',
-  comission: 'no',
+  comission: 0,
   teamType: 'local',
   sport_id: ''
 });
@@ -55,6 +55,7 @@ const formSchema = toTypedSchema(z.object({
   name: z.string().min(4).max(30),
   startDate: z.string(),
   endDate: z.string(),
+  comission: z.number().min(0).max(100)
 }));
 
 const {handleSubmit} = useForm({
@@ -67,12 +68,16 @@ onMounted(async () => {
     utils().showLoader();
     const response = await eventsLogic().getEvent(eventId);
     if (response && response?.data) {
-      objectData.value = response.data;
+      const result = response.data;
 
-      objectData.value.comission = String(objectData.value.comission) === '0' ? 'no' : 'yes';
-      objectData.value.teamType = String(objectData.value.teamType) === '1' ? 'national' : 'local';
-      objectData.value.startDate = objectData.value.startDate.split('T')[0];
-      objectData.value.endDate = objectData.value.endDate.split('T')[0];
+      objectData.value.id = result.id
+      objectData.value.name = result.name;
+      objectData.value.teamType = String(result.teamType) === '1' ? 'national' : 'local';
+      objectData.value.startDate = result.startDate.split('T')[0];
+      objectData.value.endDate = result.endDate.split('T')[0];
+      objectData.value.comission = result.comission * 100;
+      objectData.value.instantiable = result.instantiable ? 'true' : 'false';
+      objectData.value.sport_id = String(result.sport.id);
     }
 
     setTimeout(() => {
@@ -217,7 +222,7 @@ const onSubmit = handleSubmit(async () => {
                     </div>
                   </CardContent>
                 </Card>
-                <router-link :to="`/admin/event/${objectData.id}/matches`">
+                <router-link v-if="eventId !== ''" :to="`/admin/event/${objectData.id}/matches`">
                   <Button variant="outline">
                     Show Matches
                   </Button>
@@ -231,20 +236,18 @@ const onSubmit = handleSubmit(async () => {
                   <CardContent>
                     <div class="grid gap-6">
                       <div class="grid gap-3">
-                        <Label for="status">Commission</Label>
-                        <Select v-model="objectData.comission">
-                          <SelectTrigger id="status" aria-label="Select commission">
-                            <SelectValue placeholder="Select commission"/>
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem class="bg-white" value="yes">
-                              Yes
-                            </SelectItem>
-                            <SelectItem class="bg-white" value="no">
-                              No
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <FormField v-slot="{ componentField }" name="comission">
+                        <FormItem>
+                          <FormLabel>Comission</FormLabel>
+                          <FormControl>
+                            <div class="flex gap-2">
+                              <Input type="number" v-bind="componentField" v-model="objectData.comission"/>
+                              <p class="flex flex-col justify-center">%</p>
+                            </div>
+                          </FormControl>
+                          <FormMessage/>
+                        </FormItem>
+                      </FormField>
                       </div>
                     </div>
                   </CardContent>

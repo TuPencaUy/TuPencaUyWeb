@@ -216,12 +216,12 @@ const onSubmit = async (match = null) => {
             </Select>
           </TableCell>
           <TableCell>
-            <Button variant="ghost" @click="onSubmit(item)">
+            <Button variant="ghost" @click="onSubmit(item)" :disabled="utils().hasDateExpired(item.date)">
               <Icon icon="material-symbols:update" class="w-4 h-4 mr-2"/>
             </Button>
             <AlertDialog>
               <AlertDialogTrigger as-child>
-                <Button variant="ghost">
+                <Button variant="ghost" :disabled="utils().hasDateExpired(item.date)">
                   <Icon icon="octicon:trash-24" class="w-4 h-4 mr-2"/>
                 </Button>
               </AlertDialogTrigger>
@@ -281,11 +281,17 @@ const onSubmit = async (match = null) => {
             <div class="flex w-fit gap-[10px]">
               <Input type="date" class="w-[200px]" v-model="objectData.date"/>
               <div class="flex gap-[5px]">
-                <Input type="text" class="w-[60px]" v-model="timeHour"/>
+                <div class="relative">
+                  <p class="absolute bottom-10 text-xs">Hs</p>
+                  <Input type="text" class="w-[60px]" v-model="timeHour"/>
+                </div>
                 <div class="flex flex-col justify-center">
                   <p>:</p>
                 </div>
-                <Input type="text" class="w-[60px]" v-model="timeMinutes"/>
+                <div class="relative">
+                  <p class="absolute bottom-10 text-xs">Min</p>
+                  <Input type="text" class="w-[60px]" v-model="timeMinutes"/>
+                </div>
               </div>
             </div>
           </TableCell>

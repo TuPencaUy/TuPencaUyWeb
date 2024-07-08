@@ -37,12 +37,17 @@ const secondTeamScore = ref(0);
 
 onMounted(async () => {
   if (!route.params.id) await router.push('/events');
+  await getMatches();
+});
+
+const getMatches = async () => {
   matches.value = await matchLogic().getMatches(parseInt(route.params.id));
   bets.value = await betLogic().getBets('eventId=' + parseInt(route.params.id));
   matches.value = [...matches.value].map((elem) => {
     const padNumber = (num) => num < 10 ? `0${num}` : num;
 
     const date = new Date(elem.date);
+    elem.fullDate = date;
     elem.date = `${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${date.getFullYear()}`;
     elem.startTime = `${padNumber(date.getHours())}:${padNumber(date.getMinutes())}`;
     return elem;
@@ -56,7 +61,7 @@ onMounted(async () => {
     }
     return elem;
   });
-});
+}
 
 const createBet = async (matchId) => {
   utils().showLoader();
@@ -76,9 +81,7 @@ const createBet = async (matchId) => {
     toast({
       title: `You made a prediction`
     });
-    setTimeout(() => {
-      router.push(`/events/${route.params.id}`);
-    }, 1000);
+    await getMatches();
   } else {
     toast({
       title: 'Error',
@@ -117,13 +120,13 @@ const createBet = async (matchId) => {
               <div class="flex items-center">
                 <div class="flex items-center gap-4">
                   <p class="text-2xl text-uppercase font-semibold">{{ match?.firstTeam?.name ?? 'Team 1' }}</p>
-                  <p class="text-lg text-uppercase font-semibold">{{ match?.betFirstTeam ?? '0' }}</p>
-                  <p class="text-lg text-uppercase font-semibold">{{ match?.firstTeamScore ?? '0' }}</p>
+                  <p class="text-m text-uppercase font-semibold text-primary">{{ match?.betFirstTeam ?? '0' }}</p>
+                  <p class="text-xl text-uppercase font-semibold">{{ match?.firstTeamScore ?? '0' }}</p>
                 </div>
                 <Icon icon="solar:cup-outline" class="h-8 w-8 px-2"/>
                 <div class="flex items-center gap-4">
-                  <p class="text-lg text-uppercase font-semibold">{{ match?.secondTeamScore ?? '0' }}</p>
-                  <p class="text-lg text-uppercase font-semibold">{{ match?.betSecondTeam ?? '0' }}</p>
+                  <p class="text-xl text-uppercase font-semibold">{{ match?.secondTeamScore ?? '0' }}</p>
+                  <p class="text-m text-uppercase font-semibold text-primary">{{ match?.betSecondTeam ?? '0' }}</p>
                   <p class="text-2xl text-uppercase font-semibold">{{ match?.secondTeam?.name ?? 'Team 2' }}</p>
                 </div>
               </div>
@@ -137,7 +140,7 @@ const createBet = async (matchId) => {
             <div class="flex gap-2 justify-center items-center">
               <Dialog>
                 <DialogTrigger as-child>
-                  <Button variant="outline" size="sm" class="">
+                  <Button variant="outline" size="sm" class="" :disabled="utils().hasDateExpired(match.fullDate)">
                     <Icon icon="clarity:note-line" class="h-5 w-5"/>
                     Predict
                   </Button>

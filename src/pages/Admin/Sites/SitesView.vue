@@ -90,7 +90,7 @@ async function deleteItem(id) {
 </script>
 
 <template>
-  <Admin title="Sites" name-btn-add="Add Site" path-to-add="/admin/sites/add">
+  <Admin title="Sites">
     <div class="w-full m-auto" v-if="sites.length < 1">
       <div class="text-center">
         <h3 class="text-2xl font-bold tracking-tight">
