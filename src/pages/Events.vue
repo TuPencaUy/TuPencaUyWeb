@@ -23,7 +23,7 @@ import {useChatStore} from "@/store/chatStore.js";
 const {toast} = useToast();
 
 let events = ref([]);
-let userEvents = useUserStore().getEvents;
+let userEvents = useUserStore().getEvents ?? [];
 
 onMounted(async () => {
   useEventStore().resetCurrentEvent();
@@ -47,6 +47,7 @@ async function handleSubscribe(eventId) {
       description: 'An error occurred while subscribing to the event',
       variant: 'destructive'
     });
+    return;
   }
 
   toast({
@@ -55,7 +56,8 @@ async function handleSubscribe(eventId) {
     variant: 'success'
   });
 
-  userEvents.push(events.value.find(event => event.id === eventId));
+  userEvents?.push(events.value.find(event => event.id === eventId));
+
   events.value = events.value.filter(event => event.id !== eventId);
 }
 </script>
