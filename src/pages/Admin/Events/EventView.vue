@@ -68,13 +68,14 @@ onMounted(async () => {
     utils().showLoader();
     const response = await eventsLogic().getEvent(eventId);
     if (response && response?.data) {
-      objectData.value = response.data;
+      const result = response.data;
 
-      objectData.value.teamType = String(objectData.value.teamType) === '1' ? 'national' : 'local';
-      objectData.value.startDate = objectData.value.startDate.split('T')[0];
-      objectData.value.endDate = objectData.value.endDate.split('T')[0];
-      objectData.value.comission = objectData.value.comission * 100;
-      objectData.value.instantiable = objectData.value.instantiable ? 'true' : 'false';
+      objectData.value.teamType = String(result.teamType) === '1' ? 'national' : 'local';
+      objectData.value.startDate = result.startDate.split('T')[0];
+      objectData.value.endDate = result.endDate.split('T')[0];
+      objectData.value.comission = result.comission * 100;
+      objectData.value.instantiable = result.instantiable ? 'true' : 'false';
+      objectData.value.sport_id = String(result.sport.id);
     }
 
     setTimeout(() => {
