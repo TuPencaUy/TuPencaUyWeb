@@ -21,7 +21,7 @@ import {
 
 import {
   Select,
-  SelectContent,
+  SelectContent, SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -49,7 +49,8 @@ const objectData = ref({
   secondTeamScore: 0,
   date: '',
   eventId: 0,
-  sport: 0
+  sport: 0,
+  finished: false,
 });
 
 const {toast} = useToast();
@@ -125,6 +126,7 @@ const onSubmit = async (match = null) => {
     objectData.value.firstTeamScore = Number(match.firstTeamScore);
     objectData.value.secondTeamScore = Number(match.secondTeamScore);
     objectData.value.sport = match.sport.id;
+    objectData.value.finished = match.finished === "1";
   }
 
   utils().showLoader();
@@ -183,6 +185,7 @@ const onSubmit = async (match = null) => {
           <TableHead>First team score</TableHead>
           <TableHead>Second team score</TableHead>
           <TableHead>Date</TableHead>
+          <TableHead>Finished</TableHead>
           <TableHead class="text-right">
           </TableHead>
         </TableRow>
@@ -199,6 +202,19 @@ const onSubmit = async (match = null) => {
             <Input type="text" v-model="item.secondTeamScore"/>
           </TableCell>
           <TableCell>{{ item.date }}</TableCell>
+          <TableCell>
+            <Select v-model="item.finished" default-value="0">
+              <SelectTrigger class="w-full">
+                <SelectValue placeholder="Select status"/>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem class="bg-white" value="1">Finished</SelectItem>
+                  <SelectItem class="bg-white" value="0">In progress</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </TableCell>
           <TableCell>
             <Button variant="ghost" @click="onSubmit(item)">
               <Icon icon="material-symbols:update" class="w-4 h-4 mr-2"/>
