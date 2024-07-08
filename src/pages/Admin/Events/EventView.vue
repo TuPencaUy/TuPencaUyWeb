@@ -70,6 +70,7 @@ onMounted(async () => {
     if (response && response?.data) {
       const result = response.data;
 
+      objectData.value.id = result.id
       objectData.value.name = result.name;
       objectData.value.teamType = String(result.teamType) === '1' ? 'national' : 'local';
       objectData.value.startDate = result.startDate.split('T')[0];
