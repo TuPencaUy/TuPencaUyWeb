@@ -217,7 +217,7 @@ const onSubmit = handleSubmit(async () => {
                     </div>
                   </CardContent>
                 </Card>
-                <router-link :to="`/admin/event/${objectData.id}/matches`">
+                <router-link v-if="eventId !== ''" :to="`/admin/event/${objectData.id}/matches`">
                   <Button variant="outline">
                     Show Matches
                   </Button>
