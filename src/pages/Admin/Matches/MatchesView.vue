@@ -7,7 +7,8 @@ import eventsLogic from '@/logic/eventsLogic';
 import teamLogic from "@/logic/teamLogic";
 import {Button} from "@/components/ui/button/index.js";
 import {Icon} from "@iconify/vue";
-import { useRoute } from 'vue-router'
+import {Input} from '@/components/ui/input';
+import {useRoute} from 'vue-router';
 
 import {
   Table,
@@ -20,7 +21,7 @@ import {
 
 import {
   Select,
-  SelectContent,
+  SelectContent, SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -48,7 +49,8 @@ const objectData = ref({
   secondTeamScore: 0,
   date: '',
   eventId: 0,
-  sport: 0
+  sport: 0,
+  finished: false,
 });
 
 const {toast} = useToast();
@@ -56,14 +58,29 @@ const route = useRoute();
 const collection = ref([]);
 let event = ref({});
 let teams = ref([]);
+let timeHour = ref(0);
+let timeMinutes = ref(0);
 
 onMounted(async () => {
   utils().showLoader();
   let eventId = route.params.event ?? '';
-  const matches = await matchLogic().getMatches(eventId);
+  let matches = await matchLogic().getMatches(eventId);
   event.value = await eventsLogic().getEvent(eventId);
-  if (matches && matches.length > 0) {  
+
+  if (matches && matches.length > 0) {
+    matches = [...matches].map((elem) => {
+      const padNumber = (num) => num < 10 ? `0${num}` : num;
+
+      const date = new Date(elem.date);
+      const dateFormatted = `${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${date.getFullYear()}`;
+      const time = `${padNumber(date.getHours())}:${padNumber(date.getMinutes())}`;
+      elem.date = `${dateFormatted} ${time}`;
+
+      return elem;
+    });
+
     collection.value = matches;
+
   }
 
   const teamsDB = await teamLogic().getTeams();
@@ -102,17 +119,42 @@ async function deleteItem(id) {
 const onSubmit = async (match = null) => {
   let matchId = match?.id ?? '';
 
- if(matchId !== '') {
-  objectData.value.date = match.date;
-  objectData.value.firstTeam = match.firstTeam.id;
-  objectData.value.secondTeam = match.secondTeam.id;
-  objectData.value.firstTeamScore = Number(match.firstTeamScore);
-  objectData.value.secondTeamScore = Number(match.secondTeamScore);
-  objectData.value.sport = match.sport.id;
- }
+  if (matchId !== '') {
+    objectData.value.date = match.date;
+    objectData.value.firstTeam = match.firstTeam.id;
+    objectData.value.secondTeam = match.secondTeam.id;
+    objectData.value.firstTeamScore = Number(match.firstTeamScore);
+    objectData.value.secondTeamScore = Number(match.secondTeamScore);
+    objectData.value.sport = match.sport.id;
+    objectData.value.finished = match.finished === "1";
+  }
 
   utils().showLoader();
-  const response = await matchLogic().createOrUpdateMatch(objectData._rawValue, matchId);
+
+  const objectToSend = objectData._rawValue;
+
+  if (matchId === '') {
+    if (!objectToSend.date || timeHour.value < 0 || timeHour.value > 23 || timeMinutes.value < 0 || timeMinutes.value > 59) {
+      toast({
+        title: 'Error',
+        description: 'Invalid time format',
+        variant: 'destructive',
+      });
+      utils().hideLoader();
+      return;
+    }
+
+    const splittedDate = objectToSend.date?.split('-');
+    const year = Number(splittedDate[0]);
+    const month = Number(splittedDate[1]) - 1;
+    const day = Number(splittedDate[2]);
+    const datetime = new Date(year, month, day);
+    datetime.setHours(timeHour.value);
+    datetime.setMinutes(timeMinutes.value);
+    objectToSend.date = datetime;
+  }
+
+  const response = await matchLogic().createOrUpdateMatch(objectToSend, matchId);
 
   if (response && !response?.error) {
     toast({
@@ -132,19 +174,9 @@ const onSubmit = async (match = null) => {
 </script>
 
 <template>
-  <Admin title="Matches" name-btn-add="Add match"
+  <Admin title="Matches"
          :path-to-add="useTenantStore().isCentralSite ? '/admin/matches/add' : '/admin/matches/instantiate'">
-    <div class="w-full m-auto" v-if="collection.length < 1">
-      <div class="text-center">
-        <h3 class="text-2xl font-bold tracking-tight">
-          You have no matches
-        </h3>
-        <p class="text-sm text-muted-foreground">
-          You can start by adding a new one
-        </p>
-      </div>
-    </div>
-    <Table v-else>
+    <Table>
       <TableHeader>
         <TableRow>
           <TableHead v-if="useTenantStore().isCentralSite">ID</TableHead>
@@ -153,6 +185,7 @@ const onSubmit = async (match = null) => {
           <TableHead>First team score</TableHead>
           <TableHead>Second team score</TableHead>
           <TableHead>Date</TableHead>
+          <TableHead>Finished</TableHead>
           <TableHead class="text-right">
           </TableHead>
         </TableRow>
@@ -163,12 +196,25 @@ const onSubmit = async (match = null) => {
           <TableCell>{{ item.firstTeam.name }}</TableCell>
           <TableCell>{{ item.secondTeam.name }}</TableCell>
           <TableCell>
-            <input type="text" v-model="item.firstTeamScore"/>
+            <Input type="text" v-model="item.firstTeamScore"/>
           </TableCell>
           <TableCell>
-            <input type="text" v-model="item.secondTeamScore"/>
+            <Input type="text" v-model="item.secondTeamScore"/>
           </TableCell>
-          <TableCell>{{ new Date(item.date).toLocaleDateString() }}</TableCell>
+          <TableCell>{{ item.date }}</TableCell>
+          <TableCell>
+            <Select v-model="item.finished" default-value="0">
+              <SelectTrigger class="w-full">
+                <SelectValue placeholder="Select status"/>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem class="bg-white" value="1">Finished</SelectItem>
+                  <SelectItem class="bg-white" value="0">In progress</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </TableCell>
           <TableCell>
             <Button variant="ghost" @click="onSubmit(item)">
               <Icon icon="material-symbols:update" class="w-4 h-4 mr-2"/>
@@ -192,7 +238,7 @@ const onSubmit = async (match = null) => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </TableCell> 
+          </TableCell>
         </TableRow>
 
         <TableRow>
@@ -232,7 +278,16 @@ const onSubmit = async (match = null) => {
           <TableCell>0</TableCell>
           <TableCell>0</TableCell>
           <TableCell>
-            <input type="date" v-model="objectData.date"/>
+            <div class="flex w-fit gap-[10px]">
+              <Input type="date" class="w-[200px]" v-model="objectData.date"/>
+              <div class="flex gap-[5px]">
+                <Input type="text" class="w-[60px]" v-model="timeHour"/>
+                <div class="flex flex-col justify-center">
+                  <p>:</p>
+                </div>
+                <Input type="text" class="w-[60px]" v-model="timeMinutes"/>
+              </div>
+            </div>
           </TableCell>
           <TableCell>
             <Button variant="ghost" @click="onSubmit">

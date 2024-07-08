@@ -1,5 +1,6 @@
 import api from './apiLogic';
 import {useTenantStore} from '@/store/tenant';
+import {useUserStore} from "@/store/user.js";
 
 export default function teamLogic() {
 
@@ -50,7 +51,11 @@ export default function teamLogic() {
             const currentTenant = useTenantStore().getCurrentTenant;
             const url = `/event/team/${teamIdToUpdate}`;
             const httpRequest = teamIdToUpdate !== '' ? 'PATCH' : 'POST';
-            const response = await api().execute(url, httpRequest, team, {currentTenant});
+
+            const token = useUserStore().getToken;
+            if (!token) return null;
+
+            const response = await api().execute(url, httpRequest, team, {'Authorization': `Bearer ${token}`, currentTenant});
             return response.json();
         } catch (error) {
             return error;

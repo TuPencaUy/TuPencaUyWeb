@@ -1,12 +1,13 @@
 import {collection, getDocs} from "firebase/firestore";
 import {db} from "@/logic/init-firebase.js";
 import {useTenantStore} from "@/store/tenant.js";
+import {useEventStore} from "@/store/event.js";
 
 export default function firebaseLogic() {
 
     async function checkIfChatExists(senderId, receiverId) {
         const currentTenant = useTenantStore().getCurrentTenant;
-        const currentEvent = 1;
+        const currentEvent = useEventStore().getCurrentEvent?.id;
         const querySnapshot = await getDocs(collection(db, "chat"));
         let results = [];
         querySnapshot.forEach((doc) => {

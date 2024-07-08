@@ -16,6 +16,7 @@ import {
 import {uuid} from 'vue-uuid';
 import firebaseLogic from "@/logic/firebaseLogic.js";
 import {useTenantStore} from "@/store/tenant.js";
+import {useEventStore} from "@/store/event.js";
 
 export const useChatStore = defineStore({
     id: 'chat',
@@ -30,7 +31,11 @@ export const useChatStore = defineStore({
         setCurrentUser(user) {
             this.currentUser = user;
         },
-
+        resetCurrentChat() {
+            this.currentChat = null;
+            this.currentChatMessages = [];
+            this.currentUser = null;
+        },
         async openChat(receiver) {
             if (!useUserStore()._user?.id || !receiver) return;
 
@@ -41,7 +46,7 @@ export const useChatStore = defineStore({
                 receiverHasRead: false,
                 messages: [],
                 site: useTenantStore().getCurrentTenant,
-                event: 1,
+                event: useEventStore().getCurrentEvent?.id,
             };
 
             const chatExists = await firebaseLogic().checkIfChatExists(Number(data.sender), Number(data.receiver.id));

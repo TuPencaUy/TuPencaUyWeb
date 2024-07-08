@@ -2,6 +2,7 @@
 import {useUserStore} from "@/store/user.js";
 import router from "@/router/index.js";
 import {Icon} from "@iconify/vue";
+import {useEventStore} from "@/store/event.js";
 
 const url = router.currentRoute.value.path;
 
@@ -34,11 +35,19 @@ function handleLogOut() {
                       :class="['w-10 h-10 mr-2', url === '/events' ? 'text-primary' : '']"/>
               </router-link>
             </li>
-            <li>
-              <router-link to="/ranking"
+            <li v-if="useEventStore().getCurrentEvent">
+              <router-link :to="`events/${useEventStore().getCurrentEvent.id}`"
                            class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                            aria-current="page">
-                <Icon icon="ph:ranking" :class="['w-10 h-10 mr-2', url === '/ranking' ? 'text-primary' : '']"/>
+                <Icon icon="game-icons:soccer-field"
+                      :class="['w-10 h-10 mr-2', url === `/events/${useEventStore().getCurrentEvent.id}` ? 'text-primary' : '']"/>
+              </router-link>
+            </li>
+            <li v-if="useEventStore().getCurrentEvent">
+              <router-link to="/chat"
+                           class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                           aria-current="page">
+                <Icon icon="fluent:people-chat-20-regular" :class="['w-10 h-10 mr-2', url === '/chat' ? 'text-primary' : '']"/>
               </router-link>
             </li>
           </ul>

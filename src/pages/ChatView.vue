@@ -5,7 +5,3 @@ import Chat from "@/components/Chat/Chat.vue";
 <template>
   <Chat/>
 </template>
-
-<style scoped>
-
-</style>

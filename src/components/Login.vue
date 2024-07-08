@@ -82,7 +82,10 @@ async function handleLogin(event) {
     });
 
     setTimeout(() => {
-      if (useUserStore().isAdmin) router.push('/admin');
+      if (useUserStore().isAdmin) {
+        router.push('/admin');
+        return;
+      }
 
       if (useTenantStore().isCentralSite) {
         const userSite = useUserStore().getSite;
@@ -96,7 +99,6 @@ async function handleLogin(event) {
         }
       } else {
         router.push('/events');
-
       }
 
 

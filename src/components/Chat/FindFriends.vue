@@ -4,13 +4,14 @@ import utils from "@/logic/utils.js";
 import {useChatStore} from "@/store/chatStore.js";
 import {Icon} from "@iconify/vue";
 import eventsLogic from "@/logic/eventsLogic.js";
+import {useEventStore} from "@/store/event.js";
 
 const usersToShow = ref([]);
 const users = ref([]);
 
 onMounted(async () => {
   utils().showLoader();
-  users.value = await eventsLogic().getUsersFromEvent(1);
+  users.value = await eventsLogic().getUsersFromEvent(useEventStore().getCurrentEvent?.id);
   usersToShow.value = users.value;
   utils().hideLoader();
 });
@@ -38,7 +39,11 @@ const createNewChat = async (receiver) => {
 
 <template>
   <div class="find-friends">
-    <div class="find-friends__header text-center text-lg">
+    <div class="find-friends__header text-center text-lg flex gap-4">
+      <router-link :to="`events/${useEventStore().getCurrentEvent?.id}`"
+                   class="cursor-pointer hover:text-blue-500">
+        <Icon icon="bx:bx-arrow-back" color="#757575" width="30" height="30"/>
+      </router-link>
       <h3>Chats</h3>
     </div>
     <div class="find-friends__search">

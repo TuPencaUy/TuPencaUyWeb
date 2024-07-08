@@ -45,10 +45,13 @@ export const useUserStore = defineStore({
             return this._user?.role?.id === 1;
         },
         getEvents() {
-            return this._user?.events;
+            return this._user?.events ?? [];
         },
         getSite() {
             return this._user?.site;
+        },
+        getUserEmail() {
+            return this._user?.email;
         }
     }, persist: true
 });

@@ -33,7 +33,7 @@ onMounted(async () => {
   const alreadyInstantiatedEvents = await eventsLogic().getEvents();
 
   events.value = allInstantiableEvents.filter(event => {
-    return !alreadyInstantiatedEvents.find(e => e?.referenceEvent === event?.id);
+    return event.instantiable && !alreadyInstantiatedEvents.find(e => e?.referenceEvent === event?.id);
   });
 
   utils().hideLoader();
