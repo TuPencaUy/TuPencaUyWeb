@@ -1,20 +1,19 @@
 <script setup>
 import { DonutChart } from '@/components/ui/chart-donut'
 
-const data = [
-  { name: 'Jan', total: Math.floor(Math.random() * 2000) + 500, predicted: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'Feb', total: Math.floor(Math.random() * 2000) + 500, predicted: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'Mar', total: Math.floor(Math.random() * 2000) + 500, predicted: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'Apr', total: Math.floor(Math.random() * 2000) + 500, predicted: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'May', total: Math.floor(Math.random() * 2000) + 500, predicted: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'Jun', total: Math.floor(Math.random() * 2000) + 500, predicted: Math.floor(Math.random() * 2000) + 500 },
-]
+const props = defineProps({
+  data: Array,
+  title: String
+})
 </script>
 
 <template>
-  <DonutChart
-    index="name"
-    :category="'total'"
-    :data="data"
-  />
+  <div class="flex flex-col gap-2">
+    <h3 class="text-lg font-semibold md:text-xl">{{props.title ?? "Titulo"}}</h3>
+    <DonutChart
+      index="name"
+      :category="'total'"
+      :data="props.data"
+    />
+  </div>
 </template>
