@@ -1,5 +1,6 @@
 import api from "@/logic/apiLogic.js";
 import {loadScript} from "@paypal/paypal-js";
+import paymentLogic from "@/logic/paymentLogic.js";
 
 export default function paypalLogic() {
     const BASE_URL = "https://api-m.sandbox.paypal.com";
@@ -44,10 +45,10 @@ export default function paypalLogic() {
         return response.access_token;
     }
 
-    async function createPaymentDB(eventId, paymentdetails) {
+    async function createPaymentDB(eventId, paymentDetails) {
 
-        //TODO: Store payment in payment table
-        //paymentLogic().createPayment(paymentdetails);
+        paymentDetails.eventId = eventId;
+        await paymentLogic().createPayment(paymentDetails);
 
         //TODO: Save paypal user email in user table
         //userLogic().updateUser(payerEmail);
