@@ -9,6 +9,7 @@ export const useTenantStore = defineStore({
             _currentTenant: null,
             _tenantAccess: null,
             _tenantColor: null,
+            _payPalEmail: null,
         };
     },
     actions: {
@@ -35,6 +36,9 @@ export const useTenantStore = defineStore({
         async refreshTenantValues() {
             this.setCurrentTenant();
             await siteLogic().validateSite();
+        },
+        setPayPalEmail(email) {
+            this._payPalEmail = email;
         }
     },
     getters: {
@@ -52,6 +56,9 @@ export const useTenantStore = defineStore({
         },
         getTenantId() {
             return this._id;
+        },
+        getPayPalEmail() {
+            return this._payPalEmail;
         }
     },
     persist: true
