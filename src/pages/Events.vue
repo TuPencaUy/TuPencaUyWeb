@@ -48,7 +48,7 @@ onMounted(async () => {
   utils().hideLoader();
 });
 
-async function initModal(eventId, total = 0, currencyCode = 'USD') {
+async function initModal(eventId, total = 10, currencyCode = 'USD') {
   setTimeout(async () => {
     try {
       await paypal
