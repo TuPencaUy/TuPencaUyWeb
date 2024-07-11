@@ -52,9 +52,6 @@ export const useUserStore = defineStore({
         },
         getUserEmail() {
             return this._user?.email;
-        },
-        getPaypalEmail() {
-            return this._user?.paypalEmail;
         }
     }, persist: true
 });
