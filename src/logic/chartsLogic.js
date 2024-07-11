@@ -19,16 +19,24 @@ export default function chartsLogic() {
   }
   
   async function _extractDataFromEvent(attr) {
-    const siteEvents = await eventsLogic().getEvents()
-    const events = await Promise.all(
-    siteEvents.map(async (event) => {
-        event = await analyticsLogic().betsEventData(event.id)
-        event = event.data
-        return {name: event.eventName, total: event[attr]}
-    })
-    )
-    return events
-  }
+    try {
+      const siteEvents = await eventsLogic().getEvents();
+      const events = [];
+  
+      for (let i = 0; i < siteEvents.length; i++) {
+        const event = siteEvents[i];
+        let eventData = await analyticsLogic().betsEventData(event.id);
+        if (eventData && eventData.data) {
+          events.push({ name: eventData.data.eventName, total: eventData.data[attr] });
+        }
+      }
+  
+      return events;
+    } catch (error) {
+      console.error("Error in _extractDataFromEvent:", error);
+      throw error;
+    }
+  }  
 
   return {
     betsPerEvent,
