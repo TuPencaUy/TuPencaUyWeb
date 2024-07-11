@@ -25,6 +25,7 @@ import eventsLogic from "@/logic/eventsLogic.js";
 import utils from "@/logic/utils.js";
 import {Input} from "@/components/ui/input/index.js";
 import {Label} from "@/components/ui/label/index.js";
+import {useUserStore} from "@/store/user.js";
 
 const {toast} = useToast();
 const events = ref([]);
@@ -109,11 +110,20 @@ async function handleInstantiate() {
         </div>
         <div class="grid gap-2">
           <Label>Price</Label>
-          <Input type="number" v-model="price" placeholder="Event price"/>
+          <Input type="number" v-model="price" placeholder="Event price" :disabled="!useUserStore().getPaypalEmail"/>
+          <Label class="text-xs text-gray-600" v-if="!useUserStore().getPaypalEmail">To set price, please fill your paypal email in
+            your
+            <router-link to="/admin/settings/general" class="underline text-primary">Settings.</router-link>
+          </Label>
         </div>
         <div class="grid gap-2">
           <Label>Prize percentage</Label>
-          <Input type="number" v-model="prizePercentage" placeholder="Prize percentage"/>
+          <Input type="number" v-model="prizePercentage" placeholder="Prize percentage"
+                 :disabled="!useUserStore().getPaypalEmail"/>
+          <Label class="text-xs text-gray-600" v-if="!useUserStore().getPaypalEmail">To set prize percentage, please
+            fill your paypal email in your
+            <router-link to="/admin/settings/general" class="underline text-primary">Settings.</router-link>
+          </Label>
         </div>
       </CardContent>
       <CardFooter>
