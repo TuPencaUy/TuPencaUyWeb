@@ -109,9 +109,11 @@ async function deleteItem(id) {
           <TableCell>{{ item.sport.name }}</TableCell>
           <TableCell>{{ new Date(item.startDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ new Date(item.endDate).toLocaleDateString() }}</TableCell>
-          <TableCell v-if="!useTenantStore().isCentralSite">${{ item.price ?? 0 }}</TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite">{{ `${item.price !== 0 ? item.price : 'Free'}` }}</TableCell>
           <TableCell>{{ `${item.comission * 100 ?? 0}%` }}</TableCell>
-          <TableCell v-if="!useTenantStore().isCentralSite">{{ `${item.prizePercentage * 100 ?? 0}%` }}</TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite">
+            {{ `${item.prizePercentage !== 0 ? ((item.prizePercentage * 100) + '%') : 'None'}` }}
+          </TableCell>
           <TableCell>{{ TEAM_VALUES[item.teamType ?? 1] }}</TableCell>
           <TableCell v-if="useTenantStore().isCentralSite">
             <router-link class="inline-block" :to="`/admin/events/${item.id}`">
