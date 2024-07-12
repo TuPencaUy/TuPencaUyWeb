@@ -2,6 +2,7 @@
 import Admin from "@/components/Admin.vue";
 import Donut from "@/components/Analytics/Donut.vue";
 import Leaderboard from "@/components/Analytics/Leaderboard.vue";
+import BetsEventsData from "@/components/Analytics/BetsEventsData.vue";
 import chartsLogic from "@/logic/chartsLogic";
 import { onMounted, ref } from "vue";
 import { useTenantStore } from '@/store/tenant';
@@ -29,6 +30,7 @@ onMounted(async () => {
         </div>
       </div>
       <div>
+        <BetsEventsData></BetsEventsData>
         <Leaderboard></Leaderboard>
       </div>
     </div>
