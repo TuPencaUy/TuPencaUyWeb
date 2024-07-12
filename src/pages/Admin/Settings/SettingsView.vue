@@ -6,15 +6,36 @@ import {Input} from '@/components/ui/input'
 import {useTenantStore} from '@/store/tenant'
 import Settings from "@/components/Settings/Settings.vue";
 import {Label} from "@/components/ui/label";
+import siteLogic from "@/logic/siteLogic";
 import {ref} from "vue";
 
 const currentTenant = useTenantStore().getCurrentTenant ?? '';
 let paypalEmail = ref(useTenantStore().getPayPalEmail ?? '');
+import {useToast} from "@/components/ui/toast/index.js";
 
-function savePayPalEmail(e) {
+const {toast} = useToast();
+
+async function savePayPalEmail(e) {
   e.preventDefault();
   if (!paypalEmail.value) return;
-  //TODO: save paypal email to DB
+
+  const siteData = {
+    "id": useTenantStore().getTenantId,
+    "name": useTenantStore().getCurrentTenant,
+    "domain": useTenantStore().getCurrentTenant,
+    "accesstype": useTenantStore().getTenantAccess,
+    "color": useTenantStore().getTenantColor,
+    "paypalEmail": paypalEmail.value
+  };
+  const response = await siteLogic().updateSite(siteData);
+  if (!response || response?.error) {
+    toast({
+      title: 'Error',
+      description: 'Failed to update PayPal email. Please try again.',
+      variant: 'destructive'
+    });
+    return;
+  }
   useTenantStore().setPayPalEmail(paypalEmail.value);
 }
 </script>
@@ -44,7 +65,8 @@ function savePayPalEmail(e) {
         <Card>
           <CardHeader>
             <CardTitle class="flex gap-4">
-              <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="object-scale-down w-16 h-16"/>
+              <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal"
+                   class="object-scale-down w-16 h-16"/>
             </CardTitle>
           </CardHeader>
           <form @submit="savePayPalEmail">
