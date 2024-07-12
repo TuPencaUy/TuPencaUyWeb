@@ -52,6 +52,12 @@ export const useUserStore = defineStore({
         },
         getUserEmail() {
             return this._user?.email;
+        },
+        getUserName() {
+            return this._user?.name;
+        },
+        getUserId() {
+            return this._user?.id;
         }
     }, persist: true
 });

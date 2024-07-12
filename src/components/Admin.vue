@@ -1,6 +1,7 @@
 <script setup>
 import {Bell, CircleUser, Home, Menu, Package2, Users} from 'lucide-vue-next';
 import {Button} from '@/components/ui/button';
+import UserPersonalInfo from '@/components/User/UserPersonalInfo.vue';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +16,9 @@ import {useTenantStore} from '@/store/tenant';
 import utils from '@/logic/utils';
 import {Icon} from "@iconify/vue";
 import {useUserStore} from '@/store/user';
+import { ref } from 'vue';
+
+const showUserPersonalInfo = ref(false);
 
 if (!utils().ensureIsLoggedIn()) {
   router.push('/login');
@@ -168,6 +172,9 @@ const handleLogOut = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator/>
+            <DropdownMenuItem class="cursor-pointer" @click="() => {showUserPersonalInfo = true;}">
+              Personal Info
+            </DropdownMenuItem>
             <DropdownMenuItem class="cursor-pointer" @click="handleLogOut">Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -190,6 +197,8 @@ const handleLogOut = () => {
       </main>
     </div>
   </div>
+
+  <UserPersonalInfo v-if="showUserPersonalInfo"/>
 </template>
 
 <style scoped>

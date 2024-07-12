@@ -37,7 +37,7 @@ const onSubmit = form.handleSubmit(async (values) => {
 
   utils().showLoader();
 
-  const userData = await userLogic().basicSignUp(values, tenant);
+  const userData = await userLogic().basicSignUpOrUpdate(values, tenant);
 
   if (!userData || userData.error) {
     toast({

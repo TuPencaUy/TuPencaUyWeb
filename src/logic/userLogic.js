@@ -3,9 +3,20 @@ import {useUserStore} from "@/store/user.js";
 import {useTenantStore} from "@/store/tenant.js";
 
 export default function userLogic() {
-    async function basicSignUp(userData, currentTenant) {
+    async function basicSignUpOrUpdate(userData, currentTenant, userId = null) {
         try {
-            const response = await api().execute('/identity/basicsignup', 'POST', userData, {currentTenant});
+            const url = userId == null ? '/identity/basicsignup' : `/user/modify/${userId}`;
+            const httpRequest = userId !== null ? 'PATCH' : 'POST';
+
+            const headers = {currentTenant};
+
+            if(userId) {
+                const token = useUserStore().getToken;
+                if (!token) return null;
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await api().execute(url, httpRequest, userData, headers);
             return await response.json();
 
         } catch (error) {
@@ -44,7 +55,7 @@ export default function userLogic() {
     }
 
     return {
-        basicSignUp,
+        basicSignUpOrUpdate,
         basicLogin,
         authLogin,
         subscribeToEvent,
