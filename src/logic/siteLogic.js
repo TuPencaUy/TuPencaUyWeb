@@ -93,7 +93,6 @@ export default function siteLogic() {
         if (!tenant) return;
 
         const site = await getSite(tenant);
-        debugger;
         if (!site || site?.error || !site?.data) {
             window.location.href = import.meta.env.VITE_API_CENTRAL_URL;
         }
