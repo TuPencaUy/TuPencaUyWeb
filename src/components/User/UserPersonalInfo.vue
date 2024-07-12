@@ -38,7 +38,6 @@ async function handleSubmit() {
 
   utils().showLoader();
   const userId = await useUserStore().getUserId;
-  debugger
   const userData = await userLogic().basicSignUpOrUpdate(objectData._rawValue, tenant, userId);
 
   if (!userData || userData.error) {
@@ -60,8 +59,8 @@ async function handleSubmit() {
 
 <template>
   <Dialog>
-    <DialogTrigger as-child>
-      <p ref="trigger">Personal Info</p>
+    <DialogTrigger as-child class="hidden">
+      <p ref="trigger" >Personal Info</p>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
@@ -81,7 +80,7 @@ async function handleSubmit() {
           <Label for="username" class="text-right">
             Username
           </Label>
-          <Input id="username" :value="objectData.name" class="col-span-3" />
+          <Input id="username" v-model="objectData.name" class="col-span-3" />
         </div>
       </div>
       <DialogFooter>
