@@ -3,13 +3,16 @@ import {useTenantStore} from '@/store/tenant';
 import {useUserStore} from "@/store/user.js";
 
 export default function eventsLogic() {
+
+    const URL = '/event';
+
     async function getEvents(instantiateEvents = false) {
         try {
             const events = [];
             let page = 1;
             let hasMore = true;
             do {
-                const url = `/event?page=${page}`;
+                const url = `${URL}?page=${page}`;
                 let currentTenant = useTenantStore().getCurrentTenant;
                 if (instantiateEvents) currentTenant = null;
                 const response = await api().execute(url, 'GET', null, {currentTenant});
@@ -33,7 +36,7 @@ export default function eventsLogic() {
 
     async function getEvent(id) {
         try {
-            const url = `/event/${id}`;
+            const url = `${URL}/${id}`;
             const currentTenant = useTenantStore().getCurrentTenant;
             const response = await api().execute(url, 'GET', null, {currentTenant});
             return response.json();
@@ -59,13 +62,16 @@ export default function eventsLogic() {
             };
 
             const currentTenant = useTenantStore().getCurrentTenant;
-            const url = `/event/${eventIdToUpdate}`;
+            const url = `${URL}/${eventIdToUpdate}`;
             const httpRequest = eventIdToUpdate !== '' ? 'PATCH' : 'POST';
 
             const token = useUserStore().getToken;
             if (!token) return null;
 
-            const response = await api().execute(url, httpRequest, dataToSend, {'Authorization': `Bearer ${token}`, currentTenant});
+            const response = await api().execute(url, httpRequest, dataToSend, {
+                'Authorization': `Bearer ${token}`,
+                currentTenant
+            });
             return response.json();
         } catch (error) {
             return error;
@@ -79,7 +85,10 @@ export default function eventsLogic() {
             const token = useUserStore().getToken;
             if (!token) return null;
 
-            const response = await api().execute(`/event/${eventId}`, 'DELETE', null, {'Authorization': `Bearer ${token}`, currentTenant});
+            const response = await api().execute(`${URL}/${eventId}`, 'DELETE', null, {
+                'Authorization': `Bearer ${token}`,
+                currentTenant
+            });
             return response.json();
         } catch (error) {
             return error;
@@ -103,13 +112,17 @@ export default function eventsLogic() {
         }
     }
 
-    async function instantiateEvent(eventId) {
+    async function instantiateEvent(instantiateData) {
         try {
             const currentTenant = useTenantStore().getCurrentTenant;
-            const response = await api().execute(`/event/instantiateevent?eventId=${eventId}`, 'POST', null, {
-                currentTenant,
-                'Authorization': `Bearer ${useUserStore().getToken}`
-            });
+            const response = await api().execute(
+                `${URL}/instantiateevent?eventId=${instantiateData.eventId}&price=${instantiateData.price}&prizePercentage=${instantiateData.prizePercentage}`,
+                'POST',
+                null,
+                {
+                    currentTenant,
+                    'Authorization': `Bearer ${useUserStore().getToken}`
+                });
             return response.json();
         } catch (error) {
             return error;
