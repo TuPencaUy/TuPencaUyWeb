@@ -4,7 +4,7 @@ import utils from "@/logic/utils.js";
 import analyticsLogic from "@/logic/analyticsLogic.js";
 import eventsLogic from '@/logic/eventsLogic';
 import { Icon } from "@iconify/vue";
-import {Button} from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 
 import {
   Table,
@@ -39,7 +39,7 @@ onMounted(async () => {
 });
 
 async function getLeaderboard(eventId) {
-  if(!eventId) return
+  if (!eventId) return
 
   let fetching = await analyticsLogic().eventLeaderBoard(eventId);
   console.log(selectedEvent.value);
@@ -54,13 +54,13 @@ async function getLeaderboard(eventId) {
 </script>
 
 <template>
-  <div class="mt-10">
+  <div class="my-10 p-10 border rounded">
     <h3 class="text-lg font-semibold mb-4 md:text-xl">Events Leaderboard</h3>
     <div class="flex gap-2 mt-2">
       <div class="w-[400px]">
         <Select v-model="selectedEvent">
-          <SelectTrigger id="events" aria-label="Events">
-            <SelectValue placeholder="Select Event" />
+          <SelectTrigger>
+            <SelectValue placeholder="Select a fruit" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem v-for="event in siteEvents" class="bg-white" :key="event.id" :value="event.id">
@@ -71,7 +71,7 @@ async function getLeaderboard(eventId) {
       </div>
       <Button @click="getLeaderboard(selectedEvent)">Show leaderboard</Button>
     </div>
-    <Table>
+    <Table v-if="leaderboard.length > 0">
       <TableHeader>
         <TableRow>
           <TableHead></TableHead>
@@ -99,5 +99,15 @@ async function getLeaderboard(eventId) {
         </TableRow>
       </TableBody>
     </Table>
+    <div class="w-full m-auto" v-else>
+      <div class="text-center">
+        <h3 class="text-xl font-bold tracking-tight">
+          No leaderboard yet
+        </h3>
+        <p class="text-sm text-muted-foreground">
+          Select another event
+        </p>
+      </div>
+    </div>
   </div>
 </template>
