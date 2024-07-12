@@ -1,13 +1,14 @@
 <script setup>
 import Admin from "@/components/Admin.vue";
-import Donut from "../Analytics/Donut.vue";
+import Donut from "@/components/Analytics/Donut.vue";
+import Leaderboard from "@/components/Analytics/Leaderboard.vue";
 import chartsLogic from "@/logic/chartsLogic";
 import { onMounted, ref } from "vue";
 
 const betsPerEvent = ref([]);
 const usersPerEvent = ref([]);
 
-onMounted(async() => {
+onMounted(async () => {
   betsPerEvent.value = await chartsLogic().betsPerEvent();
   usersPerEvent.value = await chartsLogic().usersPerEvent();
 });
@@ -15,12 +16,17 @@ onMounted(async() => {
 
 <template>
   <Admin title="Dashboard">
-    <div class="flex justify-center p-2 w-full gap-4">
-      <div class="flex rounded-lg border border-separate shadow-sm p-4 h-fit">
-        <Donut title="Bets per Event" :data="betsPerEvent"></Donut>
+    <div class="flex flex-col p-2 w-full gap-4">
+      <div class="flex justify-center p-2 w-full gap-4">
+        <div class="flex rounded-lg border border-separate shadow-sm p-4 h-fit">
+          <Donut title="Bets per Event" :data="betsPerEvent"></Donut>
+        </div>
+        <div class="flex rounded-lg border border-separate shadow-sm p-4 h-fit">
+          <Donut title="Users per Event" :data="usersPerEvent"></Donut>
+        </div>
       </div>
-      <div class="flex rounded-lg border border-separate shadow-sm p-4 h-fit">
-        <Donut title="Users per Event" :data="usersPerEvent"></Donut>
+      <div>
+        <Leaderboard></Leaderboard>
       </div>
     </div>
   </Admin>
