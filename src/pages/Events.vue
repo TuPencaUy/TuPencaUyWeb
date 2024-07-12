@@ -48,7 +48,7 @@ onMounted(async () => {
   utils().hideLoader();
 });
 
-async function initModal(eventId, total = 10, currencyCode = 'USD') {
+async function showPaypal(eventId, total, currencyCode = 'USD') {
   setTimeout(async () => {
     try {
       await paypal
@@ -79,13 +79,15 @@ async function initModal(eventId, total = 10, currencyCode = 'USD') {
               });
               if (!paymentDone) throw new Error('Payment not saved');
 
+              await userLogic().updateUser({paypalEmail: responseCapture?.payer?.email_address});
+
               toast({
                 title: 'Success',
                 description: 'Payment completed successfully',
                 variant: 'success'
               });
 
-              await handleSubscribe(eventId);
+              await subscribeToEvent(eventId);
             },
             style: {
               layout: 'horizontal',
@@ -105,7 +107,7 @@ async function initModal(eventId, total = 10, currencyCode = 'USD') {
   });
 }
 
-async function handleSubscribe(eventId) {
+async function subscribeToEvent(eventId) {
   utils().showLoader();
   const response = await userLogic().subscribeToEvent(eventId);
   utils().hideLoader();
@@ -187,10 +189,15 @@ async function handleSubscribe(eventId) {
                       class="relative w-full h-full text-center hover:cursor-pointer group">
                   <div
                       class="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <AlertDialog>
+                    <Button v-if="event?.price === 0" class="bg-red-400 hover:bg-red-600 text-white"
+                            @click="subscribeToEvent(event?.id)">
+                      <Icon icon="iconoir:lock" class="w-5 h-5"/>
+                      Subscribe
+                    </Button>
+                    <AlertDialog v-else>
                       <AlertDialogTrigger as-child>
                         <Button class="bg-red-400 hover:bg-red-600 text-white"
-                                @click="initModal(event?.id, event?.price ?? '10', event?.currency ?? 'USD')">
+                                @click="showPaypal(event?.id, event?.price, event?.currency ?? 'USD')">
                           <Icon icon="iconoir:lock" class="w-5 h-5"/>
                           Subscribe
                         </Button>

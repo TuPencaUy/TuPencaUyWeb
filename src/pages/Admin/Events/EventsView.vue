@@ -109,7 +109,7 @@ async function deleteItem(id) {
           <TableCell>{{ item.sport.name }}</TableCell>
           <TableCell>{{ new Date(item.startDate).toLocaleDateString() }}</TableCell>
           <TableCell>{{ new Date(item.endDate).toLocaleDateString() }}</TableCell>
-          <TableCell v-if="!useTenantStore().isCentralSite">{{ `${item.price !== 0 ? item.price : 'Free'}` }}</TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite">{{`${item.price !== 0 ? '$' + item.price : 'Free'}` }}</TableCell>
           <TableCell>{{ `${item.comission * 100 ?? 0}%` }}</TableCell>
           <TableCell v-if="!useTenantStore().isCentralSite">
             {{ `${item.prizePercentage !== 0 ? ((item.prizePercentage * 100) + '%') : 'None'}` }}

@@ -120,7 +120,7 @@ async function handleInstantiate() {
         <div class="grid gap-2">
           <Label>Prize percentage</Label>
           <Input type="number" v-model="prizePercentage" placeholder="Prize percentage"
-                 :disabled="!useTenantStore().getPayPalEmail"/>
+                 :disabled="!useTenantStore().getPayPalEmail || price <= 0"/>
           <Label class="text-xs text-gray-600" v-if="!useTenantStore().getPayPalEmail">To set prize percentage, please
             fill your PayPal email in your
             <router-link to="/admin/settings/general" class="underline text-primary">Settings.</router-link>

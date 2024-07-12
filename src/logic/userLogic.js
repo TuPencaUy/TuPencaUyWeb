@@ -36,7 +36,23 @@ export default function userLogic() {
         try {
             const currentTenant = useTenantStore().getCurrentTenant;
             const userId = useUserStore()._user?.id;
-            const response = await api().execute(`/user/subscribetoevent?userId=${userId}&eventId=${eventId}`, 'POST', null, {currentTenant, "Authorization": `Bearer ${useUserStore().getToken}`});
+            const response = await api().execute(`/user/subscribetoevent?userId=${userId}&eventId=${eventId}`, 'POST', null, {
+                currentTenant,
+                "Authorization": `Bearer ${useUserStore().getToken}`
+            });
+            return await response.json();
+        } catch (error) {
+            return error;
+        }
+    }
+
+    async function updateUser(userData) {
+        try {
+            const currentTenant = useTenantStore().getCurrentTenant;
+            const response = await api().execute(`/user/modify/${useUserStore()._user?.id}`, 'PATCH', userData, {
+                currentTenant,
+                "Authorization": `Bearer ${useUserStore().getToken}`
+            });
             return await response.json();
         } catch (error) {
             return error;
@@ -48,5 +64,6 @@ export default function userLogic() {
         basicLogin,
         authLogin,
         subscribeToEvent,
+        updateUser,
     };
 }

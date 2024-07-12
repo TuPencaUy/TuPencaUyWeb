@@ -64,6 +64,7 @@ let timeMinutes = ref(0);
 onMounted(async () => {
   utils().showLoader();
   let eventId = route.params.event ?? '';
+  debugger;
   let matches = await matchLogic().getMatches(eventId);
   event.value = await eventsLogic().getEvent(eventId);
 

@@ -76,12 +76,13 @@ const createBet = async (matchId) => {
   const isUpdating = bets.value.some((bet) => bet.match?.id === matchId);
   const response = await betLogic().createOrUpdateBet(objectData, isUpdating);
   utils().hideLoader();
-
   if (response && !response?.error) {
     toast({
       title: `You made a prediction`
     });
     await getMatches();
+    firstTeamScore.value = 0;
+    secondTeamScore.value = 0;
   } else {
     toast({
       title: 'Error',

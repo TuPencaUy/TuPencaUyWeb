@@ -46,13 +46,8 @@ export default function paypalLogic() {
     }
 
     async function createPaymentDB(eventId, paymentDetails) {
-
         paymentDetails.eventId = eventId;
         await paymentLogic().createPayment(paymentDetails);
-
-        //TODO: Save paypal user email in user table
-        //userLogic().updateUser(payerEmail);
-
         return true;
     }
 
