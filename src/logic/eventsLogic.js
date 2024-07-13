@@ -129,6 +129,23 @@ export default function eventsLogic() {
         }
     }
 
+    async function endEvent(eventId) {
+        try {
+            const currentTenant = useTenantStore().getCurrentTenant;
+            const response = await api().execute(
+                `/bet/endevent/${eventId}`,
+                'POST',
+                null,
+                {
+                    currentTenant,
+                    'Authorization': `Bearer ${useUserStore().getToken}`
+                });
+            return response.json();
+        } catch (error) {
+            return error;
+        }
+    }
+
     return {
         getEvents,
         getEvent,
@@ -136,5 +153,6 @@ export default function eventsLogic() {
         createOrUpdateEvent,
         deleteEvent,
         instantiateEvent,
+        endEvent,
     };
 }
