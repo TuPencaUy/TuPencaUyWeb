@@ -34,6 +34,9 @@ export const useUserStore = defineStore({
             };
             this._picture = auth0?.user?.value?.picture;
             this._isAuthenticated = userData?.data?.token ? true : false;
+        },
+        setUserName(name) {
+            this._user.name = name 
         }
     }, getters: {
         isAuthenticated() {
@@ -59,5 +62,6 @@ export const useUserStore = defineStore({
         getUserId() {
             return this._user?.id;
         }
-    }, persist: true
+    },
+    persist: true
 });

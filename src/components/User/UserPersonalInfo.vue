@@ -27,7 +27,6 @@ const objectData = ref({});
 const { toast } = useToast();
 
 onMounted(async () => {
-  debugger
   if (trigger.value) {
     trigger.value.click();
   }
@@ -53,9 +52,11 @@ async function handleSubmit() {
     return;
   }
 
+  useUserStore().setUserName(objectData.value.name);
+
   toast({
     title: 'Personal Info updated'
-  });1
+  });
   utils().hideLoader();
 
   emit('update:showDialog', false); // Notify parent to hide the dialog
