@@ -53,7 +53,7 @@ onMounted(async () => {
       <TableBody>
         <TableRow v-for="(item, index) in collection" :key="index">
           <TableCell>{{ item.eventName }}</TableCell>
-          <TableCell>{{ item.amountCollected }}</TableCell>
+          <TableCell>${{ item.amountCollected }}</TableCell>
           <TableCell>{{ `${item.hitsPercentage * 100}%` }}</TableCell>
           <TableCell>{{ item.partialHitsPercentage }}</TableCell>
           <TableCell>${{ item.prize }}</TableCell>

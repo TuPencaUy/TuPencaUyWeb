@@ -1,6 +1,7 @@
 import api from "@/logic/apiLogic.js";
 import {loadScript} from "@paypal/paypal-js";
 import paymentLogic from "@/logic/paymentLogic.js";
+import {uuid} from "vue-uuid";
 
 export default function paypalLogic() {
     const BASE_URL = "https://api-m.sandbox.paypal.com";
@@ -42,13 +43,40 @@ export default function paypalLogic() {
             body: "grant_type=client_credentials"
         });
         response = await response.json();
-        return response.access_token;
+        return response?.access_token ?? null;
     }
 
     async function createPaymentDB(eventId, paymentDetails) {
         paymentDetails.eventId = eventId;
         await paymentLogic().createPayment(paymentDetails);
         return true;
+    }
+
+    async function createPayout(items, eventName) {
+        const accessToken = await generateAccessToken();
+        const url = `${BASE_URL}/v1/payments/payouts`;
+        const payoutDetails = {
+            items: [],
+            sender_batch_header: {
+                sender_batch_id: uuid.v4(),
+                email_subject: "You have a payment",
+                email_message: `You have received a payment.`,
+            },
+        }
+        payoutDetails.items = items.map(item => {
+            return {
+                receiver: item.receiver,
+                recipient_type: "EMAIL",
+                amount: {
+                    currency: "USD",
+                    value: item.amount,
+                },
+                note: `Payment for ${eventName} event.`,
+                notification_language: "en-EN",
+            };
+        });
+        const response = await api().execute(url, "POST", payoutDetails, {Authorization: `Bearer ${accessToken}`}, true);
+        return await response.json();
     }
 
     async function convertUSDtoUYU(uyu_value) {
@@ -66,6 +94,6 @@ export default function paypalLogic() {
         createOrder,
         capturePayment,
         createPaymentDB,
-
+        createPayout,
     };
 }
