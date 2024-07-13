@@ -46,7 +46,7 @@ function handleLogOut() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem class="cursor-pointer" @click="() => { showUserPersonalInfo = !showUserPersonalInfo; }">
+              <DropdownMenuItem class="cursor-pointer" @click="() => { showUserPersonalInfo = true; }">
                 Personal Info
               </DropdownMenuItem>
               <DropdownMenuItem class="cursor-pointer" @click="handleLogOut">Logout</DropdownMenuItem>
@@ -84,5 +84,5 @@ function handleLogOut() {
       </div>
     </nav>
   </header>
-  <UserPersonalInfo v-if="showUserPersonalInfo" show-dialog="true"/>
+  <UserPersonalInfo v-if="showUserPersonalInfo" @update:showDialog="showUserPersonalInfo = $event"/>
 </template>
