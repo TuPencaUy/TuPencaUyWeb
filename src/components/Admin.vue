@@ -168,6 +168,7 @@ const handleLogOut = () => {
               <CircleUser class="h-5 w-5"/>
               <span class="sr-only">Toggle user menu</span>
             </Button>
+            <span class="ml-2">{{ useUserStore().getUserName }}</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -198,7 +199,8 @@ const handleLogOut = () => {
     </div>
   </div>
 
-  <UserPersonalInfo v-if="showUserPersonalInfo"/>
+  <UserPersonalInfo :showModal="showUserPersonalInfo" @update:showModal="showUserPersonalInfo = $event"/>
+
 </template>
 
 <style scoped>
