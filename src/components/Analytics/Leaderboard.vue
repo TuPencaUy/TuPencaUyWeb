@@ -1,10 +1,10 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import utils from "@/logic/utils.js";
 import analyticsLogic from "@/logic/analyticsLogic.js";
 import eventsLogic from '@/logic/eventsLogic';
-import { Icon } from "@iconify/vue";
-import { Button } from '@/components/ui/button';
+import {Icon} from "@iconify/vue";
+import {Button} from '@/components/ui/button';
 
 import {
   Table,
@@ -23,15 +23,23 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+const props = defineProps({
+  eventId: {type: String, required: false},
+});
+
+const eventFromClient = props?.eventId;
 const leaderboard = ref([]);
 const siteEvents = ref([]);
-const selectedEvent = ref(0);
+const selectedEvent = ref(eventFromClient ?? 0);
 
 onMounted(async () => {
   utils().showLoader();
   siteEvents.value = await eventsLogic().getEvents();
+  siteEvents.value = siteEvents.value.filter(event => event?.finished);
 
-  await getLeaderboard();
+  if (eventFromClient) {
+    await getLeaderboard(eventFromClient);
+  }
 
   setTimeout(() => {
     utils().hideLoader();
@@ -39,14 +47,15 @@ onMounted(async () => {
 });
 
 async function getLeaderboard(eventId) {
-  if (!eventId) return
+  if (!eventId) return;
 
   let fetching = await analyticsLogic().eventLeaderBoard(eventId);
-  console.log(selectedEvent.value);
   let data = fetching.data;
 
   if (data.count > 0) {
-    leaderboard.value = data.leaderboard.map(elem => { return { name: elem.name, email: elem.email, points: elem.points } });
+    leaderboard.value = data.leaderboard.map(elem => {
+      return {name: elem.name, email: elem.email, points: elem.points};
+    });
   } else {
     leaderboard.value = [];
   }
@@ -54,13 +63,13 @@ async function getLeaderboard(eventId) {
 </script>
 
 <template>
-  <div class="my-10 p-10 border rounded">
+  <div v-if="!eventFromClient" class="my-10 p-10 border rounded">
     <h3 class="text-lg font-semibold mb-4 md:text-xl">Events Leaderboard</h3>
     <div class="flex gap-2 mt-2">
       <div class="w-[400px]">
         <Select v-model="selectedEvent">
           <SelectTrigger>
-            <SelectValue placeholder="Select a fruit" />
+            <SelectValue placeholder="Select a fruit"/>
           </SelectTrigger>
           <SelectContent>
             <SelectItem v-for="event in siteEvents" class="bg-white" :key="event.id" :value="event.id">
@@ -83,13 +92,13 @@ async function getLeaderboard(eventId) {
       <TableBody>
         <TableRow v-for="(item, index) in leaderboard" :key="item.email">
           <TableCell v-if="index === 0">
-            <Icon icon="emojione:1st-place-medal" class="w-7 h-7" />
+            <Icon icon="emojione:1st-place-medal" class="w-7 h-7"/>
           </TableCell>
           <TableCell v-else-if="index === 1">
-            <Icon icon="emojione:2nd-place-medal" class="w-7 h-7" />
+            <Icon icon="emojione:2nd-place-medal" class="w-7 h-7"/>
           </TableCell>
           <TableCell v-else-if="index === 2">
-            <Icon icon="emojione:3rd-place-medal" class="w-7 h-7" />
+            <Icon icon="emojione:3rd-place-medal" class="w-7 h-7"/>
           </TableCell>
           <TableCell v-else>
           </TableCell>
@@ -107,6 +116,44 @@ async function getLeaderboard(eventId) {
         <p class="text-sm text-muted-foreground">
           Select another event
         </p>
+      </div>
+    </div>
+  </div>
+  <div class="container mx-auto mt-8" v-else>
+    <div class="w-full h-40 flex flex-col justify-center align-items-center bg-white shadow border-primary">
+      <h1 class="text-4xl font-bold text-center">Ranking</h1>
+    </div>
+    <Table class="mt-8" v-if="leaderboard?.length > 0">
+      <TableHeader>
+        <TableRow>
+          <TableHead></TableHead>
+          <TableHead>Name</TableHead>
+          <TableHead>Points</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow v-for="(item, index) in leaderboard" :key="item.email">
+          <TableCell v-if="index === 0">
+            <Icon icon="emojione:1st-place-medal" class="w-7 h-7"/>
+          </TableCell>
+          <TableCell v-else-if="index === 1">
+            <Icon icon="emojione:2nd-place-medal" class="w-7 h-7"/>
+          </TableCell>
+          <TableCell v-else-if="index === 2">
+            <Icon icon="emojione:3rd-place-medal" class="w-7 h-7"/>
+          </TableCell>
+          <TableCell v-else>
+          </TableCell>
+          <TableCell>{{ item.name }}</TableCell>
+          <TableCell>{{ item.points }}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+    <div class="w-full m-auto" v-else>
+      <div class="text-center">
+        <h3 class="text-xl font-bold tracking-tight">
+          No leaderboard yet
+        </h3>
       </div>
     </div>
   </div>

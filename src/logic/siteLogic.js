@@ -50,7 +50,8 @@ export default function siteLogic() {
                 "Name": siteData.name,
                 "Domain": siteData.domain,
                 "AccessType": Number(siteData.accesstype),
-                "Color": Number(siteData.color)
+                "Color": Number(siteData.color),
+                "paypalEmail": siteData?.paypalEmail ?? null,
             };
 
             const token = useUserStore().getToken;
@@ -95,10 +96,10 @@ export default function siteLogic() {
         if (!site || site?.error || !site?.data) {
             window.location.href = import.meta.env.VITE_API_CENTRAL_URL;
         }
-
         useTenantStore().setTenantId(site.data?.id);
         useTenantStore().setTenantAccess(site.data?.accessType ?? 1);
         useTenantStore().setTenantColor(site.data?.color ?? 1);
+        useTenantStore().setPayPalEmail(site.data?.paypalEmail);
     }
 
     async function redirectUserToSite(tenant) {

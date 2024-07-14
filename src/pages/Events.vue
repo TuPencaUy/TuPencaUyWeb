@@ -19,29 +19,99 @@ import userLogic from "@/logic/userLogic.js";
 import {useToast} from "@/components/ui/toast/index.js";
 import {useEventStore} from "@/store/event.js";
 import {useChatStore} from "@/store/chatStore.js";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
+} from "@/components/ui/alert-dialog/index.js";
+import paypalLogic from "@/logic/paypalLogic.js";
 
 const {toast} = useToast();
 
+let paypal = null;
 let events = ref([]);
 let userEvents = useUserStore().getEvents ?? [];
 
 onMounted(async () => {
+  utils().showLoader();
   useEventStore().resetCurrentEvent();
   useChatStore().resetCurrentChat();
 
-  utils().showLoader();
+  paypal = await paypalLogic().initPaypal();
   events.value = await eventsLogic().getEvents();
   if (userEvents?.length > 0) {
     events.value = events.value.filter(event => !userEvents.find(userEvent => userEvent.id === event.id));
   }
+
   utils().hideLoader();
 });
 
-async function handleSubscribe(eventId) {
+async function showPaypal(eventId, total, currencyCode = 'USD') {
+  setTimeout(async () => {
+    try {
+      await paypal
+          .Buttons({
+            async createOrder() {
+              const paymentObj = {
+                intent: 'CAPTURE',
+                purchase_units: [
+                  {
+                    amount: {
+                      currency_code: currencyCode,
+                      value: String(Number(total).toFixed(2))
+                    }
+                  }
+                ]
+              };
+
+              return await paypalLogic().createOrder(paymentObj);
+            },
+            async onApprove(data) {
+              const responseCapture = await paypalLogic().capturePayment(data?.orderID);
+              if (responseCapture.status !== 'COMPLETED') throw new Error('Payment not completed');
+
+              let paymentDone = await paypalLogic().createPaymentDB(eventId, {
+                userEmail: useUserStore().getUserEmail,
+                amount: total,
+                transactionId: data?.orderID
+              });
+              if (!paymentDone) throw new Error('Payment not saved');
+
+              await userLogic().updateUser({paypalEmail: responseCapture?.payer?.email_address});
+
+              toast({
+                title: 'Success',
+                description: 'Payment completed successfully',
+                variant: 'success'
+              });
+
+              await subscribeToEvent(eventId);
+            },
+            style: {
+              layout: 'horizontal',
+              color: 'blue',
+              shape: 'rect',
+              label: 'paypal',
+            }
+          })
+          .render('#paypal-subscription-container');
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'An error occurred while initializing the payment',
+        variant: 'destructive'
+      });
+    }
+  });
+}
+
+async function subscribeToEvent(eventId) {
   utils().showLoader();
   const response = await userLogic().subscribeToEvent(eventId);
   utils().hideLoader();
-  if (!response || response?.error) {
+  if (!response || !response?.data?.user?.email) {
     toast({
       title: 'Error',
       description: 'An error occurred while subscribing to the event',
@@ -119,10 +189,32 @@ async function handleSubscribe(eventId) {
                       class="relative w-full h-full text-center hover:cursor-pointer group">
                   <div
                       class="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <Button class="bg-red-400 hover:bg-red-600 text-white" @click="handleSubscribe(event.id)">
+                    <Button v-if="event?.price === 0" class="bg-red-400 hover:bg-red-600 text-white"
+                            @click="subscribeToEvent(event?.id)">
                       <Icon icon="iconoir:lock" class="w-5 h-5"/>
                       Subscribe
                     </Button>
+                    <AlertDialog v-else>
+                      <AlertDialogTrigger as-child>
+                        <Button class="bg-red-400 hover:bg-red-600 text-white"
+                                @click="showPaypal(event?.id, event?.price, event?.currency ?? 'USD')">
+                          <Icon icon="iconoir:lock" class="w-5 h-5"/>
+                          Subscribe
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Event subscription</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            In order to subscribe to this event, you will be charged USD ${{ event.price ?? '10' }}.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <div id="paypal-subscription-container" class="flex items-center justify-center w-full"/>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                   <CardHeader>
                     <CardTitle>{{ event.name }}</CardTitle>

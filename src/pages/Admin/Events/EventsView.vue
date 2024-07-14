@@ -3,7 +3,7 @@ import Admin from "@/components/Admin.vue";
 import {onMounted, ref} from "vue";
 import utils from "@/logic/utils.js";
 import eventsLogic from "@/logic/eventsLogic.js";
-import {Button} from "@/components/ui/button/index.js";
+import {Button} from "@/components/ui/button";
 import {Icon} from "@iconify/vue";
 
 import {
@@ -29,6 +29,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import {useTenantStore} from "@/store/tenant.js";
+import paypalLogic from "@/logic/paypalLogic.js";
+import payoutLogic from "@/logic/payoutLogic.js";
 
 const {toast} = useToast();
 
@@ -71,6 +73,80 @@ async function deleteItem(id) {
     });
   }
 }
+
+async function handleEndEvent(event) {
+  utils().showLoader();
+  const eventInfo = await eventsLogic().endEvent(event?.id);
+  if (!eventInfo || eventInfo?.error) {
+    utils().hideLoader();
+    toast({
+      title: 'Finish event',
+      description: 'An error occurred while ending the event.',
+      variant: 'destructive',
+    });
+    return;
+  }
+  event.finished = true;
+  if (event?.price === 0) {
+    utils().hideLoader();
+    toast({
+      title: 'Finish event',
+      description: 'Event has been finished successfully.',
+    });
+    return;
+  }
+  const payoutInfo = await paypalLogic().createPayout(
+      [
+        {
+          receiver: eventInfo?.data?.winner?.paypalEmail,
+          amount: eventInfo?.data?.prizeAmount,
+        },
+        {
+          receiver: eventInfo?.data?.sitePaypalEmail,
+          amount: eventInfo?.data?.siteRevenueAmount,
+        },
+      ],
+      event?.name,
+  );
+  if (!payoutInfo || !payoutInfo?.batch_header) {
+    utils().hideLoader();
+    toast({
+      title: 'Finish event',
+      description: 'An error occurred while ending the event.',
+      variant: 'destructive',
+    });
+    return;
+  }
+  //TODO: pass list of objects to several requests to db
+  const winnerPayoutResponse = await payoutLogic().createPayout({
+    "siteId": useTenantStore().getTenantId,
+    "paypalEmail": eventInfo?.data?.winner?.paypalEmail,
+    "amount": eventInfo?.data?.prizeAmount,
+    "transactionID": payoutInfo?.batch_header?.payout_batch_id,
+    "eventId": event?.referenceEvent,
+  });
+  const sitePayoutResponse = await payoutLogic().createPayout({
+    "siteId": useTenantStore().getTenantId,
+    "paypalEmail": eventInfo?.data?.sitePaypalEmail,
+    "amount": eventInfo?.data?.siteRevenueAmount,
+    "transactionID": payoutInfo?.batch_header?.payout_batch_id,
+    "eventId": event?.referenceEvent,
+  });
+  if (!winnerPayoutResponse || !sitePayoutResponse) {
+    utils().hideLoader();
+    toast({
+      title: 'Finish event',
+      description: 'An error occurred while ending the event.',
+      variant: 'destructive',
+    });
+    return;
+  }
+  utils().hideLoader();
+  toast({
+    title: 'Finish event',
+    description: 'Event has been finished successfully.',
+  });
+}
 </script>
 
 <template>
@@ -94,23 +170,32 @@ async function deleteItem(id) {
           <TableHead>Sport</TableHead>
           <TableHead>Start Date</TableHead>
           <TableHead>End Date</TableHead>
+          <TableHead v-if="!useTenantStore().isCentralSite">Price</TableHead>
           <TableHead>Comission</TableHead>
+          <TableHead v-if="!useTenantStore().isCentralSite">Prize Percentage</TableHead>
           <TableHead>Team Type</TableHead>
           <TableHead class="text-right">
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="item in collection" :key="item.id">
-          <TableCell v-if="useTenantStore().isCentralSite">{{ item.id }}</TableCell>
-          <TableCell>{{ item.name }}</TableCell>
-          <TableCell>{{ item.sport.name }}</TableCell>
-          <TableCell>{{ new Date(item.startDate).toLocaleDateString() }}</TableCell>
-          <TableCell>{{ new Date(item.endDate).toLocaleDateString() }}</TableCell>
-          <TableCell>{{ `${item.comission * 100 ?? 0}%` }}</TableCell>
-          <TableCell>{{ TEAM_VALUES[item.teamType ?? 1] }}</TableCell>
+        <TableRow v-for="event in collection" :key="event.id">
+          <TableCell v-if="useTenantStore().isCentralSite">{{ event.id }}</TableCell>
+          <TableCell>{{ event.name }}</TableCell>
+          <TableCell>{{ event.sport.name }}</TableCell>
+          <TableCell>{{ new Date(event.startDate).toLocaleDateString() }}</TableCell>
+          <TableCell>{{ new Date(event.endDate).toLocaleDateString() }}</TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite">{{
+              `${event.price !== 0 ? '$' + event.price : 'Free'}`
+            }}
+          </TableCell>
+          <TableCell>{{ `${event.comission * 100 ?? 0}%` }}</TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite">
+            {{ `${event.prizePercentage !== 0 ? ((event.prizePercentage * 100) + '%') : 'None'}` }}
+          </TableCell>
+          <TableCell>{{ TEAM_VALUES[event.teamType ?? 1] }}</TableCell>
           <TableCell v-if="useTenantStore().isCentralSite">
-            <router-link class="inline-block" :to="`/admin/events/${item.id}`">
+            <router-link class="inline-block" :to="`/admin/events/${event.id}`">
               <Icon icon="radix-icons:pencil-2" class="w-4 h-4 mr-2"/>
             </router-link>
             <AlertDialog>
@@ -128,10 +213,34 @@ async function deleteItem(id) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction @click="deleteItem(item.id)">Continue</AlertDialogAction>
+                  <AlertDialogAction @click="deleteItem(event.id)">Continue</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          </TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite && !event?.finished">
+            <AlertDialog>
+              <AlertDialogTrigger as-child>
+                <Button>
+                  End Event
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure you want to finish this event?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently finish the event.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction @click="handleEndEvent(event)">Finish event</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite && event?.finished">
+            <span class="text-sm">Finished</span>
           </TableCell>
         </TableRow>
       </TableBody>
