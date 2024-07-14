@@ -31,7 +31,6 @@ onMounted(async () => {
   utils().showLoader();
   siteEvents.value = await eventsLogic().getEvents();
   siteEvents.value = siteEvents.value.filter(event => event?.finished);
-  await getLeaderboard();
   setTimeout(() => {
     utils().hideLoader();
   }, 1000);
