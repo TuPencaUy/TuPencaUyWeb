@@ -20,10 +20,12 @@ import SettingSecurity from "@/components/Settings/SettingSecurity.vue";
 import SettingCustom from "@/components/Settings/SettingCustom.vue";
 import SitesView from "@/pages/Admin/Sites/SitesView.vue";
 import SiteView from "@/pages/Admin/Sites/SiteView.vue";
+import Ranking from "@/pages/Ranking.vue";
 
 const routes = [
   { path: '/events', name: 'user events', component: Events },
   { path: '/events/:id', name: 'user event', component: Event },
+  { path: '/events/:id/ranking', name: 'user event', component: Ranking },
   { path: '/signup', name: 'Signin', component: SignUpView },
   { path: '/login', name: 'login', component: LoginView },
   { path: '/create-site', name: 'create-site', component: CreateSiteView },
