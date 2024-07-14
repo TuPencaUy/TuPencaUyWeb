@@ -111,7 +111,7 @@ async function subscribeToEvent(eventId) {
   utils().showLoader();
   const response = await userLogic().subscribeToEvent(eventId);
   utils().hideLoader();
-  if (!response || response?.error) {
+  if (!response || !response?.data?.user?.email) {
     toast({
       title: 'Error',
       description: 'An error occurred while subscribing to the event',
