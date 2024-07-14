@@ -86,6 +86,7 @@ async function handleEndEvent(event) {
     });
     return;
   }
+  event.finished = true;
   if (event?.price === 0) {
     utils().hideLoader();
     toast({
@@ -237,6 +238,9 @@ async function handleEndEvent(event) {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          </TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite && event?.finished">
+            <span class="text-sm">Finished</span>
           </TableCell>
         </TableRow>
       </TableBody>
