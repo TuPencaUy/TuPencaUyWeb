@@ -30,9 +30,8 @@ const selectedEvent = ref(0);
 onMounted(async () => {
   utils().showLoader();
   siteEvents.value = await eventsLogic().getEvents();
-
+  siteEvents.value = siteEvents.value.filter(event => event?.finished);
   await getLeaderboard();
-
   setTimeout(() => {
     utils().hideLoader();
   }, 1000);
@@ -42,7 +41,6 @@ async function getLeaderboard(eventId) {
   if (!eventId) return
 
   let fetching = await analyticsLogic().eventLeaderBoard(eventId);
-  console.log(selectedEvent.value);
   let data = fetching.data;
 
   if (data.count > 0) {
