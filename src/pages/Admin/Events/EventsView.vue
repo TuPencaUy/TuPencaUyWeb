@@ -86,6 +86,15 @@ async function handleEndEvent(event) {
     });
     return;
   }
+  event.finished = true;
+  if (event?.price === 0) {
+    utils().hideLoader();
+    toast({
+      title: 'Finish event',
+      description: 'Event has been finished successfully.',
+    });
+    return;
+  }
   const payoutInfo = await paypalLogic().createPayout(
       [
         {
@@ -123,7 +132,7 @@ async function handleEndEvent(event) {
     "transactionID": payoutInfo?.batch_header?.payout_batch_id,
     "eventId": event?.referenceEvent,
   });
-  if(!winnerPayoutResponse || !sitePayoutResponse) {
+  if (!winnerPayoutResponse || !sitePayoutResponse) {
     utils().hideLoader();
     toast({
       title: 'Finish event',
@@ -229,6 +238,9 @@ async function handleEndEvent(event) {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          </TableCell>
+          <TableCell v-if="!useTenantStore().isCentralSite && event?.finished">
+            <span class="text-sm">Finished</span>
           </TableCell>
         </TableRow>
       </TableBody>
