@@ -25,7 +25,7 @@ import Ranking from "@/pages/Ranking.vue";
 const routes = [
   { path: '/events', name: 'user events', component: Events },
   { path: '/events/:id', name: 'user event', component: Event },
-  { path: '/events/:id/ranking', name: 'user event', component: Ranking },
+  { path: '/events/:id/ranking', name: 'ranking', component: Ranking },
   { path: '/signup', name: 'Signin', component: SignUpView },
   { path: '/login', name: 'login', component: LoginView },
   { path: '/create-site', name: 'create-site', component: CreateSiteView },
