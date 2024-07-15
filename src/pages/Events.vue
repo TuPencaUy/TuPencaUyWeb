@@ -80,6 +80,7 @@ async function showPaypal(eventId, total, currencyCode = 'USD') {
               if (!paymentDone) throw new Error('Payment not saved');
 
               await userLogic().updateUser({paypalEmail: responseCapture?.payer?.email_address});
+              useUserStore().setUserPaypalEmail(responseCapture?.payer?.email_address);
 
               toast({
                 title: 'Success',

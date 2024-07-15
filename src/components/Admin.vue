@@ -17,8 +17,7 @@ import utils from '@/logic/utils';
 import {Icon} from "@iconify/vue";
 import {useUserStore} from '@/store/user';
 import { ref } from 'vue';
-
-const showUserPersonalInfo = ref(false);
+import app from "@/eventBus.js";
 
 if (!utils().ensureIsLoggedIn()) {
   router.push('/login');
@@ -173,7 +172,7 @@ const handleLogOut = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator/>
-            <DropdownMenuItem class="cursor-pointer" @click="() => {showUserPersonalInfo = true;}">
+            <DropdownMenuItem class="cursor-pointer" @click="app.config.globalProperties.emitter.emit('showModalInfoUser');">
               Personal Info
             </DropdownMenuItem>
             <DropdownMenuItem class="cursor-pointer" @click="handleLogOut">Logout</DropdownMenuItem>
@@ -199,7 +198,7 @@ const handleLogOut = () => {
     </div>
   </div>
 
-  <UserPersonalInfo :showModal="showUserPersonalInfo" @update:showModal="showUserPersonalInfo = $event"/>
+  <UserPersonalInfo/>
 
 </template>
 
