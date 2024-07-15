@@ -36,13 +36,14 @@ const props = defineProps({
 watch(
   () => props.showModal,
   () => {
-    trigger.value.click();
+    if(trigger.value) trigger.value.click();
   }
 )
 
 onMounted(async () => {
   email.value = await useUserStore().getUserEmail;
   objectData.value.name = await useUserStore().getUserName;
+  objectData.value.paypalEmail = await useUserStore().getUserPaypalEmail;
 });
 
 async function handleSubmit() {
@@ -63,6 +64,7 @@ async function handleSubmit() {
   }
 
   useUserStore().setUserName(objectData.value.name);
+  useUserStore().setUserPaypalEmail(objectData.value.paypalEmail);
 
   toast({
     title: 'Personal Info updated'
@@ -94,6 +96,10 @@ async function handleSubmit() {
           <div class="grid grid-cols-4 items-center gap-4">
             <Label for="username" class="text-right">Username</Label>
             <Input id="username" v-model="objectData.name" class="col-span-3" />
+          </div>
+          <div class="grid grid-cols-4 items-center gap-4">
+            <Label for="paypalEmail" class="text-right">Paypal Email</Label>
+            <Input id="paypalEmail" v-model="objectData.paypalEmail" class="col-span-3" />
           </div>
         </div>
         <AlertDialogFooter>

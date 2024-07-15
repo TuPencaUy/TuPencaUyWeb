@@ -37,6 +37,9 @@ export const useUserStore = defineStore({
         },
         setUserName(name) {
             this._user.name = name 
+        },
+        setUserPaypalEmail(paypalEmail) {
+            this._user.paypalEmail = paypalEmail 
         }
     }, getters: {
         isAuthenticated() {
@@ -57,10 +60,14 @@ export const useUserStore = defineStore({
             return this._user?.email;
         },
         getUserName() {
+            debugger
             return this._user?.name;
         },
         getUserId() {
             return this._user?.id;
+        },
+        getUserPaypalEmail() {
+            return this._user?.paypalEmail;
         }
     },
     persist: true
