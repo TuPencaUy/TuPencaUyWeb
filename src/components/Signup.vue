@@ -36,9 +36,7 @@ const onSubmit = form.handleSubmit(async (values) => {
   let tenant = useTenantStore().getCurrentTenant ?? null;
 
   utils().showLoader();
-
-  const userData = await userLogic().basicSignUp(values, tenant);
-
+  const userData = await userLogic().basicSignUpOrUpdate(values, tenant);
   if (!userData || userData.error) {
     toast({
       title: 'Register Failed',
@@ -48,27 +46,39 @@ const onSubmit = form.handleSubmit(async (values) => {
     utils().hideLoader();
     return;
   }
+
   const loginData = await useUserStore().login({email: values.email, password: values.password});
-
-
   utils().hideLoader();
-
-  if (!loginData || loginData?.error) {
-    toast({
-      title: 'Login failed!',
-      description: 'Redirecting to the home page...',
-      variant: 'destructive'
-    });
-  } else {
-    toast({
-      title: 'Thank you for sign up!',
-      description: 'Redirecting...',
-    });
+  if(loginData && !loginData?.error && useTenantStore().isCentralSite){
+    await router.push('/create-site');
   }
 
-  setTimeout(() => {
-    useTenantStore().getCurrentTenant === null ? router.push('/create-site') : router.push('/events');
-  }, 2000);
+  if (useTenantStore().isOpenAccess) {
+    if (!loginData || loginData?.error) {
+      toast({
+        title: 'Login failed!',
+        description: 'Redirecting to the home page...',
+        variant: 'destructive'
+      });
+      await router.push('/login');
+    } else {
+      toast({
+        title: 'Thank you for sign up!',
+        description: 'Redirecting...',
+      });
+      await router.push('/events');
+    }
+  }
+
+  if(useTenantStore().isRequestAccess || useTenantStore().isInvitationAccess){
+    if (!loginData || loginData?.error) {
+      toast({
+        title: 'Login failed!',
+        description: 'You need to be approved by the admin to access the site. Redirecting to login...',
+      });
+      router.push('/login');
+    }
+  }
 });
 </script>
 

@@ -40,6 +40,12 @@ export const useUserStore = defineStore({
                 return this._isAuthenticated = false;
             }
             return this._isAuthenticated = userData?.data?.token ? true : false;
+        },
+        setUserName(name) {
+            this._user.name = name
+        },
+        setUserPaypalEmail(paypalEmail) {
+            this._user.paypalEmail = paypalEmail
         }
     }, getters: {
         isAuthenticated() {
@@ -61,6 +67,15 @@ export const useUserStore = defineStore({
         },
         getAccessStatus() {
             return this._user?.accessStatus ?? '';
+        },
+        getUserName() {
+            return this._user?.name;
+        },
+        getUserId() {
+            return this._user?.id;
+        },
+        getUserPaypalEmail() {
+            return this._user?.paypalEmail;
         },
     }, persist: true
 });

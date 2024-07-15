@@ -1,6 +1,7 @@
 <script setup>
 import {Bell, CircleUser, Home, Menu, Package2, Users} from 'lucide-vue-next';
 import {Button} from '@/components/ui/button';
+import UserPersonalInfo from '@/components/User/UserPersonalInfo.vue';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +16,8 @@ import {useTenantStore} from '@/store/tenant';
 import utils from '@/logic/utils';
 import {Icon} from "@iconify/vue";
 import {useUserStore} from '@/store/user';
+import { ref } from 'vue';
+import app from "@/eventBus.js";
 
 if (!utils().ensureIsLoggedIn()) {
   router.push('/login');
@@ -164,10 +167,14 @@ const handleLogOut = () => {
               <CircleUser class="h-5 w-5"/>
               <span class="sr-only">Toggle user menu</span>
             </Button>
+            <span class="ml-2">{{ useUserStore().getUserName }}</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator/>
+            <DropdownMenuItem class="cursor-pointer" @click="app.config.globalProperties.emitter.emit('showModalInfoUser');">
+              Personal Info
+            </DropdownMenuItem>
             <DropdownMenuItem class="cursor-pointer" @click="handleLogOut">Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -190,6 +197,9 @@ const handleLogOut = () => {
       </main>
     </div>
   </div>
+
+  <UserPersonalInfo/>
+
 </template>
 
 <style scoped>
