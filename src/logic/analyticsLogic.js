@@ -48,10 +48,40 @@ export default function analyticsLogic() {
             return error;
         }
     }
+
+    async function platformFinances() {
+        return _platform('finances')
+    }
+
+    async function platformEvents() {
+        return _platform('events')
+    }
+
+    async function platformSites() {
+        return _platform('sites')
+    }
+
+    async function _platform(type) {
+        try {
+            const url = `/analytics/platform/${type}`;
+            const currentTenant = useTenantStore().getCurrentTenant;
+
+            const token = useUserStore().getToken;
+            if (!token) return null;
+
+            const response = await api().execute(url, 'GET', null, {'Authorization': `Bearer ${token}`, currentTenant});
+            return response.json();
+        } catch (error) {
+            return error;
+        }
+    }
   
     return {
         eventLeaderBoard,
         betsMatchData,
         betsEventData,
+        platformFinances,
+        platformEvents,
+        platformSites
     };
 }
