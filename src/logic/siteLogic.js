@@ -100,6 +100,7 @@ export default function siteLogic() {
         useTenantStore().setTenantAccess(site.data?.accessType ?? 1);
         useTenantStore().setTenantColor(site.data?.color ?? 1);
         useTenantStore().setPayPalEmail(site.data?.paypalEmail);
+        useTenantStore().setUniqueId(site.data?.uniqueID);
     }
 
     async function redirectUserToSite(tenant) {
