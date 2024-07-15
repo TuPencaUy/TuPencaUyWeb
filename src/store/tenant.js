@@ -10,6 +10,7 @@ export const useTenantStore = defineStore({
             _tenantAccess: null,
             _tenantColor: null,
             _payPalEmail: null,
+            _uniqueId: null,
         };
     },
     actions: {
@@ -39,6 +40,9 @@ export const useTenantStore = defineStore({
         },
         setPayPalEmail(email) {
             this._payPalEmail = email;
+        },
+        setUniqueId(id) {
+            this._uniqueId = id;
         }
     },
     getters: {
@@ -46,10 +50,13 @@ export const useTenantStore = defineStore({
             return this._currentTenant;
         },
         getTenantAccess() {
-            return this._tenantAccess;
+            return this.isCentralSite ? 1 : this._tenantAccess;
         },
         getTenantColor() {
             return this._tenantColor;
+        },
+        getUniqueId() {
+            return this._uniqueId;
         },
         isCentralSite() {
             return this._currentTenant === null;
@@ -59,7 +66,25 @@ export const useTenantStore = defineStore({
         },
         getPayPalEmail() {
             return this._payPalEmail;
-        }
+        },
+        isClosedAccess() {
+            return this._tenantAccess === 0;
+        },
+        isOpenAccess() {
+            return this._tenantAccess === 1;
+        },
+        isInvitationAccess() {
+            return this._tenantAccess === 2;
+        },
+        isRequestAccess() {
+            return this._tenantAccess === 3;
+        },
+        isInvitationLinkValidated() {
+            if(!this.isInvitationAccess || !this.getUniqueId) return false;
+            return window.location.href.includes(this.getUniqueId)
+        },
+
+
     },
     persist: true
 });

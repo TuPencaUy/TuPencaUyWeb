@@ -78,7 +78,7 @@ async function handleLogin(event) {
   if (loginData === true) {
     toast({
       title: 'You have successfully logged in!',
-      description: 'Redirecting to the home page...',
+      description: 'Redirecting...',
     });
 
     setTimeout(() => {
@@ -86,7 +86,6 @@ async function handleLogin(event) {
         router.push('/admin');
         return;
       }
-
       if (useTenantStore().isCentralSite) {
         const userSite = useUserStore().getSite;
         //Validate if the user has a tenant
@@ -95,20 +94,38 @@ async function handleLogin(event) {
           siteLogic().redirectUserToSite(userSite.domain);
         } else {
           router.push('/create-site');
-
         }
       } else {
         router.push('/events');
       }
-
-
     }, 2000);
   } else {
+    let message = 'Something went wrong. Please try again.';
+    let status = 'destructive';
+    switch (useTenantStore().getTenantAccess) {
+      case 0://CLOSED
+        message = 'You do not have access to this site. Please contact the site administrator for access.';
+        status = 'destructive';
+        break;
+      case 2://INVITE
+        if (useUserStore().getAccessStatus === 0) {
+          message = 'Your request is pending approval. Please wait for the site administrator to approve your request.';
+          status = 'info';
+        }
+        break;
+      case 3://REQUEST
+        if (useUserStore().getAccessStatus === 0) {
+          message = 'Your request is pending approval. Please wait for the site administrator to approve your request.';
+          status = 'info';
+        }
+        break;
+    }
     toast({
       title: 'Login failed!',
-      description: loginData?.message ?? 'Please try again.',
-      variant: 'destructive'
+      description: message,
+      status: status,
     });
+    useUserStore().logOut();
   }
 }
 </script>
@@ -148,7 +165,10 @@ async function handleLogin(event) {
           <button class="login-with-google-btn" data-id="google" @click="handleLogin">
             Log In with Google
           </button>
-          <div>
+          <div v-if="
+          useTenantStore().isCentralSite ||
+          (useTenantStore().isInvitationAccess && useTenantStore().isInvitationLinkValidated) ||
+          (!useTenantStore().isClosedAccess && !useTenantStore().isInvitationAccess)">
             Do not have an account?
             <router-link
                 class="nav-link link-body-emphasis font-semibold text-black"

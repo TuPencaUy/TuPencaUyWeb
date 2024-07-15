@@ -33,13 +33,13 @@ export const useUserStore = defineStore({
                 expiration: userData?.data?.expiration
             };
             this._picture = auth0?.user?.value?.picture;
-            this._isAuthenticated = userData?.data?.token ? true : false;
-        },
-        setUserName(name) {
-            this._user.name = name 
-        },
-        setUserPaypalEmail(paypalEmail) {
-            this._user.paypalEmail = paypalEmail 
+
+            if (!useTenantStore().isCentralSite &&
+                !useUserStore().isAdmin &&
+                useUserStore().getAccessStatus !== 1) {
+                return this._isAuthenticated = false;
+            }
+            return this._isAuthenticated = userData?.data?.token ? true : false;
         }
     }, getters: {
         isAuthenticated() {
@@ -60,7 +60,6 @@ export const useUserStore = defineStore({
             return this._user?.email;
         },
         getUserName() {
-            debugger
             return this._user?.name;
         },
         getUserId() {
@@ -68,7 +67,9 @@ export const useUserStore = defineStore({
         },
         getUserPaypalEmail() {
             return this._user?.paypalEmail;
-        }
-    },
-    persist: true
+        },
+        getAccessStatus() {
+            return this._user?.accessStatus ?? '';
+        },
+    }, persist: true
 });
