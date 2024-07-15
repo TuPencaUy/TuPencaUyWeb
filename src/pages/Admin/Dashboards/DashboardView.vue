@@ -9,11 +9,15 @@ import { useTenantStore } from '@/store/tenant';
 
 const betsPerEvent = ref([]);
 const usersPerEvent = ref([]);
+const usersPerSite = ref([]);
 
 onMounted(async () => {
   if (!useTenantStore().isCentralSite) {
     betsPerEvent.value = await chartsLogic().betsPerEvent();
     usersPerEvent.value = await chartsLogic().usersPerEvent();
+  } else {
+    usersPerSite.value = await chartsLogic().usersPerSitePlatfrom();
+    usersPerEvent.value = await chartsLogic().usersPerEventPlatfrom();
   }
 });
 </script>
@@ -32,6 +36,16 @@ onMounted(async () => {
       <div>
         <BetsEventsData></BetsEventsData>
         <Leaderboard></Leaderboard>
+      </div>
+    </div>
+    <div class="flex flex-col p-10 w-full gap-4" v-else>
+      <div class="flex justify-center p-2 w-full gap-4">
+        <div class="flex rounded-lg border border-separate shadow-sm p-4 h-fit">
+          <Donut title="Users per Site" :data="usersPerSite"></Donut>
+        </div>
+        <div class="flex rounded-lg border border-separate shadow-sm p-4 h-fit">
+          <Donut title="Users per Event" :data="usersPerEvent"></Donut>
+        </div>
       </div>
     </div>
   </Admin>
