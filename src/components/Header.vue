@@ -5,6 +5,7 @@ import { Icon } from "@iconify/vue";
 import { useEventStore } from "@/store/event.js";
 import { Button } from '@/components/ui/button'
 import UserPersonalInfo from '@/components/User/UserPersonalInfo.vue';
+import app from '@/eventBus.js';
 
 import {
   DropdownMenu,
@@ -14,11 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-
-import { ref } from "vue";
-
-const showUserPersonalInfo = ref(false);
-
 
 const url = router.currentRoute.value.path;
 
@@ -47,7 +43,7 @@ function handleLogOut() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem class="cursor-pointer" @click="() => { showUserPersonalInfo = true; }">
+              <DropdownMenuItem class="cursor-pointer" @click="app.config.globalProperties.emitter.emit('showModalInfoUser');">
                 Personal Info
               </DropdownMenuItem>
               <DropdownMenuItem class="cursor-pointer" @click="handleLogOut">Logout</DropdownMenuItem>
@@ -93,5 +89,5 @@ function handleLogOut() {
       </div>
     </nav>
   </header>
-  <UserPersonalInfo :showModal="showUserPersonalInfo" @update:showModal="showUserPersonalInfo = $event"/>
+  <UserPersonalInfo/>
 </template>
