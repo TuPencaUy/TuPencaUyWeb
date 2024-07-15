@@ -5,7 +5,7 @@ import {useTenantStore} from "@/store/tenant.js";
 export default function userLogic() {
     async function basicSignUp(userData, currentTenant) {
         try {
-            const response = await api().execute('/identity/basicsignup', 'POST', userData, {currentTenant});
+            const response = await api().execute(`/identity/basicsignup?siteAccess=${useTenantStore().getTenantAccess}`, 'POST', userData, {currentTenant});
             return await response.json();
 
         } catch (error) {
@@ -16,7 +16,7 @@ export default function userLogic() {
     async function basicLogin(userData) {
         try {
             const currentTenant = useTenantStore().getCurrentTenant;
-            const response = await api().execute('/identity/basiclogin', 'POST', userData, {currentTenant});
+            const response = await api().execute(`/identity/basiclogin?siteAccess=${useTenantStore().getTenantAccess}`, 'POST', userData, {currentTenant});
             return await response.json();
         } catch (error) {
             return error;
@@ -25,7 +25,13 @@ export default function userLogic() {
 
     async function authLogin(token, currentTenant = {}) {
         try {
-            const response = await api().execute('/identity/oauthlogin', 'POST', token, {currentTenant});
+            let isAllowedRegister =
+                !useTenantStore().isInvitationAccess ||
+                useTenantStore().isInvitationAccess && useTenantStore().isInvitationLinkValidated;
+            const response = await api().execute(`/identity/oauthlogin?siteAccess=${useTenantStore().getTenantAccess}`, 'POST', {
+                token,
+                isAllowedRegister
+            }, {currentTenant});
             return await response.json();
         } catch (error) {
             return error;

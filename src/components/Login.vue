@@ -148,7 +148,10 @@ async function handleLogin(event) {
           <button class="login-with-google-btn" data-id="google" @click="handleLogin">
             Log In with Google
           </button>
-          <div>
+          <div v-if="
+          useTenantStore().isCentralSite ||
+          (useTenantStore().isInvitationAccess && useTenantStore().isInvitationLinkValidated) ||
+          (!useTenantStore().isClosedAccess && !useTenantStore().isInvitationAccess)">
             Do not have an account?
             <router-link
                 class="nav-link link-body-emphasis font-semibold text-black"

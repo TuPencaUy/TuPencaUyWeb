@@ -33,7 +33,13 @@ export const useUserStore = defineStore({
                 expiration: userData?.data?.expiration
             };
             this._picture = auth0?.user?.value?.picture;
-            this._isAuthenticated = userData?.data?.token ? true : false;
+
+            if (!useTenantStore().isCentralSite &&
+                !useUserStore().isAdmin &&
+                useUserStore().getAccessStatus !== 1) {
+                return this._isAuthenticated = false;
+            }
+            return this._isAuthenticated = userData?.data?.token ? true : false;
         }
     }, getters: {
         isAuthenticated() {
@@ -52,6 +58,9 @@ export const useUserStore = defineStore({
         },
         getUserEmail() {
             return this._user?.email;
-        }
+        },
+        getAccessStatus() {
+            return this._user?.accessStatus ?? '';
+        },
     }, persist: true
 });
