@@ -22,15 +22,23 @@ export default function utils() {
     function hasDateExpired(limitDate) {
         const dateToCompare = typeof limitDate === 'string' ? new Date(limitDate) : limitDate;
 
-        const result = Date.now() > dateToCompare;
+        return Date.now() > dateToCompare;
+    }
 
-        return result;
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 
     return {
         showLoader,
         hideLoader,
         ensureIsLoggedIn,
-        hasDateExpired
+        hasDateExpired,
+        copyToClipboard,
     };
 }
