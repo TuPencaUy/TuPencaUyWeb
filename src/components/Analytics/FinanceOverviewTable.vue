@@ -29,7 +29,7 @@ onMounted(async () => {
   events.value = dataFetched.data.events;
   sites.value = dataFetched.data.sites;
 
-  total.value = dataFetched.totalRaised;
+  total.value = dataFetched.data.totalRaised;
 
   setTimeout(() => {
     utils().hideLoader();
@@ -67,47 +67,52 @@ async function showCompleteTable(type) {
 </script>
 
 <template>
-  <div class="flex justify-around">
-    <div class="my-10 p-10 border rounded w-[49%]">
-      <div class="flex gap-2 justify-between mb-4">
-        <h3 class="text-lg font-semibold md:text-xl">Event Finances Last Inputs</h3>
-        <Button @click="showCompleteTable('event')">Show All</Button>
+  <div class="flex flex-col">
+    <div class="flex justify-around mt-10">
+      <div class="p-10 border rounded w-[49%]">
+        <div class="flex gap-2 justify-between mb-4">
+          <h3 class="text-lg font-semibold md:text-xl">Event Finances Last Inputs</h3>
+          <Button @click="showCompleteTable('event')">Show All</Button>
+        </div>
+        <Table v-if="events.length > 0">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Total Raised</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="item in events.slice(0, 5)" :key="item.eventId">
+              <TableCell>{{ item.eventName }}</TableCell>
+              <TableCell>${{ item.totalRaised }}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </div>
-      <Table v-if="events.length > 0">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Total Raised</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow v-for="item in events.slice(0, 5)" :key="item.eventId">
-            <TableCell>{{ item.eventName }}</TableCell>
-            <TableCell>${{ item.totalRaised }}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
 
-    <div class="my-10 p-10 border rounded w-[49%]">
-      <div class="flex gap-2 justify-between mb-4">
-        <h3 class="text-lg font-semibold md:text-xl">Site Finances Last Inputs</h3>
-        <Button @click="showCompleteTable('site')">Show All</Button>
+      <div class="p-10 border rounded w-[49%]">
+        <div class="flex gap-2 justify-between mb-4">
+          <h3 class="text-lg font-semibold md:text-xl">Site Finances Last Inputs</h3>
+          <Button @click="showCompleteTable('site')">Show All</Button>
+        </div>
+        <Table v-if="sites.length > 0">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Total Raised</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="item in sites.slice(0, 5)" :key="item.siteId">
+              <TableCell>{{ item.siteName }}</TableCell>
+              <TableCell>${{ item.totalRaised }}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </div>
-      <Table v-if="sites.length > 0">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Total Raised</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow v-for="item in sites.slice(0, 5)" :key="item.siteId">
-            <TableCell>{{ item.siteName }}</TableCell>
-            <TableCell>${{ item.totalRaised }}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+    </div>
+    <div class="flex justify-left my-5 mx-2 text-lg font-semibold">
+      TOTAL REVENUE: ${{ total }}
     </div>
   </div>
 
