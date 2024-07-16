@@ -71,7 +71,7 @@ async function showCompleteTable(type) {
     <div class="my-10 p-10 border rounded w-[49%]">
       <div class="flex gap-2 justify-between mb-4">
         <h3 class="text-lg font-semibold md:text-xl">Event Finances Last Inputs</h3>
-        <Button @click="showCompleteTable('event')">Ver Todo</Button>
+        <Button @click="showCompleteTable('event')">Show All</Button>
       </div>
       <Table v-if="events.length > 0">
         <TableHeader>
@@ -92,7 +92,7 @@ async function showCompleteTable(type) {
     <div class="my-10 p-10 border rounded w-[49%]">
       <div class="flex gap-2 justify-between mb-4">
         <h3 class="text-lg font-semibold md:text-xl">Site Finances Last Inputs</h3>
-        <Button @click="showCompleteTable('site')">Ver Todo</Button>
+        <Button @click="showCompleteTable('site')">Show All</Button>
       </div>
       <Table v-if="sites.length > 0">
         <TableHeader>
