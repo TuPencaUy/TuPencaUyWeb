@@ -141,9 +141,6 @@ const onSubmit = handleSubmit(async () => {
               </h1>
               <Badge variant="success">{{ objectData.teamType }}</Badge>
               <div class="hidden items-center gap-2 md:ml-auto md:flex">
-                <Button variant="outline" size="sm">
-                  Discard
-                </Button>
                 <Button @click="onSubmit" size="sm">
                   Save
                 </Button>
