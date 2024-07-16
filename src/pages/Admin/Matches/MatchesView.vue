@@ -127,6 +127,17 @@ const onSubmit = async (match = null) => {
     objectData.value.secondTeamScore = Number(match.secondTeamScore);
     objectData.value.sport = match.sport.id;
     objectData.value.finished = match.finished === "1";
+
+    if(objectData.value.finished &&
+        !match?.firstTeam?.sport?.tie
+        && objectData.value.firstTeamScore === objectData.value.secondTeamScore) {
+      toast({
+        title: 'Error',
+        description: 'Match cannot end in a tie',
+        variant: 'destructive',
+      });
+      return;
+    }
   }
 
   utils().showLoader();
