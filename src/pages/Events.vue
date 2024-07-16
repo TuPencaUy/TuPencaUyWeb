@@ -42,7 +42,7 @@ onMounted(async () => {
   paypal = await paypalLogic().initPaypal();
   events.value = await eventsLogic().getEvents();
   if (userEvents?.length > 0) {
-    events.value = events.value.filter(event => !userEvents.find(userEvent => userEvent.id === event.id));
+    events.value = events.value.filter(event => !event.finished && !userEvents.find(userEvent => userEvent.id === event.id));
   }
 
   utils().hideLoader();
