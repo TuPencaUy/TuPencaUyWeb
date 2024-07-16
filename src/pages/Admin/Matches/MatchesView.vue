@@ -68,19 +68,7 @@ onMounted(async () => {
   event.value = await eventsLogic().getEvent(eventId);
 
   if (matches && matches.length > 0) {
-    matches = [...matches].map((elem) => {
-      const padNumber = (num) => num < 10 ? `0${num}` : num;
-
-      const date = new Date(elem.date);
-      const dateFormatted = `${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${date.getFullYear()}`;
-      const time = `${padNumber(date.getHours())}:${padNumber(date.getMinutes())}`;
-      elem.date = `${dateFormatted} ${time}`;
-
-      return elem;
-    });
-
-    collection.value = matches;
-
+    collection.value = mapMatches(matches);
   }
 
   const teamsDB = await teamLogic().getTeams();
@@ -96,6 +84,20 @@ onMounted(async () => {
     utils().hideLoader();
   }, 1000);
 });
+
+function mapMatches(matches) {
+  return matches.map((elem) => {
+    const padNumber = (num) => num < 10 ? `0${num}` : num;
+
+    const date = new Date(elem.date);
+    const dateFormatted = `${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${date.getFullYear()}`;
+    const time = `${padNumber(date.getHours())}:${padNumber(date.getMinutes())}`;
+    elem.date = `${dateFormatted} ${time}`;
+    elem.finished = elem.finished ? '1' : '0';
+
+    return elem;
+  });
+}
 
 async function deleteItem(id) {
   utils().showLoader();
@@ -126,7 +128,7 @@ const onSubmit = async (match = null) => {
     objectData.value.firstTeamScore = Number(match.firstTeamScore);
     objectData.value.secondTeamScore = Number(match.secondTeamScore);
     objectData.value.sport = match.sport.id;
-    objectData.value.finished = match.finished === "1";
+    objectData.value.finished = match.finished === '1';
 
     if(objectData.value.finished &&
         !match?.firstTeam?.sport?.tie
@@ -163,6 +165,9 @@ const onSubmit = async (match = null) => {
     datetime.setHours(timeHour.value);
     datetime.setMinutes(timeMinutes.value);
     objectToSend.date = datetime;
+    objectToSend.finished = false;
+    objectToSend.firstTeamScore = 0;
+    objectToSend.secondTeamScore = 0;
   }
 
   const response = await matchLogic().createOrUpdateMatch(objectToSend, matchId);
@@ -173,6 +178,7 @@ const onSubmit = async (match = null) => {
       description: `Match has been ${matchId !== '' ? "updated" : "created"} successfully`,
     });
     collection.value = await matchLogic().getMatches(event.value.data.id);
+    collection.value = mapMatches(collection.value);
   } else {
     toast({
       title: 'Error',
