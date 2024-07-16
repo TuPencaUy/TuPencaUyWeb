@@ -41,6 +41,7 @@ onMounted(async () => {
 
   paypal = await paypalLogic().initPaypal();
   events.value = await eventsLogic().getEvents();
+  events.value = events.value.filter(event => !event?.finished);
   if (userEvents?.length > 0) {
     events.value = events.value.filter(event => !userEvents.find(userEvent => userEvent.id === event.id));
   }
