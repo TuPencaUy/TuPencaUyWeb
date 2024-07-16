@@ -75,7 +75,7 @@ onMounted(async () => {
       objectData.value.teamType = String(result.teamType) === '1' ? 'national' : 'local';
       objectData.value.startDate = result.startDate.split('T')[0];
       objectData.value.endDate = result.endDate.split('T')[0];
-      objectData.value.comission = result.comission * 100;
+      objectData.value.comission = parseInt(result.comission * 100);
       objectData.value.instantiable = result.instantiable ? 'true' : 'false';
       objectData.value.sport_id = String(result.sport.id);
     }
@@ -141,9 +141,6 @@ const onSubmit = handleSubmit(async () => {
               </h1>
               <Badge variant="success">{{ objectData.teamType }}</Badge>
               <div class="hidden items-center gap-2 md:ml-auto md:flex">
-                <Button variant="outline" size="sm">
-                  Discard
-                </Button>
                 <Button @click="onSubmit" size="sm">
                   Save
                 </Button>

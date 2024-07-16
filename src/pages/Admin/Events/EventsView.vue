@@ -189,9 +189,9 @@ async function handleEndEvent(event) {
               `${event.price !== 0 ? '$' + event.price : 'Free'}`
             }}
           </TableCell>
-          <TableCell>{{ `${event.comission * 100 ?? 0}%` }}</TableCell>
+          <TableCell>{{ `${(parseInt(event.comission * 100)) ?? 0}%` }}</TableCell>
           <TableCell v-if="!useTenantStore().isCentralSite">
-            {{ `${event.prizePercentage !== 0 ? ((event.prizePercentage * 100) + '%') : 'None'}` }}
+            {{ `${event.prizePercentage !== 0 ? (parseInt(event.prizePercentage * 100) + '%') : 'None'}` }}
           </TableCell>
           <TableCell>{{ TEAM_VALUES[event.teamType ?? 1] }}</TableCell>
           <TableCell v-if="useTenantStore().isCentralSite">

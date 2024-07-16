@@ -35,7 +35,6 @@ const selectedEvent = ref(eventFromClient ?? 0);
 onMounted(async () => {
   utils().showLoader();
   siteEvents.value = await eventsLogic().getEvents();
-  siteEvents.value = siteEvents.value.filter(event => event?.finished);
 
   if (eventFromClient) {
     await getLeaderboard(eventFromClient);
