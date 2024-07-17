@@ -42,7 +42,7 @@ onMounted(async () => {
           <TableHead>Total Collected Amount</TableHead>
           <TableHead>Success Rate</TableHead>
           <TableHead>Partial Success Rate</TableHead>
-          <TableHead>Prize amount</TableHead>
+          <TableHead>Price amount</TableHead>
           <TableHead>Total Bets</TableHead>
           <TableHead>Unsuccessful Bets</TableHead>
           <TableHead>Successful Bets</TableHead>
