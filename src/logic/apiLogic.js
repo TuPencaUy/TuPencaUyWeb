@@ -5,7 +5,8 @@ export default function api() {
         const requestObject = {
             method,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Content-Security-Policy': 'upgrade-insecure-requests',
             }
         };
 
@@ -28,7 +29,7 @@ export default function api() {
             finalUrl = url;
         }
 
-      return await fetch(finalUrl, requestObject);
+        return await fetch(finalUrl, requestObject);
     }
 
     function response(data = null, message = "", error = false) {
