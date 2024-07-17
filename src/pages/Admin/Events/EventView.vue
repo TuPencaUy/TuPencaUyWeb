@@ -2,17 +2,17 @@
 import {
   ChevronLeft,
 } from 'lucide-vue-next';
-import {Button} from '@/components/ui/button';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import eventsLogic from '@/logic/eventsLogic';
 import sportLogic from "@/logic/sportLogic";
-import {useToast} from '@/components/ui/toast/use-toast';
+import { useToast } from '@/components/ui/toast/use-toast';
 import router from '@/router';
-import {useRoute} from 'vue-router';
+import { useRoute } from 'vue-router';
 
-const {toast} = useToast();
+const { toast } = useToast();
 import {
   Select,
   SelectContent,
@@ -20,20 +20,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import
-{
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+import {
+FormControl,
+FormField,
+FormItem,
+FormLabel,
+FormMessage,
 } from '@/components/ui/form';
 import Admin from "@/components/Admin.vue";
-import {onMounted, ref} from "vue";
-import {toTypedSchema} from "@vee-validate/zod";
+import { onMounted, ref } from "vue";
+import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
-import {useForm} from 'vee-validate';
-import {Badge} from "@/components/ui/badge";
+import { useForm } from 'vee-validate';
+import { Badge } from "@/components/ui/badge";
 import utils from '@/logic/utils';
 
 
@@ -58,7 +57,7 @@ const formSchema = toTypedSchema(z.object({
   comission: z.number().min(0).max(100)
 }));
 
-const {handleSubmit} = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: formSchema,
 });
 
@@ -80,6 +79,10 @@ onMounted(async () => {
       objectData.value.sport_id = String(result.sport.id);
     }
 
+    resetForm({
+      values: { ...objectData.value }
+    });
+
     setTimeout(() => {
       utils().hideLoader();
     }, 1000);
@@ -88,7 +91,7 @@ onMounted(async () => {
   //get sports
   const sportsCollection = await sportLogic().getSports();
   sports.value = sportsCollection.map(elem => {
-    return {id: String(elem.id), name: elem.name};
+    return { id: String(elem.id), name: elem.name };
   });
 });
 
@@ -133,7 +136,7 @@ const onSubmit = handleSubmit(async () => {
             <div class="flex items-center gap-4">
               <router-link to="/admin/events">
                 <Button variant="outline" size="icon" class="h-7 w-7">
-                  <ChevronLeft class="h-4 w-4"/>
+                  <ChevronLeft class="h-4 w-4" />
                 </Button>
               </router-link>
               <h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
@@ -149,18 +152,15 @@ const onSubmit = handleSubmit(async () => {
             <div class="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
               <div class="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Create Event</CardTitle>
-                  </CardHeader>
                   <CardContent>
                     <div class="grid gap-6">
                       <FormField v-slot="{ componentField }" name="name">
                         <FormItem>
                           <FormLabel>Name</FormLabel>
                           <FormControl>
-                            <Input type="text" v-bind="componentField" v-model="objectData.name"/>
+                            <Input type="text" v-bind="componentField" v-model="objectData.name" />
                           </FormControl>
-                          <FormMessage/>
+                          <FormMessage />
                         </FormItem>
                       </FormField>
                       <div class="w-full justify-between flex gap-2">
@@ -168,18 +168,18 @@ const onSubmit = handleSubmit(async () => {
                           <FormItem>
                             <FormLabel>Start Date</FormLabel>
                             <FormControl>
-                              <Input type="date" v-bind="componentField" v-model="objectData.startDate"/>
+                              <Input type="date" v-bind="componentField" v-model="objectData.startDate" />
                             </FormControl>
-                            <FormMessage/>
+                            <FormMessage />
                           </FormItem>
                         </FormField>
                         <FormField v-slot="{ componentField }" name="endDate">
                           <FormItem>
                             <FormLabel>End Date</FormLabel>
                             <FormControl>
-                              <Input type="date" v-bind="componentField" v-model="objectData.endDate"/>
+                              <Input type="date" v-bind="componentField" v-model="objectData.endDate" />
                             </FormControl>
-                            <FormMessage/>
+                            <FormMessage />
                           </FormItem>
                         </FormField>
                       </div>
@@ -189,7 +189,7 @@ const onSubmit = handleSubmit(async () => {
                         <Label for="status">Sport</Label>
                         <Select v-model="objectData.sport_id">
                           <SelectTrigger id="status" aria-label="Sports">
-                            <SelectValue placeholder="Select sport"/>
+                            <SelectValue placeholder="Select sport" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem v-for="sport in sports" class="bg-white" :key="sport.id" :value="sport.id">
@@ -204,7 +204,7 @@ const onSubmit = handleSubmit(async () => {
                         <Label for="status">Instantiable</Label>
                         <Select v-model="objectData.instantiable">
                           <SelectTrigger id="instantiable" aria-label="Instantiable">
-                            <SelectValue placeholder="Select"/>
+                            <SelectValue placeholder="Select" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem class="bg-white" value="true">
@@ -234,17 +234,17 @@ const onSubmit = handleSubmit(async () => {
                     <div class="grid gap-6">
                       <div class="grid gap-3">
                         <FormField v-slot="{ componentField }" name="comission">
-                        <FormItem>
-                          <FormLabel>Comission</FormLabel>
-                          <FormControl>
-                            <div class="flex gap-2">
-                              <Input type="number" v-bind="componentField" v-model="objectData.comission"/>
-                              <p class="flex flex-col justify-center">%</p>
-                            </div>
-                          </FormControl>
-                          <FormMessage/>
-                        </FormItem>
-                      </FormField>
+                          <FormItem>
+                            <FormLabel>Comission</FormLabel>
+                            <FormControl>
+                              <div class="flex gap-2">
+                                <Input type="number" v-bind="componentField" v-model="objectData.comission" />
+                                <p class="flex flex-col justify-center">%</p>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        </FormField>
                       </div>
                     </div>
                   </CardContent>
@@ -254,7 +254,7 @@ const onSubmit = handleSubmit(async () => {
                         <Label for="status">Team Type</Label>
                         <Select v-model="objectData.teamType">
                           <SelectTrigger id="status" aria-label="Select team type">
-                            <SelectValue placeholder="Select team type"/>
+                            <SelectValue placeholder="Select team type" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem class="bg-white" value="national">

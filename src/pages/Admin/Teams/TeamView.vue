@@ -2,15 +2,15 @@
 import {
   ChevronLeft,
 } from 'lucide-vue-next';
-import {Button} from '@/components/ui/button';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import teamLogic from '@/logic/teamLogic';
 import sportLogic from '@/logic/sportLogic';
-import {useToast} from '@/components/ui/toast/use-toast';
+import { useToast } from '@/components/ui/toast/use-toast';
 import router from '@/router';
-import {useRoute} from 'vue-router';
+import { useRoute } from 'vue-router';
 import {
   Select,
   SelectContent,
@@ -18,23 +18,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import
-{
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+import {
+FormControl,
+FormField,
+FormItem,
+FormLabel,
+FormMessage,
 } from '@/components/ui/form';
 import Admin from "@/components/Admin.vue";
-import {onMounted, ref} from "vue";
-import {toTypedSchema} from "@vee-validate/zod";
+import { onMounted, ref } from "vue";
+import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
-import {useForm} from 'vee-validate';
+import { useForm } from 'vee-validate';
 import utils from '@/logic/utils';
 
 const route = useRoute();
-const {toast} = useToast();
+const { toast } = useToast();
 
 let teamId = '';
 let sports = ref([]);
@@ -50,7 +49,7 @@ const formSchema = toTypedSchema(z.object({
   name: z.string().min(4).max(30),
 }));
 
-const {handleSubmit} = useForm({
+const { handleSubmit, resetForm } = useForm({
   validationSchema: formSchema,
 });
 
@@ -66,6 +65,10 @@ onMounted(async () => {
       objectData.value.sport = response.data.sport;
       objectData.value.sport.id = String(response.data.sport?.id);
 
+      resetForm({
+        values: { ...objectData.value }
+      });
+
       setTimeout(() => {
         utils().hideLoader();
       }, 1000);
@@ -75,7 +78,7 @@ onMounted(async () => {
   //get sports
   const sportsCollection = await sportLogic().getSports();
   sports.value = sportsCollection.map(elem => {
-    return {id: String(elem.id), name: elem.name};
+    return { id: String(elem.id), name: elem.name };
   });
 });
 
@@ -120,7 +123,7 @@ const onLogoChanged = (e) => {
           <div class="flex items-center gap-4">
             <router-link to="/admin/teams">
               <Button variant="outline" size="icon" class="h-7 w-7">
-                <ChevronLeft class="h-4 w-4"/>
+                <ChevronLeft class="h-4 w-4" />
               </Button>
             </router-link>
             <h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
@@ -138,30 +141,29 @@ const onLogoChanged = (e) => {
           <div class="flex w-full mt-2">
             <div class="w-full">
               <Card>
-                <CardHeader>
-                  <CardTitle>Create Team</CardTitle>
-                </CardHeader>
                 <CardContent>
                   <div class="grid gap-6">
                     <FormField v-slot="{ componentField }" name="name">
                       <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                          <Input type="text" v-bind="componentField" v-model="objectData.name"/>
+                          <Input type="text" v-bind="componentField" v-model="objectData.name" />
                         </FormControl>
-                        <FormMessage/>
+                        <FormMessage />
                       </FormItem>
                     </FormField>
                     <Label for="logo">Logo</Label>
-                    <Input name="logo" v-if="!teamId || teamId && !objectData.logo" type="file" @change="onLogoChanged"/>
-                    <img v-if="objectData.logo && !objectData.logo?.includes('data:image')" :src="['data:image/png;base64', objectData.logo]" alt="logo1" class="w-80 h-80">
+                    <Input name="logo" v-if="!teamId || teamId && !objectData.logo" type="file"
+                      @change="onLogoChanged" />
+                    <img v-if="objectData.logo && !objectData.logo?.includes('data:image')"
+                      :src="['data:image/png;base64', objectData.logo]" alt="logo1" class="w-80 h-80">
                     <img v-else-if="objectData.logo" :src="objectData.logo" alt="logo2" class="w-80 h-80">
                     <div class="grid gap-6">
                       <div class="grid gap-3">
                         <Label for="status">Team Type</Label>
                         <Select v-model="objectData.teamType">
                           <SelectTrigger id="status" aria-label="Select team type">
-                            <SelectValue placeholder="Select team type"/>
+                            <SelectValue placeholder="Select team type" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem class="bg-white" value="1">
@@ -179,7 +181,7 @@ const onLogoChanged = (e) => {
                         <Label for="status">Sports</Label>
                         <Select v-if="teamId" v-model="objectData.sport.id">
                           <SelectTrigger id="status" aria-label="Sports">
-                            <SelectValue placeholder="Select sport"/>
+                            <SelectValue placeholder="Select sport" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem v-for="sport in sports" class="bg-white" :key="sport.id" :value="sport.id">
@@ -189,7 +191,7 @@ const onLogoChanged = (e) => {
                         </Select>
                         <Select v-else-if="!teamId" v-model="objectData.sport">
                           <SelectTrigger id="status" aria-label="Sports">
-                            <SelectValue placeholder="Select sport"/>
+                            <SelectValue placeholder="Select sport" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem v-for="sport in sports" class="bg-white" :key="sport.id" :value="sport.id">
