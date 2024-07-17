@@ -6,6 +6,7 @@ import themes from "@/logic/themes.js";
 export default function siteLogic() {
 
     async function init() {
+        debugger;
         await useTenantStore().setCurrentTenant();
 
         await themes().setTheme(useTenantStore().getTenantColor);
@@ -104,6 +105,7 @@ export default function siteLogic() {
     }
 
     async function redirectUserToSite(tenant) {
+        debugger;
         window.location.href = `https://${tenant}.${import.meta.env.VITE_BASE_DOMAIN}`;
     }
 

@@ -14,6 +14,7 @@ onMounted(async () => {
 });
 
 router.beforeEach((to, from, next) => {
+  debugger;
   if (!useUserStore().isAuthenticated) {
     if (to.path === '/login' || to.path === '/signup') next();
     next('/login');
