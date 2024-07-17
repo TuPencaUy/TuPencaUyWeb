@@ -37,7 +37,9 @@ const secondTeamScore = ref(0);
 
 onMounted(async () => {
   if (!route.params.id) await router.push('/events');
+  utils().showLoader();
   await getMatches();
+  utils().hideLoader();
 });
 
 const getMatches = async () => {
