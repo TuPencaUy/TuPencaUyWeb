@@ -15,15 +15,18 @@ export const useTenantStore = defineStore({
     },
     actions: {
         setCurrentTenant() {
-            let url = window.location.hostname;
-            url = url.replace('www.', '');
-            url = url.replace('.com', '');
+            const hostname = window.location.hostname;
+            if (!hostname) return null;
 
-            const splittedUrl = url.split('.');
+            let parts = hostname.split('.');
 
-            this._currentTenant = (splittedUrl?.length > 1)
-                ? splittedUrl[0]
-                : null;
+            let tupencauyIndex = parts.indexOf(import.meta.env.VITE_BASE_URL_INDEX);
+
+            if (tupencauyIndex > 0) {
+                this._currentTenant = parts[tupencauyIndex - 1];
+            } else {
+                this._currentTenant = null;
+            }
         },
         setTenantAccess(access) {
             this._tenantAccess = access;
@@ -80,11 +83,9 @@ export const useTenantStore = defineStore({
             return this._tenantAccess === 3;
         },
         isInvitationLinkValidated() {
-            if(!this.isInvitationAccess || !this.getUniqueId) return false;
-            return window.location.href.includes(this.getUniqueId)
-        },
-
-
+            if (!this.isInvitationAccess || !this.getUniqueId) return false;
+            return window.location.href.includes(this.getUniqueId);
+        }
     },
     persist: true
 });
