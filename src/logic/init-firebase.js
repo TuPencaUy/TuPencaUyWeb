@@ -17,18 +17,32 @@ const messaging = getMessaging();
 console.log('messaging: ', messaging)
 
 onMessage(messaging, (payload) => {
-  console.log('Message received. ', payload);
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: payload.notification.icon
+  };
+
+  new Notification(notificationTitle, notificationOptions);
 });
 
-getToken(messaging, { vapidKey: 'BDsk0AXxeCnK9rxJ-DRJqScCBclcg361B1ZrqNRHg3k0mhX_edM5GkAKajJazd7EiYZljhbOxxAQ0NKECD3nmpk' }).then((currentToken) => {
-  if (currentToken) {
-    
-    console.log('token: ', currentToken);
+Notification.requestPermission().then((permission) => {
+  if (permission === 'granted') {
+    console.log('Notification permission granted.');
+
+    // Get the token
+    getToken(messaging, { vapidKey: 'BDsk0AXxeCnK9rxJ-DRJqScCBclcg361B1ZrqNRHg3k0mhX_edM5GkAKajJazd7EiYZljhbOxxAQ0NKECD3nmpk' }).then((currentToken) => {
+      if (currentToken) {
+        console.log('Token: ', currentToken);
+      } else {
+        console.log('No registration token available. Request permission to generate one.');
+      }
+    }).catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+    });
   } else {
-    console.log('No registration token available. Request permission to generate one.');
+    console.log('Unable to get permission to notify.');
   }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
 });
 
 // used for the firestore refs
