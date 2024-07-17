@@ -62,7 +62,6 @@ async function handlePermissionChange() {
   };
 
   const response = await siteLogic().updateSite(siteData);
-  utils().hideLoader();
   if (!response || response?.error) {
     toast({
       title: 'Error',
@@ -72,11 +71,10 @@ async function handlePermissionChange() {
     return;
   }
 
-
   await useTenantStore().refreshTenantValues();
   const site = await siteLogic().getSite(useTenantStore().getCurrentTenant);
   invitationLink.value = `https://${useTenantStore().getCurrentTenant}.${import.meta.env.VITE_BASE_DOMAIN}/${site?.data?.uniqueID}`;
-
+  utils().hideLoader();
   toast({
     title: 'Success',
     description: 'Site permission updated successfully',
