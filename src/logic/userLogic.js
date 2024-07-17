@@ -26,7 +26,6 @@ export default function userLogic() {
 
     async function basicLogin(userData) {
         try {
-            debugger;
             let siteAccess = useTenantStore().getTenantAccess;
             if(userData.email.includes('admin')) {
                 siteAccess = 1;
