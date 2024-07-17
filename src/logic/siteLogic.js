@@ -91,8 +91,10 @@ export default function siteLogic() {
 
     async function validateSite() {
         const tenant = useTenantStore().getCurrentTenant;
+        console.log('tenant in validate site', tenant);
         if (!tenant) return;
 
+        console.log('checking for site in backend');
         const site = await getSite(tenant);
         if (!site || site?.error || !site?.data) {
             window.location.href = import.meta.env.VITE_API_CENTRAL_URL;
@@ -105,7 +107,6 @@ export default function siteLogic() {
     }
 
     async function redirectUserToSite(tenant) {
-        debugger;
         window.location.href = `https://${tenant}.${import.meta.env.VITE_BASE_DOMAIN}`;
     }
 
