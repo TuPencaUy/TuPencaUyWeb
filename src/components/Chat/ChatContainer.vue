@@ -13,10 +13,35 @@ import {
 import {Button} from "@/components/ui/button/index.js";
 import {CircleUser} from "lucide-vue-next";
 import router from "@/router/index.js";
+import {onMounted, onUnmounted} from "vue";
+import {collection, onSnapshot, query} from "firebase/firestore";
+import {db} from "@/logic/init-firebase.js";
 
 const {currentChat} = storeToRefs(useChatStore());
 
 let messageToSend = '';
+
+onMounted(() => {
+  const chatRef = collection(db, "chat"); // replace with your chat collection reference
+  const chatQuery = query(chatRef); // replace "timestamp" with your timestamp field
+
+  // Listen for new messages
+  const unsubscribe = onSnapshot(chatQuery, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === "modified") {
+        const receiver = currentChat.value?.receiver?.id;
+        const sender = currentChat.value?.sender;
+        let newDocument = change.doc.data();
+        if (newDocument?.receiver?.id === receiver && newDocument?.sender === sender) {
+          currentChat.value.messages = newDocument.messages;
+        }
+      }
+    });
+  });
+
+  // Remember to unsubscribe when the component unmounts
+  onUnmounted(unsubscribe);
+});
 
 const handleSendMessage = async () => {
   if (!messageToSend) return;

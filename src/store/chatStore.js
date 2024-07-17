@@ -89,8 +89,6 @@ export const useChatStore = defineStore({
                     receiverHasRead: false,
                     messages: arrayUnion(data),
                 });
-
-                this.currentChat.messages.push(data);
             } catch (e) {
                 console.log(e);
             }
