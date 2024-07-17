@@ -6,9 +6,7 @@ export default function api() {
             method,
             headers: {
                 'Content-Type': 'application/json',
-                'Content-Security-Policy': 'upgrade-insecure-requests',
             },
-            referrerPolicy: 'unsafe-url',
         };
 
         if (body && Object.keys(body).length > 0) {
