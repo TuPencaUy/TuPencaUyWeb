@@ -22,13 +22,13 @@ import {Icon} from "@iconify/vue";
 
 const {toast} = useToast();
 
-const invitationLink = ref(`http://${useTenantStore().getCurrentTenant}.${import.meta.env.VITE_BASE_DOMAIN}/${useTenantStore().getUniqueId}`);
+const invitationLink = ref(`https://${useTenantStore().getCurrentTenant}.${import.meta.env.VITE_BASE_DOMAIN}/${useTenantStore().getUniqueId}`);
 let currentPermission = ref('');
 const accesses = ref([]);
 
 onMounted(async () => {
   const site = await siteLogic().getSite(useTenantStore().getCurrentTenant);
-  invitationLink.value = `http://${useTenantStore().getCurrentTenant}.${import.meta.env.VITE_BASE_DOMAIN}/${site?.data?.uniqueID}`;
+  invitationLink.value = `https://${useTenantStore().getCurrentTenant}.${import.meta.env.VITE_BASE_DOMAIN}/${site?.data?.uniqueID}`;
   accesses.value = await accessRequestLogic().getAccessRequests();
   currentPermission.value = String(useTenantStore().getTenantAccess);
 });

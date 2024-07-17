@@ -104,7 +104,7 @@ export default function siteLogic() {
     }
 
     async function redirectUserToSite(tenant) {
-        window.location.href = `http://${tenant}.${import.meta.env.VITE_BASE_DOMAIN}`;
+        window.location.href = `https://${tenant}.${import.meta.env.VITE_BASE_DOMAIN}`;
     }
 
     return {
