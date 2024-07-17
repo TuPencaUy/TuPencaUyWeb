@@ -235,7 +235,7 @@ const onSubmit = handleSubmit(async () => {
                       <div class="grid gap-3">
                         <FormField v-slot="{ componentField }" name="comission">
                           <FormItem>
-                            <FormLabel>Comission</FormLabel>
+                            <FormLabel>Commission</FormLabel>
                             <FormControl>
                               <div class="flex gap-2">
                                 <Input type="number" v-bind="componentField" v-model="objectData.comission" />

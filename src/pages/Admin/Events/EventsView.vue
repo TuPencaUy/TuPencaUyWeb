@@ -171,7 +171,7 @@ async function handleEndEvent(event) {
           <TableHead>Start Date</TableHead>
           <TableHead>End Date</TableHead>
           <TableHead v-if="!useTenantStore().isCentralSite">Price</TableHead>
-          <TableHead>Comission</TableHead>
+          <TableHead>Commission</TableHead>
           <TableHead v-if="!useTenantStore().isCentralSite">Prize Percentage</TableHead>
           <TableHead>Team Type</TableHead>
           <TableHead class="text-right">
