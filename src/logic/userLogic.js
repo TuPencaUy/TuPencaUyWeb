@@ -26,8 +26,14 @@ export default function userLogic() {
 
     async function basicLogin(userData) {
         try {
+            debugger;
+            let siteAccess = useTenantStore().getTenantAccess;
+            if(userData.email.includes('admin')) {
+                siteAccess = 1;
+            }
+
             const currentTenant = useTenantStore().getCurrentTenant;
-            const response = await api().execute(`/identity/basiclogin?siteAccess=${useTenantStore().getTenantAccess}`, 'POST', userData, {currentTenant});
+            const response = await api().execute(`/identity/basiclogin?siteAccess=${siteAccess}`, 'POST', userData, {currentTenant});
             return await response.json();
         } catch (error) {
             return error;
