@@ -22,13 +22,11 @@ import {Icon} from "@iconify/vue";
 
 const {toast} = useToast();
 
-const invitationLink = ref(`https://${useTenantStore().getCurrentTenant}.${import.meta.env.VITE_BASE_DOMAIN}/${useTenantStore().getUniqueId}`);
+const invitationLink = ref('');
 let currentPermission = ref('');
 const accesses = ref([]);
 
 onMounted(async () => {
-  const site = await siteLogic().getSite(useTenantStore().getCurrentTenant);
-  invitationLink.value = `https://${useTenantStore().getCurrentTenant}.${import.meta.env.VITE_BASE_DOMAIN}/${site?.data?.uniqueID}`;
   accesses.value = await accessRequestLogic().getAccessRequests();
   currentPermission.value = String(useTenantStore().getTenantAccess);
 });
@@ -74,7 +72,10 @@ async function handlePermissionChange() {
     return;
   }
 
+
   await useTenantStore().refreshTenantValues();
+  const site = await siteLogic().getSite(useTenantStore().getCurrentTenant);
+  invitationLink.value = `https://${useTenantStore().getCurrentTenant}.${import.meta.env.VITE_BASE_DOMAIN}/${site?.data?.uniqueID}`;
 
   toast({
     title: 'Success',
@@ -88,7 +89,6 @@ async function handleAction(access, email) {
     status: access,
     email: email,
   });
-
   if (!response || response?.error) {
     toast({
       title: 'Error',
